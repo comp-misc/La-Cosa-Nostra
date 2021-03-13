@@ -1,4 +1,4 @@
-var rs = require("../../../../../source/lcn.js")
+var rs = require("../../../../../source/lcn")
 
 var responses = {
 	neutral: ":mag: Your target is a __Neutral__. Their role is **{;role}**.",

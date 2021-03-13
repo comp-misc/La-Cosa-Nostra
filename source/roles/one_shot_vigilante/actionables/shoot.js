@@ -1,4 +1,4 @@
-var rs = require("../../../rolesystem/rolesystem.js")
+var rs = require("../../../rolesystem/rolesystem")
 
 module.exports = function (actionable, game, params) {
 	rs.prototypes.powerfulAttack.reason = "shot by a __Vigilante__"

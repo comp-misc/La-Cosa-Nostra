@@ -1,6 +1,6 @@
 // Executes BEFORE introduction
 
-var auxils = require("../../../systems/auxils.js")
+var auxils = require("../../../systems/auxils")
 
 module.exports = function (player) {
 	// Find pair

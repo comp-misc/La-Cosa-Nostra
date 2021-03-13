@@ -24,7 +24,7 @@ module.exports = function (actionable, game, params) {
 	}
 
 	async function lynchAG() {
-		var lcn = require("../../../../source/lcn.js")
+		var lcn = require("../../../../source/lcn")
 		var assets = lcn.assets
 
 		// Execute the arbiter god

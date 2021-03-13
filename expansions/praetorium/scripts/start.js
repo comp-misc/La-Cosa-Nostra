@@ -1,5 +1,5 @@
 var fs = require("fs")
-var lcn = require("../../../source/lcn.js")
+var lcn = require("../../../source/lcn")
 
 module.exports = function (config) {
 	// Override configuration liberally

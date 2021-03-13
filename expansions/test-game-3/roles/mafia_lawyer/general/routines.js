@@ -1,6 +1,6 @@
 // Routines
 // Runs every cycle
-var mafia = require("../../../../../source/lcn.js")
+var mafia = require("../../../../../source/lcn")
 // Function should be synchronous
 
 var auxils = mafia.auxils

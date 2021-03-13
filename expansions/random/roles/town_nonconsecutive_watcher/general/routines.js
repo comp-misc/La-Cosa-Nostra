@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 // Routines
 // Runs every cycle

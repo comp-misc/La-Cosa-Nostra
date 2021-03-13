@@ -1,6 +1,4 @@
-var attributes = require("../../../../source/systems/attributes.js")
-
-var Discord = require("discord.js")
+var attributes = require("../../../../source/systems/attributes")
 
 var powers = new Array()
 

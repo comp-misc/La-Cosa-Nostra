@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
 var auxils = lcn.auxils
@@ -15,7 +15,9 @@ module.exports = function (actionable, game, params) {
 	var target = game.getPlayerByIdentifier(actionable.to)
 
 	// Add attribute
-	target.addAttribute("investigation_contract", 3, { contractor: actionable.from })
+	target.addAttribute("investigation_contract", 3, {
+		contractor: actionable.from,
+	})
 	game.addMessage(
 		target,
 		":exclamation: You have been contacted last night and given an investigation ability. You may choose who your contractor investigates tonight, but you will not receive the results."

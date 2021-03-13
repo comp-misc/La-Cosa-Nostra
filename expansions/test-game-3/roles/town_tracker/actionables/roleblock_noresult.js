@@ -1,4 +1,4 @@
-var mafia = require("../../../../../source/lcn.js")
+var mafia = require("../../../../../source/lcn")
 
 module.exports = function (actionable, game, params) {
 	var player = game.getPlayerByIdentifier(actionable.from)

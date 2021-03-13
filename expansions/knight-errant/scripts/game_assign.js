@@ -1,7 +1,6 @@
-var logger = process.logger
 var fs = require("fs")
 
-var lcn = require("../../../source/lcn.js")
+var lcn = require("../../../source/lcn")
 var auxils = lcn.auxils
 
 var role_table = JSON.parse(fs.readFileSync(__dirname + "/role_table.json"))
@@ -10,6 +9,7 @@ var role_table = JSON.parse(fs.readFileSync(__dirname + "/role_table.json"))
 role_table = role_table[0].map((col, i) => role_table.map((row) => row[i]))
 
 module.exports = function (playing_config) {
+	var logger = process.logger
 	if (playing_config.roles) {
 		logger.log(2, "[Knight-Errant] Not running setup randomiser as roles have been defined.")
 
@@ -41,7 +41,10 @@ module.exports = function (playing_config) {
 
 	var attributes = new Array()
 	for (var i = 0; i < unique.length; i++) {
-		attributes.push({ identifier: unique[i], tags: { uses: abilities.filter((x) => x === unique[i]).length } })
+		attributes.push({
+			identifier: unique[i],
+			tags: { uses: abilities.filter((x) => x === unique[i]).length },
+		})
 	}
 
 	var serial_killer = { identifier: "serial_killer", attributes: attributes }

@@ -1,26 +1,26 @@
-var expansion_config = require("../../miscellaneous/config.js")
+var expansion_config = require("../../miscellaneous/config")
 
-module.exports = async function (message, params, config) {
-	var guild = message.client.guilds.get(config["server-id"])
+module.exports = async function (message) {
+	var guild = message.client.guilds.get(process.env["server-id"])
 
 	// Purges all consipracy channels
 	var categories = guild.channels
 		.filter((x) => x.name.startsWith(expansion_config["cc-category-prefix"]) && x.type === "category")
 		.array()
 
-	var channels = new Array()
+	let channels = []
 
-	for (var i = 0; i < categories.length; i++) {
+	for (let i = 0; i < categories.length; i++) {
 		channels = channels.concat(categories[i].children.array())
 	}
 
 	channels = channels.concat(categories)
 
-	var cache = new Array()
-	for (var i = 0; i < channels.length; i++) {
+	let cache = []
+	for (let i = 0; i < channels.length; i++) {
 		if (i % 10 === 0) {
 			await Promise.all(cache)
-			cache = new Array()
+			cache = []
 		}
 
 		cache.push(channels[i].delete())

@@ -1,7 +1,7 @@
 // Register heal
 
-var rs = require("../../../rolesystem/rolesystem.js")
-var auxils = require("../../../systems/auxils.js")
+var rs = require("../../../rolesystem/rolesystem")
+var auxils = require("../../../systems/auxils")
 
 module.exports = function (game, message, params) {
 	var actions = game.actions

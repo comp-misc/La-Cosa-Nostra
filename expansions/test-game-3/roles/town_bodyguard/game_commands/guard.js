@@ -1,4 +1,4 @@
-var mafia = require("../../../../../source/lcn.js")
+var mafia = require("../../../../../source/lcn")
 
 // Register heal
 

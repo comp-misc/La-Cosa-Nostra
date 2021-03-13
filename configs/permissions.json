@@ -1,12 +1,12 @@
 {
-  "permissions": {
-    "admin": "Host",
-    "alive": "Alive",
-    "dead": "Dead",
-    "spectator": "Spectator",
-    "aftermath": "Season Player",
-    "pre": "Participant",
-    "backup": "Backup",
-    "notify": "Notify"
-  }
+	"permissions": {
+		"admin": "Host",
+		"alive": "Alive",
+		"dead": "Dead",
+		"spectator": "Spectator",
+		"aftermath": "Season Player",
+		"pre": "Participant",
+		"backup": "Backup",
+		"notify": "Notify"
+	}
 }

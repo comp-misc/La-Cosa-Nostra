@@ -1,27 +1,24 @@
 {
-  "bot-token": "<insert bot token>",
-  "server-id": "<insert server ID>",
+	"command-prefix": "!",
+	"automatically-load-saves": true,
 
-  "command-prefix": "!",
-  "automatically-load-saves": true,
+	"allow-config-override-subprocess": true,
 
-  "allow-config-override-subprocess": true,
+	"auto-reconnect": true,
 
-  "auto-reconnect": true,
+	"console-log-level": 2,
+	"file-log-level": 1,
 
-  "console-log-level": 2,
-  "file-log-level": 1,
+	"encode-cache": true,
 
-  "encode-cache": true,
-
-  "merge-configs": [
-    "game-details.json",
-    "server-details.json",
-    "permissions.json",
-    "channels.json",
-    "playing.json",
-    "messages.json",
-    "tick.json",
-    "disabled_commands.json"
-  ]
+	"merge-configs": [
+		"game-details.json",
+		"server-details.json",
+		"permissions.json",
+		"channels.json",
+		"playing.json",
+		"messages.json",
+		"tick.json",
+		"disabled_commands.json"
+	]
 }

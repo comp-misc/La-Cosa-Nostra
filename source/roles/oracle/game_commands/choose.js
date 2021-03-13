@@ -1,4 +1,4 @@
-var rs = require("../../../rolesystem/rolesystem.js")
+var rs = require("../../../rolesystem/rolesystem")
 
 module.exports = function (game, message, params) {
 	var actions = game.actions

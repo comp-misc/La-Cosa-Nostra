@@ -1,7 +1,7 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
-var getWord = require("../miscellaneous/getWord.js")
+var getWord = require("../miscellaneous/getWord")
 
 module.exports = function (actionable, game, params) {
 	var word = getWord()

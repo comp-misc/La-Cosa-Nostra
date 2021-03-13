@@ -57,7 +57,7 @@ rl.on("line", async function (msg) {
 			var concat = "../".repeat(depth + global_depth)
 
 			// Add LCN require
-			modified = 'var lcn = require("' + concat + 'source/lcn.js");\n\n' + modified
+			modified = 'var lcn = require("' + concat + 'source/lcn");\n\n' + modified
 
 			fs.writeFileSync(file, modified)
 
@@ -69,13 +69,12 @@ rl.on("line", async function (msg) {
 	process.exit()
 })
 
-function cycle(directory, accept = ".js") {
+function cycle(directory) {
 	if (!fs.existsSync(directory)) {
-		return new Array()
+		return []
 	}
-
 	var lists = fs.readdirSync(directory)
-	var ret = new Array()
+	var ret = []
 
 	lists = lists.map((x) => directory + "/" + x)
 
@@ -83,10 +82,9 @@ function cycle(directory, accept = ".js") {
 		// Recursively check
 		if (fs.lstatSync(lists[i]).isDirectory()) {
 			ret = ret.concat(cycle(lists[i]))
-		} else if (lists[i].endsWith(accept)) {
+		} else if (lists[i].endsWith(".js") || lists[i].endsWith(".ts")) {
 			ret.push(lists[i])
 		}
 	}
-
 	return ret
 }

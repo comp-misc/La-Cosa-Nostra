@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
 
@@ -7,7 +7,11 @@ module.exports = function (actionable, game, params) {
 	var target = game.getPlayerByIdentifier(actionable.to)
 	var praetor = game.getPlayerByIdentifier(actionable.from)
 
-	var pushable = { interval: game.period, successful: null, target: target.identifier }
+	var pushable = {
+		interval: game.period,
+		successful: null,
+		target: target.identifier,
+	}
 
 	if (target.hasAttribute("apostate")) {
 		pushable.successful = false

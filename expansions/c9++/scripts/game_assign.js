@@ -1,6 +1,4 @@
-var logger = process.logger
-
-var lcn = require("../../../source/lcn.js")
+var lcn = require("../../../source/lcn")
 
 var configurations = {
 	C: {
@@ -56,6 +54,7 @@ var configurations = {
 }
 
 module.exports = function (playing_config) {
+	var logger = process.logger
 	if (playing_config.roles) {
 		logger.log(2, "[C9++] Not running setup randomiser as roles have been defined.")
 

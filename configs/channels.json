@@ -1,16 +1,16 @@
 {
-  "channels": {
-    "log": "journal",
-    "voting": "journal",
-    "main": "neighbourhood",
-    "whisper-log": "note-board",
-    "roles": "game-info",
-    "signup-channel": "signup",
-    "logs": "logs",
-    "welcome-channel": "general"
-  },
+	"channels": {
+		"log": "journal",
+		"voting": "journal",
+		"main": "neighbourhood",
+		"whisper-log": "note-board",
+		"roles": "game-info",
+		"signup-channel": "signup",
+		"logs": "logs",
+		"welcome-channel": "general"
+	},
 
-  "categories": {
-    "private": "Private"
-  }
+	"categories": {
+		"private": "Private"
+	}
 }

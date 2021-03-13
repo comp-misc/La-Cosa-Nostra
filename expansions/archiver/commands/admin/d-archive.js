@@ -1,13 +1,12 @@
-var lcn = require("../../../../source/lcn.js")
+var lcn = require("../../../../source/lcn")
 var auxils = lcn.auxils
 
 var zlib = require("zlib")
 var fs = require("fs")
 var request = require("request-promise")
 
-var logger = process.logger
-
 module.exports = async function (message, params, config) {
+	var logger = process.logger
 	var client = message.client
 
 	if (params.length < 3) {
@@ -120,11 +119,19 @@ module.exports = async function (message, params, config) {
 			message_amount += output.messages.length
 
 			if (!returnable.categories.some((x) => x.id === channel.parentID)) {
-				returnable.categories.push({ id: channel.parent.id, name: channel.parent.name })
+				returnable.categories.push({
+					id: channel.parent.id,
+					name: channel.parent.name,
+				})
 			}
 
 			if (!returnable.guilds.some((x) => x.id === channel.guild.id)) {
-				var addable = { id: channel.guild.id, name: channel.guild.name, icon_url: channel.guild.iconURL, icon: null }
+				var addable = {
+					id: channel.guild.id,
+					name: channel.guild.name,
+					icon_url: channel.guild.iconURL,
+					icon: null,
+				}
 
 				if (addable.icon_url) {
 					console.log("Downloading profile picture of guild icon %s", channel.guild.id)

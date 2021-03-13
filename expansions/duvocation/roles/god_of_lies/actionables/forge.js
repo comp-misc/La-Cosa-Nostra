@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var auxils = lcn.auxils
 
@@ -11,7 +11,7 @@ module.exports = function (actionable, game, params) {
 	var p1_name = vote_from.identifier === forger.identifier ? "yourself" : vote_from.getDisplayName()
 	var p2_name = vote_to.identifier === forger.identifier ? "yourself" : vote_to.getDisplayName()
 
-	vote_from.setStatus("vote-blocked", false)
+	vote_from.setStatus("voteBlocked", false)
 
 	if (vote_from.role_identifier === "unknown_god") {
 		forger.misc.forgeries_left--
@@ -97,7 +97,7 @@ module.exports = function (actionable, game, params) {
 	// Forge the vote
 	game.toggleVote(vote_from, vote_to)
 
-	vote_from.setStatus("vote-blocked", true)
+	vote_from.setStatus("voteBlocked", true)
 
 	vote_from.misc.forgery = game.getStep()
 	vote_from.misc.forger = actionable.from

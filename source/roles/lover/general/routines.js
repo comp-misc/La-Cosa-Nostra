@@ -3,7 +3,7 @@
 
 // Function should be synchronous
 
-var auxils = require("../../../systems/auxils.js")
+var auxils = require("../../../systems/auxils")
 
 module.exports = function (player) {
 	var game = player.game

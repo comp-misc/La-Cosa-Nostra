@@ -1,4 +1,4 @@
-var expansion_config = require("../../miscellaneous/config.js")
+var expansion_config = require("../../miscellaneous/config")
 
 module.exports = async function (message, params, config) {
 	if (params.length < 2 || !["read", "write", "deny", "manage"].includes(params[0].toLowerCase())) {
@@ -13,7 +13,7 @@ module.exports = async function (message, params, config) {
 	var operator = params[0].toLowerCase()
 	var role_name = params.splice(1, Infinity).join(" ")
 
-	var guild = message.client.guilds.get(config["server-id"])
+	var guild = message.client.guilds.get(process.env["server-id"])
 
 	if (role_name.toLowerCase() === "everyone") {
 		var role = guild.roles.find((x) => x.id === guild.id)

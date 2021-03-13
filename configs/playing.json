@@ -1,12 +1,11 @@
 {
-  "playing": {
-    "players": "auto",
+	"playing": {
+		"players": "auto",
 
-    "roles": null,
+		"roles": [],
 
-    "expansions": ["test-game-21"],
-    "shuffle": true,
-    "flavour": null
-
-  }
+		"expansions": ["compmeme", "test-game-21"],
+		"shuffle": true,
+		"flavour": null
+	}
 }

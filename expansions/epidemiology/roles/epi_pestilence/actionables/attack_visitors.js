@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
 
@@ -13,7 +13,11 @@ module.exports = function (actionable, game, params) {
 
 		// Astral
 		var outcome = rs.prototypes.powerfulAttack(
-			{ from: actionable.from, to: params.visitor, priority: actionable.priority },
+			{
+				from: actionable.from,
+				to: params.visitor,
+				priority: actionable.priority,
+			},
 			game,
 			params,
 			true

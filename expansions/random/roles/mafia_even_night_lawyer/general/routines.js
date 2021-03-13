@@ -1,6 +1,6 @@
 // Routines
 // Runs every cycle
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 // Function should be synchronous
 
 var auxils = lcn.auxils

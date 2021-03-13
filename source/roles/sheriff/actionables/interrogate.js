@@ -1,4 +1,4 @@
-var rs = require("../../../rolesystem/rolesystem.js")
+var rs = require("../../../rolesystem/rolesystem")
 
 var responses = {
 	neutral: ":mag: Your target is a __Neutral__.",

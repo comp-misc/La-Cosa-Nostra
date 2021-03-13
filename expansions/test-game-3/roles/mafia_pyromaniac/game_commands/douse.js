@@ -1,6 +1,6 @@
 // Register heal
 
-var mafia = require("../../../../../source/lcn.js")
+var mafia = require("../../../../../source/lcn")
 
 var rs = mafia.rolesystem
 

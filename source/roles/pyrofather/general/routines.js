@@ -1,4 +1,4 @@
-var auxils = require("../../../systems/auxils.js")
+var auxils = require("../../../systems/auxils")
 
 // Routines
 // Runs every cycle

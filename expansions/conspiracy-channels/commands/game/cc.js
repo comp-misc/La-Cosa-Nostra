@@ -1,7 +1,7 @@
-var lcn = require("../../../../source/lcn.js")
+var lcn = require("../../../../source/lcn")
 
 var auxils = lcn.auxils
-var expansion_config = require("../../miscellaneous/config.js")
+var expansion_config = require("../../miscellaneous/config")
 
 module.exports = async function (game, message, params) {
 	// Create conspiracy channels

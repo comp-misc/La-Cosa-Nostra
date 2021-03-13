@@ -3,7 +3,7 @@ module.exports = function (player) {
 
 	var main = game.getMainChannel()
 
-	player.setStatus("lynch-proof", true)
+	player.setStatus("lynchProof", true)
 
 	player.misc.praetor_conversions = new Array()
 

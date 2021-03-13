@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
 
@@ -7,7 +7,7 @@ module.exports = function (actionable, game, params) {
 
 	var player = game.getPlayerByIdentifier(actionable.from)
 
-	player.setStatus("can-win", false)
+	player.setStatus("canWin", false)
 
 	return true
 }

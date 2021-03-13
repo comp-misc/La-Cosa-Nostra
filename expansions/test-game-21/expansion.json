@@ -9,13 +9,9 @@
 
 	"overrides": {
 		"flavours": [],
-
 		"role_win_conditions": [],
-
 		"roles": ["+test-game-21/*"],
-
 		"attributes": ["+test-game-21/*"]
 	},
-
 	"dependencies": ["forum-auxiliaries"]
 }

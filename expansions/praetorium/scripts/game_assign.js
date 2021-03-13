@@ -1,12 +1,12 @@
-var logger = process.logger
 var fs = require("fs")
 
-var lcn = require("../../../source/lcn.js")
+var lcn = require("../../../source/lcn")
 var auxils = lcn.auxils
 
 var role_table = JSON.parse(fs.readFileSync(__dirname + "/role_table.json"))
 
 module.exports = function (playing_config) {
+	var logger = process.logger
 	if (playing_config.roles) {
 		logger.log(2, "[Praetorium] Not running setup randomiser as roles have been defined.")
 
@@ -21,7 +21,10 @@ module.exports = function (playing_config) {
 	var outcome = auxils.cryptoRandom()
 	if (outcome < 0.5) {
 		// Has arsonist
-		setup.push({ identifier: "arsonist", attributes: [{ identifier: "apostate" }] })
+		setup.push({
+			identifier: "arsonist",
+			attributes: [{ identifier: "apostate" }],
+		})
 
 		// Pick from matrix
 

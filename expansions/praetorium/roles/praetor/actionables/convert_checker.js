@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
 var auxils = lcn.auxils
@@ -13,5 +13,9 @@ module.exports = function (actionable, game, params) {
 	}
 
 	// Add log
-	praetor.misc.praetor_conversions.push({ interval: game.period, successful: false, target: actionable.to })
+	praetor.misc.praetor_conversions.push({
+		interval: game.period,
+		successful: false,
+		target: actionable.to,
+	})
 }

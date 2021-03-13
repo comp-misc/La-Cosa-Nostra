@@ -3,7 +3,7 @@
 
 // Function should be synchronous
 
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var auxils = lcn.auxils
 

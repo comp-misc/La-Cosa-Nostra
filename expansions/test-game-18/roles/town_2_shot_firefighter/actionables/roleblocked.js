@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 module.exports = function (actionable, game, params) {
 	var player = game.getPlayerByIdentifier(actionable.from)

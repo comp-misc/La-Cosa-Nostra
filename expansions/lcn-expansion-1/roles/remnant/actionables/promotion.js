@@ -1,9 +1,9 @@
-var lcn = require("../../../../../source/lcn.js")
-var logger = process.logger
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	var logger = process.logger
 	// Check if XK roles left
 	var primary_left = game.exists((x) => x.role["see-mafia-chat"] && x.isAlive())
 

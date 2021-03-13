@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
 
@@ -22,7 +22,11 @@ module.exports = function (actionable, game, params) {
 	var target = game.getPlayerByIdentifier(actionable.to)
 
 	rs.prototypes.basicAttack(
-		{ from: actionable.to, to: redirect_target.identifier, priority: actionable.priority },
+		{
+			from: actionable.to,
+			to: redirect_target.identifier,
+			priority: actionable.priority,
+		},
 		game,
 		params,
 		true

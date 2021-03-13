@@ -1,8 +1,6 @@
 {
-
-  "ticks": {
-    "time": 1000,
-    "autosave-ticks": 320
-  }
-
+	"ticks": {
+		"time": 1000,
+		"autosave-ticks": 320
+	}
 }

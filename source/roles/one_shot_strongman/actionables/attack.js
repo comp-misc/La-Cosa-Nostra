@@ -1,4 +1,4 @@
-var rs = require("../../../rolesystem/rolesystem.js")
+var rs = require("../../../rolesystem/rolesystem")
 
 module.exports = function (actionable, game, params) {
 	rs.prototypes.unstoppableAttack.reason = "dealt a fatal blow by a member of the __Mafia__"

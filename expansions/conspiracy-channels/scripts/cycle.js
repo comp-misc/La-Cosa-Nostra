@@ -1,4 +1,4 @@
-var expansion_config = require("../miscellaneous/config.js")
+var expansion_config = require("../miscellaneous/config")
 
 module.exports = async function (game) {
 	var config = game.config

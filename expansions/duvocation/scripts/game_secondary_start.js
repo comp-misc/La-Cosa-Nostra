@@ -1,7 +1,7 @@
 var Discord = require("discord.js")
 
 module.exports = async function (game) {
-	var lcn = require("../../../source/lcn.js")
+	var lcn = require("../../../source/lcn")
 	var flavours = lcn.assets
 
 	var channel = game.getChannel("mafia")

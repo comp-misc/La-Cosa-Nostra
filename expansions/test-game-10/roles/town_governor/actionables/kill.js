@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn.js")
+var lcn = require("../../../../../source/lcn")
 
 var rs = lcn.rolesystem
 
@@ -11,7 +11,7 @@ module.exports = function (actionable, game, params) {
 	var private_channel = user.getPrivateChannel()
 	var target_channel = target.getPrivateChannel()
 	var main_channel = game.getMainChannel()
-	//var journal = game.getJournalChannel();
+	//var journal = game.getLogChannel();
 
 	rs.prototypes.unstoppableAttack.reason = "executed by the __Governor__"
 

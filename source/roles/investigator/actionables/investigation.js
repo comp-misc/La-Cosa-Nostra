@@ -1,7 +1,6 @@
-var rs = require("../../../rolesystem/rolesystem.js")
-var auxils = require("../../../systems/auxils.js")
+var auxils = require("../../../systems/auxils")
 
-module.exports = function (actionable, game, params) {
+module.exports = function (actionable, game) {
 	game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,

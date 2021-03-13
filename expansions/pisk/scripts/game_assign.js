@@ -1,6 +1,4 @@
-var logger = process.logger
-
-var lcn = require("../../../source/lcn.js")
+var lcn = require("../../../source/lcn")
 var auxils = lcn.auxils
 
 var town_configuration = {
@@ -57,6 +55,7 @@ var mafia_configuration = [
 var fields = Object.keys(town_configuration)
 
 module.exports = function (playing_config) {
+	var logger = process.logger
 	if (playing_config.roles) {
 		logger.log(2, "[PISK] Not running setup randomiser as roles have been defined.")
 

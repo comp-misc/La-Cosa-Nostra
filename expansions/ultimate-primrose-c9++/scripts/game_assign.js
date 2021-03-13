@@ -1,6 +1,4 @@
-var logger = process.logger
-
-var lcn = require("../../../source/lcn.js")
+var lcn = require("../../../source/lcn")
 
 var configurations = {
 	C: {
@@ -106,6 +104,7 @@ var configurations = {
 }
 
 module.exports = function (playing_config) {
+	var logger = process.logger
 	if (playing_config.roles) {
 		logger.log(2, "[Primrose C9++] Not running setup randomiser as roles have been defined.")
 
@@ -181,7 +180,11 @@ module.exports = function (playing_config) {
 
 	logger.log(2, "[Expanded Primrose C9++] Running setup: %s; rolled: %s", letters.join(""), numbers.join(", "))
 
-	var override = { roles: setup, flavour: "primrose-c9++", generated: { numbers: numbers, letters: letters } }
+	var override = {
+		roles: setup,
+		flavour: "primrose-c9++",
+		generated: { numbers: numbers, letters: letters },
+	}
 
 	return lcn.auxils.objectOverride(playing_config, override)
 }
