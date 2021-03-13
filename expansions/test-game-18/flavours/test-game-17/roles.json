@@ -1,0 +1,99 @@
+{
+
+  "mafia_1_shot_tracker": [{
+    "name": "Mafia 1-shot Tracker",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia 1-shot Tracker!\n\nAlignment: Mafia"
+  }],
+
+  "mafia_role_cop": [{
+    "name": "Mafia Role Cop",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia Role Cop!\n\nAlignment: Mafia"
+  }],
+
+  "mafia_2_shot_tracker": [{
+    "name": "Mafia 2-shot Tracker",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia 2-shot Tracker!\n\nAlignment: Mafia"
+  }],
+
+  "mafia_even_night_tracker": [{
+    "name": "Mafia Even-Night Tracker",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia Even-Night Tracker!\n\nAlignment: Mafia"
+  }],
+
+  "mafia_odd_night_tracker": [{
+    "name": "Mafia Odd-Night Tracker",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia Odd-Night Tracker!\n\nAlignment: Mafia"
+  }],
+
+  "mafia_nonconsecutive_tracker": [{
+    "name": "Mafia Non-Consecutive Tracker",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia Non-Consecutive Tracker!\n\nAlignment: Mafia"
+  }],
+
+  "town_1_shot_firefighter": [{
+    "name": "Town 1-shot Firefighter",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town 1-shot Firefighter!\n\nAlignment: Town"
+  }],
+
+  "town_2_shot_firefighter": [{
+    "name": "Town 2-shot Firefighter",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town 2-shot Firefighter!\n\nAlignment: Town"
+  }],
+
+  "town_even_night_firefighter": [{
+    "name": "Town Even-Night Firefighter",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Even-Night Firefighter!\n\nAlignment: Town"
+  }],
+
+  "town_odd_night_firefighter": [{
+    "name": "Town Odd-Night Firefighter",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Odd-Night Firefighter!\n\nAlignment: Town"
+  }],
+
+  "town_nonconsecutive_firefighter": [{
+    "name": "Town Non-Consecutive Firefighter",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Non-Consecutive Firefighter!\n\nAlignment: Town"
+  }],
+
+  "town_1_shot_vigilante": [{
+    "name": "Town 1-shot Vigilante",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town 1-shot Vigilante!\n\nAlignment: Town"
+  }],
+
+  "town_2_shot_vigilante": [{
+    "name": "Town 2-shot Vigilante",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town 2-shot Vigilante!\n\nAlignment: Town"
+  }],
+
+  "town_even_night_vigilante": [{
+    "name": "Town Even-Night Vigilante",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Even-Night Vigilante!\n\nAlignment: Town"
+  }],
+
+  "town_odd_night_vigilante": [{
+    "name": "Town Odd-Night Vigilante",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Odd-Night Vigilante!\n\nAlignment: Town"
+  }],
+
+  "town_nonconsecutive_vigilante": [{
+    "name": "Town Non-Consecutive Vigilante",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Non-Consecutive Vigilante!\n\nAlignment: Town"
+  }]
+
+}

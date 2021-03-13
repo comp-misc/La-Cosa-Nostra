@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town 2-shot Veteran.
+
+Role Abilities:
+- You can at night, twice during the game, choose to be alert. As a result of this, you will attack any player unfortunate enough to visit you.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

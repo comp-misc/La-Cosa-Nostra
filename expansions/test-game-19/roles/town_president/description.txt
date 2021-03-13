@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town President.
+
+Role Abilities:
+- As head of state you have power to override one lynch. However, you are also responsible for keeping the situation under control. If you die, all town and mafia roles with active role abilities will lose them. Everyone is informed of your existance.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

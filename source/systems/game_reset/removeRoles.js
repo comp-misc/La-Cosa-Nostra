@@ -8,9 +8,10 @@ module.exports = async function (client, config) {
   var spectator = guild.roles.find(x => x.name === config["permissions"]["spectator"]);
   var pre = guild.roles.find(x => x.name === config["permissions"]["pre"]);
   var post = guild.roles.find(x => x.name === config["permissions"]["aftermath"]);
+  var backup = guild.roles.find(x => x.name === config["permissions"]["backup"]);
 
   for (var i = 0; i < members.length; i++) {
-    await removeRole(members[i], [alive, dead, spectator, pre, post]);
+    await removeRole(members[i], [alive, dead, spectator, pre, post, backup]);
   };
 
 };

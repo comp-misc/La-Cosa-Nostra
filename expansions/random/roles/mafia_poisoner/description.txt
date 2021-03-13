@@ -1,0 +1,12 @@
+Role Description:
+
+"Welcome to _____! You are a Mafia Poisoner.
+
+Role Abilities:
+- You may each night choose to poison a player. Unless they are cured either this or the next night, they will die. They will be informed of this.
+
+Factional Abilities:
+- You are given a common mafia night chat with the other mafias.
+- You may each night use the mafia factional kill on a player.
+
+Win Condition: You win when mafia gains majority and all other threats are eliminated."

@@ -23,12 +23,30 @@ module.exports = async function (game, ended=false) {
     var message = texts.public_vote;
   };
 
+  message = message.replace("{;day}", game.getPeriod()/2);
+  message = message.replace("{;vote_info}", getVoteInfo());
   message = message.replace("{;public_votes}", getVoteList());
-  message = message.replace("{;vote_configurations}", getVoteConfiguration());
 
   await display_message.edit(format(game, message));
 
   function getVoteList () {
+
+    var players_alive = 0;
+    var players_voting = new Array();
+
+    for (var i = 0; i < roles.length; i++) {
+      if (roles[i].status.alive) {
+        players_alive++;
+      };
+    };
+
+    if (players_alive % 2 == 1) {
+      var lynch_votes = (players_alive + 1)/2
+      var nolynch_votes = (players_alive + 1)/2
+    } else {
+      var lynch_votes = (players_alive + 2)/2
+      var nolynch_votes = players_alive/2
+    };
 
     var displays = new Array();
     for (var i = 0; i < roles.length; i++) {
@@ -49,6 +67,9 @@ module.exports = async function (game, ended=false) {
 
           // Mapped by IDs
           var player = game.getPlayerByIdentifier(voting_against[j].identifier);
+
+          players_voting.push(voting_against[j].identifier)
+
           concat.push(player.getDisplayName());
 
         };
@@ -57,9 +78,40 @@ module.exports = async function (game, ended=false) {
 
         names = voting_against.length > 0 ? ": " + names : "";
 
-        displays.push("<@" + roles[i].id + "> (" + roles[i].countVotes() + ")" + names);
+        displays.push("<@" + roles[i].id + "> (" + roles[i].countVotes() + "/" + lynch_votes + ")" + names);
+      
       } else {
-        displays.push("[" + roles[i].alphabet + " - dead, **" + roles[i].getDisplayRole(false) + "**]");
+
+        if (roles[i].misc.time_of_death == undefined && game.getPeriod() % 2 == 0) {
+
+          if (roles[i].getStatus("lynch-proof")) {
+            displays.push("<@" + roles[i].id + "> (\\✖)");
+            continue;
+          };
+  
+          // Get people voting against
+          var voting_against = roles[i].votes;
+          var concat = new Array();
+  
+          // Get their display names
+          for (var j = 0; j < voting_against.length; j++) {
+  
+            // Mapped by IDs
+            var player = game.getPlayerByIdentifier(voting_against[j].identifier);
+  
+            players_voting.push(voting_against[j].identifier)
+  
+            concat.push(player.getDisplayName());
+  
+          };
+  
+          var names = auxils.pettyFormat(concat);
+  
+          names = voting_against.length > 0 ? ": " + names : "";
+  
+          displays.push("<@" + roles[i].id + "> (:x:)" + names);
+
+        };
       };
     };
 
@@ -68,13 +120,17 @@ module.exports = async function (game, ended=false) {
       var voters = game.getNoLynchVoters();
       var vote_count = game.getNoLynchVoteCount();
 
+      for (var j = 0; j < voters.length; j++) {
+        players_voting.push(voters[j]);
+      };
+
       var concat = voters.map(x => game.getPlayerByIdentifier(x).getDisplayName());
 
       var names = auxils.pettyFormat(concat);
 
       names = voters.length > 0 ? ": " + names : "";
 
-      displays.push("**No-lynch** (" + vote_count + ")" + names);
+      displays.push("No-lynch (" + vote_count + "/" + nolynch_votes + ")" + names);
 
     };
 
@@ -85,6 +141,9 @@ module.exports = async function (game, ended=false) {
       var voters = special_vote_types[i].voters;
       var vote_count = game.getSpecialVoteCount(special_vote_types[i].identifier);
 
+      for (var j = 0; j < voters.length; j++) {
+        players_voting.push(voters[j]);
+      };
       var names = auxils.pettyFormat(voters.map(x => game.getPlayerByIdentifier(x.identifier).getDisplayName()));
 
       names = voters.length > 0 ? ": " + names : "";
@@ -93,47 +152,41 @@ module.exports = async function (game, ended=false) {
 
     };
 
+    var voters = [];
+
+    for (var i = 0; i < roles.length; i++) {
+      if (roles[i].status.alive) {
+        if (!players_voting.includes(roles[i].identifier)) {
+          voters.push(roles[i].identifier)
+        };
+      };
+    };
+
+    displays.push("\nNot voting (" + voters.length + "/" + players_alive + ")");
+
     return displays.join("\n");
 
   };
 
-  function getVoteConfiguration () {
+  function getVoteInfo() {
 
-    var ret = new Array();
-    var lynch_config = config["game"]["lynch"];
+    var players_alive = 0;
 
-    if (game.getLynchesAvailable() > 1) {
-      ret.push(texts.lynchtext_available);
+    for (var i = 0; i < roles.length; i++) {
+      if (roles[i].status.alive) {
+        players_alive++;
+      };
     };
 
-    if (!lynch_config["top-voted-lynch"] || game.hammerActive()) {
-      if (lynch_config["no-lynch-option"]) {
-        ret.push(texts.lynchtext_nolynch);
-      } else {
-        ret.push(texts.lynchtext_standard);
-      };
+    if (players_alive % 2 == 1) {
+      var lynch_votes = (players_alive + 1)/2
+      var nolynch_votes = (players_alive + 1)/2
     } else {
-      ret.push(texts.lynchtext_tvl);
+      var lynch_votes = (players_alive + 2)/2
+      var nolynch_votes = players_alive/2
     };
-
-    if (game.hammerActive() && !lynch_config["top-voted-lynch"]) {
-      ret.push(texts.lynchtext_hammer);
-    };
-
-    if (game.hammerActive() && lynch_config["top-voted-lynch"]) {
-      ret.push(texts.lynchtext_hammer_tvl);
-    };
-
-    if (lynch_config["top-voted-lynch"]) {
-      if (lynch_config["tied-random"]) {
-        ret.push(texts.lynchtext_maxrandom);
-      } else {
-        ret.push(texts.lynchtext_maxnolynch);
-      };
-    };
-
-    return ret.join("\n");
-
+    
+    return "There are required **" + lynch_votes + "** votes to lynch, and **" + nolynch_votes + "** votes to no-lynch."
   };
 
 };

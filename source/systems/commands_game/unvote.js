@@ -5,7 +5,7 @@ module.exports = async function (game, message, params) {
   var config = game.config;
 
   if (!game.isDay()) {
-    await message.channel.send(":x: There is no trial during the night!");
+    await message.channel.send(":x:  There is no trial during the night!");
     return null;
   };
 
@@ -13,12 +13,12 @@ module.exports = async function (game, message, params) {
 
 
   if (!self) {
-    await message.channel.send(":x: You are not in the game!");
+    await message.channel.send(":x:  You are not in the game!");
     return null;
   };
 
   if (!self.isAlive()) {
-    await message.channel.send(":x: You have died and cannot vote!");
+    await message.channel.send(":x:  You have died and cannot vote!");
     return null;
   };
 
@@ -64,7 +64,7 @@ module.exports = async function (game, message, params) {
   };
 
   if (player.score < 0.7 && max_score.score < 0.7) {
-    await message.channel.send(":x: I cannot find that player!");
+    await message.channel.send(":x:  I cannot find that player!");
     return null;
   };
 
@@ -73,7 +73,7 @@ module.exports = async function (game, message, params) {
     player = player.player;
 
     if (!player.isVotedAgainstBy(self.identifier)) {
-      await message.channel.send(":x: You are not currently voting on **" + player.getDisplayName() + "**!");
+      await message.channel.send(":x:  You are not currently voting on **" + player.getDisplayName() + "**!");
       return null;
     };
 
@@ -84,7 +84,7 @@ module.exports = async function (game, message, params) {
     var special_vote = max_score.special_vote;
 
     if (!special_vote.voters.some(x => x.identifier === self.identifier)) {
-      await message.channel.send(":x: You are not currently voting on the **" + special_vote.name + "**!");
+      await message.channel.send(":x:  You are not currently voting on the **" + special_vote.name + "**!");
       return null;
     };
 

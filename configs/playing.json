@@ -4,7 +4,7 @@
 
     "roles": null,
 
-    "expansions": ["c9++"],
+    "expansions": ["test-game-21"],
     "shuffle": true,
     "flavour": null
 

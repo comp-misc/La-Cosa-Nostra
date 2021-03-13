@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town 2-shot Tracker.
+
+Role Abilities:
+- You can at night, twice during the game, choose to track a player to see who they visited, if anyone. You will recieve the report next morning.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

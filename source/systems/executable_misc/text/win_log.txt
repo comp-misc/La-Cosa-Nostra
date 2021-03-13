@@ -1,7 +1,13 @@
-~~                                ~~   **{;faction} WINS**   ~~                                ~~
+** **
+~~                                ~~   **Game End**   ~~                                ~~
+The game is now finished. The channels will be held open to everyone who participated.
+
+:star2:  **{;faction}**
+
 {;description}
 
 **ROLES**
 {;role_list}
 
 {@aftermath}
+~~                                                                                         ~~

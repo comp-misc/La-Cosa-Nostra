@@ -6,7 +6,7 @@ module.exports = function (actionable, game, params) {
   game.execute("visit", {visitor: actionable.from,
     target: actionable.to,
     priority: actionable.priority,
-    reason: "Investigator-investigation"});
+    reason: "-investigation"});
 
   var from = game.getPlayerByIdentifier(actionable.from);
   var target = game.getPlayerByIdentifier(actionable.to);
@@ -14,7 +14,7 @@ module.exports = function (actionable, game, params) {
   var flavour = game.getGameFlavour();
 
   // Check roles
-  if (target.flavour_role && flavour && flavour.info["investigator-sees-flavour-role"]) {
+  if (target.flavour_role && flavour && flavour.info["-sees-flavour-role"]) {
 
     var role = target.flavour_role;
     var message = ":mag: Your target's role is **" + role + "**.";

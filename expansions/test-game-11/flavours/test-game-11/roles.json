@@ -1,0 +1,57 @@
+{
+
+  "town_interrogator": [{
+    "name": "Town Interrogator",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Sheriff!\n\nAlignment: Town"
+  }],
+
+  "mafia_janitor": [{
+    "name": "Mafia Janitor",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia Janitor!\n\nAlignment: Mafia"
+  }],
+
+  "3p_serial_killer": [{
+    "name": "Serial Killer",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Serial Killer!\n\nAlignment: Third Party"
+  }],
+
+  "3p_serial_killer_im_bp": [{
+    "name": "Serial Killer with IM/BP",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Serial Killer!\n\nAlignment: Third Party"
+  }],
+
+  "3p_arsonist_im_bp": [{
+    "name": "Arsonist",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Arsonist!\n\nAlignment: Third Party"
+  }],
+
+  "3p_jester": [{
+    "name": "Jester",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Jester!\n\nAlignment: Third Party"
+  }],
+
+  "3p_survivor": [{
+    "name": "Survivor",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Survivor!\n\nAlignment: Third Party"
+  }],
+
+  "3p_haunted_jester": [{
+    "name": "Haunted Jester",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Haunted Jester!\n\nAlignment: Third Party"
+  }],
+
+  "3p_fool": [{
+    "name": "Fool",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Fool!\n\nAlignment: Third Party"
+  }]
+
+}

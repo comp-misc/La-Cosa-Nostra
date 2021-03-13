@@ -1,0 +1,29 @@
+{
+
+  "name": "Test Game 18",
+  "type": "Setup",
+  "description": "A game for testing how if different variations of a role work properly.",
+
+  "link": "None",
+
+  "authors": ["Unusual"],
+
+  "overrides": {
+
+    "flavours": [],
+
+    "role_win_conditions": [],
+
+    "roles": [
+      "+test-game-18/*"
+    ],
+
+    "attributes": [
+      "+test-game-18/*"
+    ]
+
+  },
+
+  "dependencies": ["forum-auxiliaries"]
+
+}

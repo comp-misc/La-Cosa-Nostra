@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Even-Night Doctor.
+
+Role Abilities:
+- You may on even nights choose to protect a player from a single night kill. You will also cure any poison the player may have.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

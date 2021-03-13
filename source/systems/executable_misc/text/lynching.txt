@@ -1,1 +1,1 @@
-:school: **{;voter}** has __voted against__ **{;voted}**.
+:classical_building:  **{;voter}** has __voted__ against **{;voted}**. They now have {;votes}.{;hammer_alert}

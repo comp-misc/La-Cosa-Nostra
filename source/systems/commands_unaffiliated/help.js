@@ -62,6 +62,6 @@ module.exports = async function (message, params, config) {
     ret = extended_ret.concat(["~~                                                                                                    ~~", ...ret]);
   };
 
-  await message.channel.send("**LCN Commands Index" + (extended ? " [extended]" : "") + "** (prefix `" + config["command-prefix"] + "`)\n\n" + ret.join("\n\n"));
+  await message.channel.send("**Saviet Union Mafia Commands Index" + (extended ? " [extended]" : "") + "** (prefix `" + config["command-prefix"] + "`)\n\n" + ret.join("\n\n"));
 
 };

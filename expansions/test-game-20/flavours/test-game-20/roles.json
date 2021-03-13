@@ -1,0 +1,27 @@
+{
+
+  "mafia_odd_night_roleblocker": [{
+    "name": "Mafia Odd-Night Roleblocker",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "town_odd_day_interrogator": [{
+    "name": "Town Odd-Day Interrogator",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "town_even_day_interrogator": [{
+    "name": "Town Even-Day Interrogator",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "town_neighbour": [{
+    "name": "Town Neighbour",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }]
+
+}

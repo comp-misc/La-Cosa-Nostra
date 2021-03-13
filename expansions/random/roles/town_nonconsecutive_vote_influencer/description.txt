@@ -1,0 +1,9 @@
+Role Description:
+
+"Welcome to _____! You are a Town Nonconsecutive Vote Influencer.
+
+Role Abilities:
+- You may each night choose to either block the vote of someone, or influence it to count for two.
+Your action may not be used on two nights consecutively.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

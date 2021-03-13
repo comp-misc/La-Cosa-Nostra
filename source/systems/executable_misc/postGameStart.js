@@ -29,7 +29,11 @@ module.exports = async function (game) {
 
   var whisper_intro = await post.send(format(game, config["messages"]["whisper-log"]));
 
-  await log.send(format(game, texts.opening));
+  var message = texts.opening
+  message = message.replace("{;opening_quote}", getOpeningQuoteItalic(message));
+  message = message.replace("{;day_or_night}", getDayOrNight());
+
+  await log.send(format(game, message));
 
   var main_pinnable = await main.send("**" + game.getFormattedDay() + "**    ~~                                                                                            ~~");
   var post_pinnable = await post.send("**" + game.getFormattedDay() + "**    ~~                                                                                            ~~");
@@ -61,4 +65,40 @@ module.exports = async function (game) {
 
   await game.postIntroMessages();
 
+  function getOpeningQuoteItalic (message) {
+    return message;
+
+    if (message[0] !== "*") {
+      message = "*" + message;
+    };
+    if (message[message.length-1] !== "*") {
+      message = message + "*";
+    };
+
+    for (var i = 0; i < 10; i++) {
+
+        message = message.replace("\n\n", "*ÆØÅÆØÅ*");
+    };
+
+    for (var i = 0; i < 10; i++) {
+        message = message.replace("\n", "*\n*")
+    };
+
+    for (var i = 0; i < 10; i++) {
+        message = message.replace("ÆØÅ", "\n")
+    };
+
+    return message;
+
+  };
+
+  function getDayOrNight () {
+    if (game.getPeriod() % 2 == 0) {
+      return "__daytime__.\n** **";
+
+    } else {
+
+      return "__night-time__.";
+    };
+  };
 };

@@ -1,0 +1,12 @@
+Role Description:
+
+"Welcome to _____! You are a Mafia Odd-Night Neapolitan.
+
+Role Abilities:
+- You may on odd nights choose to investigate whether someone is a vanilla townie or not. You will the next morning recieve a report in the form of «True» or «False».
+
+Factional Abilities:
+- You are given a common mafia night chat with the other mafias.
+- You may each night use the mafia factional kill on a player.
+
+Win Condition: You win when mafia gains majority and all other threats are eliminated."

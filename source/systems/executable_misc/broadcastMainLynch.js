@@ -19,7 +19,17 @@ module.exports = async function (game, roles) {
   if (roles.length === 1) {
 
     // Singular lynch
-    var lynched = formatRoleMessage(roles);
+    var lynched = [];
+
+    for (var i = 0; i < roles.length; i++) {
+
+      lynched.push("**" + roles[i].getDisplayName() + "**");
+
+      roles[i].misc.time_of_death = game.getPeriod() + 0.2;
+
+    };
+
+    var lynched = auxils.pettyFormat(lynched);
     var message = config["messages"]["singular-lynch"];
 
     await channel.send(message.replace(new RegExp("{;player}", "g"), lynched));
@@ -28,7 +38,18 @@ module.exports = async function (game, roles) {
   } else {
 
     // Plural lynch
-    var lynched = formatRoleMessage(roles);
+
+    var lynched = [];
+
+    for (var i = 0; i < roles.length; i++) {
+
+      lynched.push("**" + roles[i].getDisplayName() + "**");
+
+      roles[i].misc.time_of_death = game.getPeriod() + 0.2;
+
+    };
+
+    var lynched = auxils.pettyFormat(lynched);
     var message = config["messages"]["plural-lynch"];
 
     await channel.send(message.replace(new RegExp("{;players}", "g"), lynched));
@@ -41,6 +62,8 @@ module.exports = async function (game, roles) {
     for (var i = 0; i < roles.length; i++) {
 
       roles[i] = "**" + roles[i].getDisplayName() + "**";
+
+      roles[i].misc.time_of_death = game.getPeriod() + 0.2;
 
     };
 

@@ -12,6 +12,11 @@ module.exports = function (game, role, reason) {
   message = message.replace(new RegExp("{;reason}", "g"), reason);
   message = message.replace(new RegExp("{;role}", "g"), role.getDisplayRole());
 
+  if (role.misc.time_of_death==undefined) {
+
+      role.misc.time_of_death = game.getPeriod() + 0.1;
+  };
+
   var will = "We could not find a last will.";
 
   if (role.will !== undefined) {

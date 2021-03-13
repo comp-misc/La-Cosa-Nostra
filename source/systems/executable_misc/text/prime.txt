@@ -1,10 +1,13 @@
-~~                                ~~   **GAME PRIMED**   ~~                                ~~
-*({;current_utc_formatted})*
+~~                                ~~   **Game Initiated**   ~~                                ~~
+Welcome to {;setup_name}, a game played on Saviet Union Mafia!
 
-There {+is|alive} __{!alive}__ player{+s|alive} registered in this game:
+There are __{!alive}__ players registered in this game:
 
 {;players}
+
+{;settings}
 
 `The game will start on {!next_utc_formatted}.`
 
 {@alive}
+** **

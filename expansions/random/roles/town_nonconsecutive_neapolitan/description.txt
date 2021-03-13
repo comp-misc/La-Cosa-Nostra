@@ -1,0 +1,9 @@
+Role Description:
+
+"Welcome to _____! You are a Town Nonconsecutive Neapolitan.
+
+Role Abilities:
+- You may each night choose to investigate whether someone is a vanilla townie or not. You will the next morning recieve a report in the form of «True» or «False».
+Your action may not be used on two nights consecutively.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

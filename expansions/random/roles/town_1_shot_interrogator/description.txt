@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town 1-shot Interrogator.
+
+Role Abilities:
+- You can at day, once during the game, choose to interrogate a player. The interrogation will take place next night and closes once the day begins.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

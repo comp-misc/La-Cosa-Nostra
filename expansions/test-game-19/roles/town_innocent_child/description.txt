@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Innocent Child.
+
+Role Abilities:
+- Your role is revealed at the start of the game.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

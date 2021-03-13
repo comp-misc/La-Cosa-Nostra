@@ -3,6 +3,10 @@ var client = new Discord.Client();
 var fs = require("fs");
 
 var [logger, version, lcn] = require("./source/init.js")();
+var configModifier = require("./source/systems/game_setters/configModifier.js");
+// profanity test
+var profanity = require('./profanities/profanity.json');
+var racism = require('./profanities/racism.json')
 
 var config = lcn.config;
 
@@ -20,7 +24,7 @@ client.on("ready", function () {
     throw new Error("Invalid guild ID entered in the configuration.");
   };
 
-  logger.log(2, "%s La Cosa Nostra [%s] ready.", version["update-name"], version.version);
+  logger.log(2, "%s SUM [%s] ready.", version["update-name"], version.version);
 
   var login_time = process.uptime() * 1000;
 
@@ -45,6 +49,10 @@ client.on("ready", function () {
 });
 
 client.on("message", async function (message) {
+
+  if (message.author.bot) {
+    return;
+  }
 
   var content = message.content;
 
@@ -172,6 +180,233 @@ client.on("message", async function (message) {
   };
 
 });
+
+// join commands
+client.on("message", msg => {
+
+  if (msg.author.bot) {
+    return;
+  }
+
+  config = configModifier(config);
+
+  // backup
+  if (msg.content === "!backup") {
+    let membersWithRole = msg.guild.members.filter(member => {
+      return member.roles.find(roleName => roleName.name === config["permissions"]["pre"]);
+    }).map(member => {
+      return member.user.username;
+    })
+
+    if (msg.member.roles.find(r => r.name === config["permissions"]["alive"])) {
+      msg.channel.send(":x:  You cannot change your role midgame!")
+      return;
+    }
+
+    var guild = client.guilds.get(config["server-id"]);
+    var channel1 = guild.channels.find(x => x.name === config["channels"]["signup-channel"]);
+
+    if (msg.channel === channel1) {
+      if (msg.member.roles.find(r => r.name === config["permissions"]["backup"])) {
+        msg.channel.send(`:x:  You are already a backup!`)
+        return;
+      } else {
+
+        var role1 = msg.guild.roles.find(role => role.name === config["permissions"]["pre"]);
+        var role2 = msg.guild.roles.find(role => role.name === config["permissions"]["spectator"]);
+        var role3 = msg.guild.roles.find(role => role.name === config["permissions"]["backup"]);
+
+        if (msg.member.roles.some(role => role.name === config["permissions"]["pre"])) {
+          msg.member.removeRole(role1);
+
+          var gearij = membersWithRole.length - 1;
+
+          msg.channel.send("**" + msg.member.user.tag + "** is no longer playing the game! [" + gearij + "/" + config.playing.roles.length + "]");
+        };
+
+        if (msg.member.roles.some(role => role.name === config["permissions"]["spectator"])) {
+          msg.member.removeRole(role2);
+          msg.channel.send("**" + msg.member.user.tag + "** is no longer spectating the game!");
+        };
+
+        msg.member.addRole(role3);
+        msg.channel.send(":ballot_box_with_check:  ~~    ~~  **" + msg.member.user.tag + "** has signed up as a __backup__!");
+      }
+    } else {
+      msg.channel.send(`If you wish to become a backup, please navigate over to ` + channel1.toString() + ".");
+    }
+  }
+
+  // participant
+  if (msg.content === "!play" || msg.content === "!jgame" || msg.content === "!joingame" || msg.content === "!join") {
+    let membersWithRole = msg.guild.members.filter(member => {
+      return member.roles.find(roleName => roleName.name === config["permissions"]["pre"]);
+    }).map(member => {
+      return member.user.username;
+    })
+
+    if (msg.member.roles.find(r => r.name === config["permissions"]["alive"])) {
+      msg.channel.send(":x:  You cannot change your role midgame!")
+      return;
+    }
+
+    var guild = client.guilds.get(config["server-id"]);
+    var channel1 = guild.channels.find(x => x.name === config["channels"]["signup-channel"])
+
+    if (msg.channel === channel1) {
+      if (msg.member.roles.find(r => r.name === config["permissions"]["pre"])) {
+        msg.channel.send(`:x:  You are already in the game!`);
+        return;
+      }
+
+      var role1 = msg.guild.roles.find(role => role.name === config["permissions"]["pre"]);
+      var role2 = msg.guild.roles.find(role => role.name === config["permissions"]["spectator"]);
+      var role3 = msg.guild.roles.find(role => role.name === config["permissions"]["backup"]);
+
+      if (msg.member.roles.some(role => role.name === config["permissions"]["spectator"])) {
+        msg.member.removeRole(role2);
+        msg.channel.send("**" + msg.member.user.tag + "** is no longer spectating the game!");
+      }
+
+      if (msg.member.roles.some(role => role.name === config["permissions"]["backup"])) {
+        msg.member.removeRole(role3);
+        msg.channel.send("**" + msg.member.user.tag + "** is no longer a backup!");
+      }
+
+      msg.member.addRole(role1);
+
+      var gearij = membersWithRole.length + 1;
+
+      msg.channel.send(":white_check_mark:  ~~    ~~  **" + msg.member.user.tag + "** has signed up to __play__! [" + gearij + "/" + config.playing.roles.length + "]");
+
+    } else {
+
+      msg.channel.send(`If you wish to play the game, please navigate over to ` + channel1.toString() + ".");
+    }
+  }
+
+  // spectator
+  if (msg.content === "!spectate" || msg.content === "!spec") {
+    let membersWithRole = msg.guild.members.filter(member => {
+      return member.roles.find(roleName => roleName.name === config["permissions"]["pre"]);
+    }).map(member => {
+      return member.user.username;
+    })
+
+    if (msg.member.roles.find(r => r.name === config["permissions"]["alive"])) {
+      msg.channel.send(":x:  You cannot change your role midgame!")
+      return;
+    }
+
+    var guild = client.guilds.get(config["server-id"]);
+    var channel1 = guild.channels.find(x => x.name === config["channels"]["signup-channel"])
+
+    if (msg.channel === channel1) {
+      if (msg.member.roles.find(r => r.name === config["permissions"]["spectator"])) {
+        msg.channel.send(`:x:  You are already spectating the game!`);
+        return;
+      }
+
+      var role1 = msg.guild.roles.find(role => role.name === config["permissions"]["pre"]);
+      var role2 = msg.guild.roles.find(role => role.name === config["permissions"]["spectator"]);
+      var role3 = msg.guild.roles.find(role => role.name === config["permissions"]["backup"]);
+
+      if (msg.member.roles.some(role => role.name === config["permissions"]["pre"])) {
+        var gearij = membersWithRole.length - 1;
+
+        msg.member.removeRole(role1);
+        msg.channel.send("**" + msg.member.user.tag + "** is no longer playing the game! [" + gearij + "/" + config.playing.roles.length + "]");
+      }
+
+      if (msg.member.roles.some(role => role.name === config["permissions"]["backup"])) {
+        msg.member.removeRole(role3);
+        msg.channel.send("**" + msg.member.user.tag + "** is no longer a backup!");
+      }
+
+      msg.member.addRole(role2);
+      msg.channel.send(":crystal_ball:  ~~    ~~  **" + msg.member.user.tag + "** is choosing to __spectate__ the game!");
+
+    } else {
+      msg.channel.send(`If you wish to spectate the game, please navigate over to ` + channel1.toString() + ".");
+    }
+  }
+
+  // unspectate
+  if (msg.content === "!unspectate" || msg.content === "!unspec") {
+    let membersWithRole = msg.guild.members.filter(member => {
+      return member.roles.find(roleName => roleName.name === config["permissions"]["pre"]);
+    }).map(member => {
+      return member.user.username;
+    })
+
+    if (msg.member.roles.find(r => r.name === config["permissions"]["alive"])) {
+      msg.channel.send(":x:  You cannot change your role midgame!")
+      return;
+    }
+
+    var guild = client.guilds.get(config["server-id"]);
+    var channel1 = guild.channels.find(x => x.name === config["channels"]["signup-channel"]) 
+
+    if (msg.channel === channel1) {
+      var role1 = msg.guild.roles.find(role => role.name === config["permissions"]["spectator"]);
+      if (msg.member.roles.find(r => r.name === config["permissions"]["spectator"])) {
+        msg.member.removeRole(role1);
+        msg.channel.send("**" + msg.member.user.tag + "** is no longer spectating the game!");
+      } else {
+        msg.channel.send(":x:  You are already not spectating the game!");
+      }
+    } else {
+      msg.channel.send(`If you wish to stop spectating, please navigate over to ` + channel1.toString() + ".");
+    }
+  }
+
+  // left game
+  if (msg.content === "!leavegame"|| msg.content === "!leave" || msg.content === "!lgame") {
+    if (msg.member.roles.find(r => r.name === config["permissions"]["alive"])) {
+      msg.channel.send(":x:  You cannot leave midgame!")
+      return;
+    }
+
+    var guild = client.guilds.get(config["server-id"]);
+    var channel1 = guild.channels.find(x => x.name === config["channels"]["signup-channel"]) 
+
+    if (msg.channel === channel1) {
+      var role1 = msg.guild.roles.find(role => role.name === config["permissions"]["pre"]);
+      var role2 = msg.guild.roles.find(role => role.name === config["permissions"]["spectator"]);
+      var role3 = msg.guild.roles.find(role => role.name === config["permissions"]["backup"]);
+
+      if (!((msg.member.roles.find(r => r.name === config["permissions"]["pre"])) || (msg.member.roles.find(r => r.name === config["permissions"]["spectator"])) || (msg.member.roles.find(r => r.name === config["permissions"]["backup"])))) {
+        msg.channel.send(":x:  You cannot leave a game you were never in!");
+      };
+
+      if (msg.member.roles.find(r => r.name === config["permissions"]["pre"])) {
+
+      let membersWithRole = msg.guild.members.filter(member => {
+        return member.roles.find(roleName => roleName.name === config["permissions"]["pre"]);
+      }).map(member => {
+        return member.user.username;
+      })
+      var gearij = membersWithRole.length - 1;
+
+      msg.member.removeRole(role1);
+      msg.channel.send("**" + msg.member.user.tag + "** is no longer playing the game! [" + gearij + "/" + config.playing.roles.length + "]");
+      }
+
+      if (msg.member.roles.find(r => r.name === config["permissions"]["spectator"])) {
+        msg.member.removeRole(role2)
+        msg.channel.send("**" + msg.member.user.tag + "** is no longer spectating the game!");
+      }
+
+      if (msg.member.roles.find(r => r.name === config["permissions"]["backup"])) {
+        msg.member.removeRole(role3);
+        msg.channel.send("**" + msg.member.user.tag + "** is no longer a backup!");
+      }
+    } else {
+      msg.channel.send(`If you wish to leave the game, please navigate over to ` + channel1.toString() + ".")
+    }
+  }
+});
+// end
 
 client.on("guildMemberAdd", function (member) {
 

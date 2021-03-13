@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Jester.
+
+You have no actions.
+
+Win Condition: You win when you get lynched."
+

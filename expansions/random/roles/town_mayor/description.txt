@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Mayor.
+
+Role Abilities:
+- Your vote will count for two.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

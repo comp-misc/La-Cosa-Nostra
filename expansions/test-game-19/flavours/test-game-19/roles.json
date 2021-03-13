@@ -1,0 +1,93 @@
+{
+
+  "3p_fool": [{
+    "name": "Fool",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "3p_haunted_jester": [{
+    "name": "Haunted Jester",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "3p_jester": [{
+    "name": "Jester",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "mafia_2_shot_role_cop": [{
+    "name": "Mafia 2-shot Role Cop",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "mafia_neighbour": [{
+    "name": "Mafia Neighbour",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "mafia_odd_night_roleblocker": [{
+    "name": "Mafia Odd-Night Roleblocker",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "town_2_shot_roleblocker": [{
+    "name": "Town 2-shot Roleblocker",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_even_day_interrogator": [{
+    "name": "Town Even-Day Interrogator",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_even_day_dayshooter": [{
+    "name": "Town Even-Day Dayshooter",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_governor": [{
+    "name": "Town Governor",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_innocent_child": [{
+    "name": "Innocent Child",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_nonconsecutive_role_cop": [{
+    "name": "Town Nonconsecutive Role Cop",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_odd_day_dayshooter": [{
+    "name": "Town Odd-Day Dayshooter",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_odd_day_interrogator": [{
+    "name": "Town Odd-Day Interrogator",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_president": [{
+    "name": "Town President",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }]
+
+}

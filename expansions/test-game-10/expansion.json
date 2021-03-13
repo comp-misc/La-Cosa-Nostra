@@ -1,0 +1,29 @@
+{
+
+  "name": "Test Game 10",
+  "type": "Setup",
+  "description": "A game for testing how win conditions work and interract with each other.",
+
+  "link": "None",
+
+  "authors": ["Unusual"],
+
+  "overrides": {
+
+    "flavours": [],
+
+    "role_win_conditions": [],
+
+    "roles": [
+      "+test-game-10/*"
+    ],
+
+    "attributes": [
+      "+test-game-10/*"
+    ]
+
+  },
+
+  "dependencies": ["forum-auxiliaries"]
+
+}

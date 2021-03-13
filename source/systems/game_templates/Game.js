@@ -69,6 +69,8 @@ module.exports = class {
         continue;
       };
 
+      this.game_start_message_sent = false;
+
       game_init(this);
 
     };
@@ -202,27 +204,29 @@ module.exports = class {
 
     var messages = await executable.misc.createTrialVote(this);
 
-    var period_log = this.getPeriodLog();
+    if (!(this.getPeriod() == 1)) {
 
-    period_log.trial_vote = {messages: new Array(), channel: messages[0].channel.id};
+      var period_log = this.getPeriodLog();
 
-    for (var i = 0; i < messages.length; i++) {
-      period_log.trial_vote.messages.push(messages[i].id);
+      period_log.trial_vote = {messages: new Array(), channel: messages[0].channel.id};
+
+      for (var i = 0; i < messages.length; i++) {
+        period_log.trial_vote.messages.push(messages[i].id);
+      };
+
+      this.save();
+
+      this.instantiateTrialVoteCollector();
+
+      if (load_preemptives) {
+
+        this.loadPreemptiveVotes();
+
+      };
+
+      await this.__reloadTrialVoteMessage();
     };
-
-    this.save();
-
-    this.instantiateTrialVoteCollector();
-
-    if (load_preemptives) {
-
-      this.loadPreemptiveVotes();
-
-    };
-
-    await this.__reloadTrialVoteMessage();
-
-  }
+  };
 
   async instantiateTrialVoteCollector () {
 
@@ -823,7 +827,10 @@ module.exports = class {
 
   day () {
     // Executed at the start of daytime
-    this.createTrialVote();
+
+    if (this.game_start_message_sent == true) {
+      this.createTrialVote();
+    };
 
     if (this.config["game"]["mafia"]["night-only"]) {
       executable.misc.lockMafiaChat(this);
@@ -1301,7 +1308,13 @@ module.exports = class {
       cache.push(this.players[i].start());
     };
 
+    this.game_start_message_sent = true;
+
     executable.misc.postGameStart(this);
+
+    setTimeout(() => {
+      this.createTrialVote();
+    }, 1600);
 
     await Promise.all(cache);
 
@@ -1682,12 +1695,20 @@ module.exports = class {
     return this.getGuild().channels.find(x => x.name === this.config["channels"]["log"]);
   }
   
+  getJournalChannel () {
+    return this.getGuild().channels.find(x => x.name === this.config["channels"]["journal"]);
+  }
+  
   getMainChannel () {
     return this.getGuild().channels.find(x => x.name === this.config["channels"]["main"]);
   }
 
   getWhisperLogChannel () {
     return this.getGuild().channels.find(x => x.name === this.config["channels"]["whisper-log"]);
+  }
+  
+  getGameInfoChannel () {
+	  return this.getGuild().channels.find(x => x.name === this.config["channels"]["game-info"]);
   }
 
   getPeriod () {
@@ -1718,6 +1739,7 @@ module.exports = class {
   }
 
   postPrimeLog () {
+
     executable.misc.postPrimeMessage(this);
   }
 

@@ -1,0 +1,45 @@
+{
+
+  "town_veteran": [{
+    "name": "Town Veteran",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Veteran!\n\nAlignment: Town"
+  }],
+
+  "town_bomb": [{
+    "name": "Town Bomb",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Bomb!\n\nAlignment: Town"
+  }],
+
+  "mafia_ascetic": [{
+    "name": "Mafia Ascetic",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia Ascetic!\n\nAlignment: Mafia"
+  }],
+
+  "mafia_jailkeeper": [{
+    "name": "Mafia Jailkeeper",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia Jailkeeper!\n\nAlignment: Mafia"
+  }],
+
+  "town_vigilante": [{
+    "name": "Town Vigilante",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Vigilante!\n\nAlignment: Town"
+  }],
+
+  "town_dayshooter": [{
+    "name": "Town Dayshooter",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Dayshooter!\n\nAlignment: Town"
+  }],
+
+  "town_bulletproof": [{
+    "name": "Town Bulletproof",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Bulletproof!\n\nAlignment: Town"
+  }]
+
+}

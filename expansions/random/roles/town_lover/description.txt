@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Lover.
+
+Role Abilities:
+- You will receive a common night chat with others with the Lover role. If any of you for some reason dies, the other Lovers will commit suicide over the loss. 
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

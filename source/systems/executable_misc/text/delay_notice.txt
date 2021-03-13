@@ -1,6 +1,4 @@
-~~                                ~~   **DELAY NOTICE**   ~~                                ~~
-*({;current_utc_formatted})*
-
+~~                                ~~   **Delay Notice**   ~~                                ~~
 Due to an error, there is a delay to the next game step.
 
 We apologise for the error and inconvenience.

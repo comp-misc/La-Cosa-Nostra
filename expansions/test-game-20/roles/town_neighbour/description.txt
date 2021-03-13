@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Neighbour.
+
+Role Abilities:
+- You are given a common night chat with the other neighbours.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

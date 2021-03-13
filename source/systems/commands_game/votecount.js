@@ -11,7 +11,7 @@ module.exports = async function (game, message, params) {
   var config = game.config;
 
   if (!game.isDay()) {
-    await message.channel.send(":x: There is no trial during the night!");
+    await message.channel.send(":x:  There is no trial during the night!");
     return null;
   };
 
@@ -21,16 +21,33 @@ module.exports = async function (game, message, params) {
 
   var sendable = texts.public_votecount;
 
+  sendable = sendable.replace("{;day}", game.getPeriod()/2);
   sendable = sendable.replace("{;public_votes}", getVoteList());
-  sendable = sendable.replace("{;vote_configurations}", getVoteConfiguration());
 
   await message.channel.send(format(game, sendable));
 
   function getVoteList () {
 
     var displays = new Array();
+    var players_voting = new Array();
+
+    var players_alive = 0;
+
     for (var i = 0; i < roles.length; i++) {
       if (roles[i].status.alive) {
+        players_alive++;
+      };
+    };
+
+    if (players_alive % 2 == 1) {
+      var lynch_votes = (players_alive + 1)/2;
+    } else {
+      var lynch_votes = (players_alive + 2)/2;
+    };
+
+    for (var i = 0; i < roles.length; i++) {
+      if (roles[i].status.alive) {
+
         // Get display role
 
         // Get people voting against
@@ -46,7 +63,11 @@ module.exports = async function (game, message, params) {
 
           // Mapped by IDs
           var player = game.getPlayerByIdentifier(voting_against[j].identifier);
+          
+          players_voting.push(voting_against[j].identifier);
+
           concat.push(player.getDisplayName());
+
 
         };
 
@@ -54,14 +75,24 @@ module.exports = async function (game, message, params) {
 
         names = voting_against.length > 0 ? ": " + names : "";
 
-        displays.push("**" + roles[i].getDisplayName() + "** (" + roles[i].countVotes() + ")" + names);
+        displays.push("**" + roles[i].getDisplayName() + "** (" + roles[i].countVotes() + "/" + lynch_votes + ")" + names);
       };
     };
 
     if (no_lynch_option) {
 
+      if (players_alive % 2 == 1) {
+        var nolynch_votes = (players_alive + 1)/2;
+      } else {
+        var nolynch_votes = players_alive/2;
+      };
+
       var voters = game.getNoLynchVoters();
       var vote_count = game.getNoLynchVoteCount();
+
+      for (var j = 0; j < voters.length; j++) {
+        players_voting.push(voters[j]);
+      };
 
       var concat = voters.map(x => game.getPlayerByIdentifier(x).getDisplayName());
 
@@ -69,7 +100,7 @@ module.exports = async function (game, message, params) {
 
       names = voters.length > 0 ? ": " + names : "";
 
-      displays.push("**No-lynch** (" + vote_count + ")" + names);
+      displays.push("**No-lynch** (" + vote_count + "/" + nolynch_votes + ")" + names);
 
     };
 
@@ -80,6 +111,10 @@ module.exports = async function (game, message, params) {
       var voters = special_vote_types[i].voters;
       var vote_count = game.getSpecialVoteCount(special_vote_types[i].identifier);
 
+      for (var j = 0; j < voters.length; j++) {
+        players_voting.push(voters[j]);
+      };
+
       var names = auxils.pettyFormat(voters.map(x => game.getPlayerByIdentifier(x.identifier).getDisplayName()));
 
       names = voters.length > 0 ? ": " + names : "";
@@ -88,38 +123,19 @@ module.exports = async function (game, message, params) {
 
     };
 
-    return displays.join("\n");
+    var voters = [];
 
-  };
-
-  function getVoteConfiguration () {
-
-    var ret = new Array();
-    var lynch_config = config["game"]["lynch"];
-
-    if (game.getLynchesAvailable() > 1) {
-      ret.push(texts.lynchtext_available);
-    };
-
-    if (lynch_config["no-lynch-option"]) {
-      ret.push(texts.lynchtext_nolynch);
-    } else {
-      ret.push(texts.lynchtext_standard);
-    };
-
-    if (game.hammerActive()) {
-      ret.push(texts.lynchtext_hammer);
-    };
-
-    if (lynch_config["top-voted-lynch"]) {
-      if (lynch_config["tied-random"]) {
-        ret.push(texts.lynchtext_maxrandom);
-      } else {
-        ret.push(texts.lynchtext_maxnolynch);
+    for (var i = 0; i < roles.length; i++) {
+      if (roles[i].status.alive) {
+        if (!players_voting.includes(roles[i].identifier)) {
+          voters.push(roles[i].identifier);
+        };
       };
     };
 
-    return ret.join("\n");
+    displays.push("\nNot voting (" + voters.length + "/" + players_alive + ")");
+
+    return displays.join("\n");
 
   };
 

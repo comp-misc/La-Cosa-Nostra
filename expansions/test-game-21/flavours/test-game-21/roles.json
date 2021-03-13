@@ -1,0 +1,27 @@
+{
+
+  "mafia_odd_night_roleblocker": [{
+    "name": "Mafia Odd-Night Roleblocker",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Mafia"
+  }],
+
+  "town_lover": [{
+    "name": "Town Lover",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_innocent_child": [{
+    "name": "Innocent Child",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }],
+
+  "town_bomb": [{
+    "name": "Town Bomb",
+    "banner": "Mafia Goon.png",
+    "description": "Alignment: Town"
+  }]
+
+}

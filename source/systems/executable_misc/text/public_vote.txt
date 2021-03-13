@@ -1,6 +1,8 @@
-**{!game_chronos} TRIAL**
+~~                                ~~   **Day {;day}**   ~~                                ~~
+It is now daytime. There are __{!alive}__ players alive.
+
+{;vote_info}
 
 {;public_votes}
 
-{;vote_configurations}
-*React on the corresponding alphabet below to vote.*
+`{!game_chronos_next} will begin on {!next_utc_formatted}.`

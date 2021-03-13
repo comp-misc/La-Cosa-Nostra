@@ -1,0 +1,10 @@
+Role Description:
+
+"Welcome to _____! You are an Arsonist.
+
+Role Abilities:
+- You may each night choose to either douse a player, or to ignite and kill all the doused players.
+- At the beginning of the game, you may select either a one-use bulletproof vest or investigative immunity.
+
+Win Condition: You win when you are the last player alive, or that is inevitable."
+

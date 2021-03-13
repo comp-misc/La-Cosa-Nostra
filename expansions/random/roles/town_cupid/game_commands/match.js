@@ -1,0 +1,81 @@
+// Register heal
+
+var lcn = require("../../../../../source/lcn.js")
+
+var rs = lcn.rolesystem;
+
+module.exports = function (game, message, params) {
+
+  var actions = game.actions;
+  var config = game.config;
+
+  // Run checks, etc
+
+  var from = game.getPlayerById(message.author.id);
+
+  if (from.misc.cupid_matches < 1) {
+    message.channel.send(":x:  You have already used up your match.");
+    return null;
+  };
+
+  if (params[0] === undefined) {
+    message.channel.send(":x:  Wrong syntax! Please use `" + config["command-prefix"] + "mark <alphabet/name/nobody> <alphabet/name>` instead!");
+    return null;
+  };
+
+  var one = game.getPlayerMatch(params[0]);
+
+  if (one.score < 0.7 || params[0].toLowerCase() === "nobody") {
+
+    actions.delete(x => x.from === from.identifier && x.identifier === "town_cupid/match");
+
+    message.channel.send(":bow_and_arrow:  You have now selected to not match anyone tonight.");
+    return null;
+  };
+
+  one = one.player;
+
+  if (params[1] === undefined) {
+    message.channel.send(":x:  Wrong syntax! Please use `" + config["command-prefix"] + "match <alphabet/name/nobody> <alphabet/name>` instead!");
+    return null;
+  };
+
+  var two = game.getPlayerMatch(params[1]);
+
+  if (two.score < 0.7) {
+    message.channel.send(":x:  Wrong syntax! Please use `" + config["command-prefix"] + "match <alphabet/name/nobody> <alphabet/name>` instead!");
+    return null;
+  };
+
+  two = two.player;
+
+  if (!one.isAlive() || !two.isAlive()) {
+    message.channel.send(":x:  Both targets have to be alive!");
+    return null;
+  };
+
+  if (one.identifier === two.identifier) {
+    message.channel.send(":x:  Both targets cannot be the same player!");
+    return null;
+  };
+
+  actions.delete(x => x.from === from.identifier && x.identifier === "town_cupid/match");
+
+  game.addAction("town_cupid/match", ["cycle"], {
+    name: "Cupid-match",
+    expiry: 1,
+    from: message.author.id,
+    to: one.identifier,
+    target: two.identifier
+  });
+
+  message.channel.send(":bow_and_arrow:  You have now selected to match **" + ((one.identifier === from.identifier) ? "yourself" : one.getDisplayName()) + "** with **" + ((two.identifier === from.identifier) ? "yourself" : two.getDisplayName()) + "** tonight.");
+
+};
+
+module.exports.ALLOW_NONSPECIFIC = false;
+module.exports.PRIVATE_ONLY = true;
+module.exports.DEAD_CANNOT_USE = true;
+module.exports.ALIVE_CANNOT_USE = false;
+module.exports.DISALLOW_DAY = true;
+module.exports.DISALLOW_NIGHT = false;

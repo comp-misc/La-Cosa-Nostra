@@ -7,15 +7,15 @@ module.exports = async function (game, message, params) {
   var ratio = config["game"]["fast-forwarding"]["ratio"];
 
   if (!config["game"]["fast-forwarding"]["allow"] || ratio <= 0 || ratio > 1) {
-    await message.channel.send(":x: Fast forwarding is disabled in this game!");
+    await message.channel.send(":x:  Fast forwarding is disabled in this game!");
     return null;
   };
 
   if (game.isDay() && !config["game"]["fast-forwarding"]["day"]) {
-    await message.channel.send(":x: Fast forwarding is disabled during the day phase.");
+    await message.channel.send(":x:  Fast forwarding is disabled during the day phase.");
     return null;
   } else if (!game.isDay() && !config["game"]["fast-forwarding"]["night"]) {
-    await message.channel.send(":x: Fast forwarding is disabled during the night phase.");
+    await message.channel.send(":x:  Fast forwarding is disabled during the night phase.");
     return null;
   };
 
@@ -27,18 +27,18 @@ module.exports = async function (game, message, params) {
 
   // Check existent
   if (player === null) {
-    await message.channel.send(":x: You are not in the game!");
+    await message.channel.send(":x:  You are not in the game!");
     return null;
   };
 
   if (!player.status.alive) {
-    await message.channel.send(":x: Dead people may not vote to skip ahead with the time!");
+    await message.channel.send(":x:  Dead people may not vote to skip ahead with the time!");
     return null;
   };
 
   // Check private channel
   if (player.channel.id !== message.channel.id) {
-    await message.channel.send(":x: You cannot use that command here!");
+    await message.channel.send(":x:  You cannot use that command here!");
     return null;
   };
 
@@ -53,14 +53,14 @@ module.exports = async function (game, message, params) {
     if (!fast_forwarded) {
 
       game.addFastForwardVote(identifier);
-      await message.channel.send(":fast_forward: You have __voted to fast forward__ **" + game.getFormattedDay() + "**.\n\n*[__" + percentage + "%__ of all players have to vote for the game to be fast forwarded.]*");
+      await message.channel.send(":fast_forward:  You have __selected__ to fast forward__ **" + game.getFormattedDay() + "**.\n\n*[__" + percentage + "%__ of all players have to vote for the game to be fast forwarded.]*");
 
       game.checkFastForward();
 
     } else {
 
       game.removeFastForwardVote(identifier);
-      await message.channel.send(":play_pause: You have __revoked__ your vote to fast forward **" + game.getFormattedDay() + "**.\n\n*[__" + percentage + "%__ of all players have to vote for the game to be fast forwarded.]*");
+      await message.channel.send(":play_pause:  You have __retracted__ your vote to fast forward **" + game.getFormattedDay() + "**.\n\n*[__" + percentage + "%__ of all players have to vote for the game to be fast forwarded.]*");
 
     };
 

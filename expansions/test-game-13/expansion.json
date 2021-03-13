@@ -1,0 +1,29 @@
+{
+
+  "name": "Test Game 13",
+  "type": "Setup",
+  "description": "A game for testing how win conditions work and interract with each other.",
+
+  "link": "None",
+
+  "authors": ["Unusual"],
+
+  "overrides": {
+
+    "flavours": [],
+
+    "role_win_conditions": [],
+
+    "roles": [
+      "+test-game-13/*"
+    ],
+
+    "attributes": [
+      "+test-game-13/*"
+    ]
+
+  },
+
+  "dependencies": ["forum-auxiliaries"]
+
+}

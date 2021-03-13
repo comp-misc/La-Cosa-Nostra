@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Lazy Tracker.
+
+Role Abilities:
+- You may each night choose to track a player to see whether they were visiting someone or not. You will recieve the report next morning.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

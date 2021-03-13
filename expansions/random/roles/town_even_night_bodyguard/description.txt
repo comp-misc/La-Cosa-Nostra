@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Even-Night Bodyguard.
+
+Role Abilities:
+- You may on even nights choose to guard a player. If they are attempted killed that night, you will sacrifice yourself so they can survive.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

@@ -1,0 +1,12 @@
+Role Description:
+
+"Welcome to _____! You are a Mafia 1-shot Roleblocker.
+
+Role Abilities:
+- You can at night, once during the game, choose to roleblock a player. You are are also immune to all sorts of roleblocks.
+
+Factional Abilities:
+- You are given a common mafia night chat with the other mafias.
+- You may each night use the mafia factional kill on a player.
+
+Win Condition: You win when mafia gains majority and all other threats are eliminated."

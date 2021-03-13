@@ -1,0 +1,11 @@
+Role Description:
+
+"Welcome to _____! You are a Mafia Traitor.
+
+Role Abilities:
+- You have no role abilities.
+
+Factional Abilities:
+- If all existing mafias dies, you will be promoted to a mafia goon.
+
+Win Condition: You win when mafia gains majority and all other threats are eliminated."

@@ -1,0 +1,13 @@
+Role Description:
+
+"Welcome to _____! You are a Mafia Nonconsecutive Janitor.
+
+Role Abilities:
+- You may each night choose to clean a player. As a result of this, if the player dies during the night, their role will be indistinguishable and therefore not revealed.
+Your action may not be used on two nights consecutively.
+
+Factional Abilities:
+- You are given a common mafia night chat with the other mafias.
+- You may each night use the mafia factional kill on a player.
+
+Win Condition: You win when mafia gains majority and all other threats are eliminated."

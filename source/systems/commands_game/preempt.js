@@ -5,31 +5,31 @@ module.exports = async function (game, message, params) {
   var config = game.config;
 
   if (!config["game"]["allow-pre-emptive-votes"]) {
-    await message.channel.send(":x: Pre-emptive votes are disabled in this game.");
+    await message.channel.send(":x:  Pre-emptive votes are disabled in this game.");
     return null;
   };
 
   var player = game.getPlayerById(message.author.id);
 
   if (!player.isAlive()) {
-    await message.channel.send(":x: You cannot pre-empt votes when you are dead!");
+    await message.channel.send(":x:  You cannot pre-empt votes when you are dead!");
     return null;
   };
 
   // Check private channel
   if (player.channel.id !== message.channel.id) {
-    await message.channel.send(":x: You cannot use that command here!");
+    await message.channel.send(":x:  You cannot use that command here!");
     return null;
   };
 
   // Allows players to pre-empt their votes before the day
   if (game.isDay()) {
-    await message.channel.send(":x: You may only pre-empt votes during nighttime!");
+    await message.channel.send(":x:  You may only pre-empt votes during nighttime!");
     return null;
   };
 
   if (params.length < 1) {
-    await message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "preempt <alphabet/name/\"clear\"/\"list\"> [alphabet/name]...` instead!");
+    await message.channel.send(":x:  Wrong syntax! Use `" + config["command-prefix"] + "preempt <alphabet/name/\"clear\"/\"list\"> [alphabet/name]...` instead!");
     return null;
   };
 
@@ -40,7 +40,7 @@ module.exports = async function (game, message, params) {
     var names = new Array();
 
     if (votes.length < 1) {
-      await message.channel.send(":open_file_folder: No pre-emptive votes set.\n\nUse `" + config["command-prefix"] + "preempt <alphabet/name> [alphabet/name]...` to set it!");
+      await message.channel.send(":open_file_folder:  No pre-emptive votes set.\n\nUse `" + config["command-prefix"] + "preempt <alphabet/name> [alphabet/name]...` to set it!");
       return null;
     };
 
@@ -48,7 +48,7 @@ module.exports = async function (game, message, params) {
       names.push((i + 1) + ". " + game.getPlayerByIdentifier(votes[i]).getDisplayName());
     };
 
-    await message.channel.send(":open_file_folder: Current pre-emptive votes:\n```fix\n" + names.join("\n") + "```\n\nUse `" + config["command-prefix"] + "preempt <alphabet/name> [alphabet/name]...` to change it!");
+    await message.channel.send(":open_file_folder:  Current pre-emptive votes:\n```fix\n" + names.join("\n") + "```\n\nUse `" + config["command-prefix"] + "preempt <alphabet/name> [alphabet/name]...` to change it!");
 
     return null;
   };
@@ -56,7 +56,7 @@ module.exports = async function (game, message, params) {
   player.clearPreemptiveVotes();
 
   if (params[0].toLowerCase() === "clear") {
-    await message.channel.send(":file_folder: Successfully cleared all pre-emptive votes.");
+    await message.channel.send(":file_folder:  Successfully cleared all pre-emptive votes.");
     return null;
   };
 
@@ -85,7 +85,7 @@ module.exports = async function (game, message, params) {
 
   if (fails.length > 0) {
     // Print failed message
-    await message.channel.send(":x: I cannot not recognise the player" + auxils.vocab("s", fails.length) + " " + auxils.pettyFormat(fails) + ".");
+    await message.channel.send(":x:  I cannot not recognise the player" + auxils.vocab("s", fails.length) + " " + auxils.pettyFormat(fails) + ".");
     return null;
   };
 
@@ -96,7 +96,7 @@ module.exports = async function (game, message, params) {
       player.addPreemptiveVote(passed_identifiers[i]);
     };
 
-    await message.channel.send(":file_folder: Set the following pre-emptive votes:\n```fix\n" + passed_names.join("\n") + "```\n**Notice**: these votes will be executed and cleared immediately once the trial starts.");
+    await message.channel.send(":file_folder:  Set the following pre-emptive votes:\n```fix\n" + passed_names.join("\n") + "```\n**Notice**: these votes will be executed and cleared immediately once the trial starts.");
 
   };
 

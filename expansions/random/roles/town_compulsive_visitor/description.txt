@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Compulsive Visitor.
+
+Role Abilities:
+- You are forced to each night visit a player. The ability does nothing. If you do not choose a target, one will be selected at random.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

@@ -1,0 +1,39 @@
+{
+
+  "town_backup": [{
+    "name": "Town Backup-Cop",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Backup-Cop!\n\nAlignment: Town"
+  }],
+
+  "town_sheriff_cop": [{
+    "name": "Town Sheriff",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Sheriff!\n\nAlignment: Town"
+  }],
+
+  "town_alignment_cop": [{
+    "name": "Town Alignment Cop",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Alignment Cop!\n\nAlignment: Town"
+  }],
+
+  "town_role_cop": [{
+    "name": "Town Role Cop",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Role Cop!\n\nAlignment: Town"
+  }],
+
+  "town_neapolitan": [{
+    "name": "Town Neapolitan",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Town Neapolitan!\n\nAlignment: Town"
+  }],
+
+  "mafia_cop_role_cop": [{
+    "name": "Mafia Role and Alignment Cop",
+    "banner": "Mafia Goon.png",
+    "description": "You are a Mafia Role and Alignment Cop!\n\nAlignment: Third Party"
+  }]
+  
+}

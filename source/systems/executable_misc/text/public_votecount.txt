@@ -1,5 +1,3 @@
-**{!game_chronos} TRIAL VOTE COUNT**
+**Day {;day}  -  Current Vote Count**
 
 {;public_votes}
-
-Tallied at **{!now_utc}**.

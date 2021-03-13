@@ -103,9 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#VSCode
-.vscode
-
 # OSX
 .DS_Store
 
@@ -119,3 +116,4 @@ self/
 _+*
 meta/
 log.txt
+node_modules

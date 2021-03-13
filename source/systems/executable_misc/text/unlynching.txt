@@ -1,1 +1,1 @@
-:newspaper: **{;voter}** has __revoked__ their vote against **{;voted}**.
+:scroll:  **{;voter}** has __retracted__ their vote against **{;voted}**.

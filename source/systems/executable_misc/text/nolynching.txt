@@ -1,1 +1,1 @@
-:school: **{;voter}** has __voted__ for a **no-lynch**.
+:classical_building:  **{;voter}** has __voted__ for a **no-lynch**. It now has {;votes}.{;hammer_alert}

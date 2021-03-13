@@ -1,0 +1,9 @@
+Role Description:
+
+"Welcome to _____! You are a Town Nonconsecutive Lazy Watcher.
+
+Role Abilities:
+- You may each night choose to watch a player to see whether they were visited by someone or not. You will recieve the report next morning.
+Your action may not be used on two nights consecutively.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

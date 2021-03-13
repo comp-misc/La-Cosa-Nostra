@@ -6,27 +6,39 @@ var win_conditions = require("../win_conditions.js");
 
 var Discord = require("discord.js");
 
-var ret = new Object();
-
-// Categorise
-for (var key in role_info) {
-
-  var role = role_info[key];
-  var info = role.role;
-
-  if (!ret[info.alignment]) {
-    ret[info.alignment] = new Object();
-  };
-
-  if (!ret[info.alignment][info.class]) {
-    ret[info.alignment][info.class] = new Array();
-  };
-
-  ret[info.alignment][info.class].push({id: key, name: info["role-name"]});
-
-};
-
 module.exports = async function (message, params, config) {
+  
+  // Categorise
+
+  var ret = new Object();
+
+  for (var key in role_info) {
+
+    if (config["playing"]["expansions"].includes("the-butterfly-effect")) {
+
+      var setup = ["town_citizen","recruitable_citizen","town_bulletproof","recruitable_bulletproof","mafia_team_1_bulletproof","mafia_team_2_bulletproof","town_neighbour","recruitable_neighbour","town_lazy_tracker","recruitable_lazy_tracker","town_tracker","recruitable_tracker","town_watcher","recruitable_watcher","town_vanilla_cop","recruitable_vanilla_cop","town_role_cop","recruitable_role_cop","mafia_team_1_alignment_cop","mafia_team_2_alignment_cop","town_messenger","recruitable_messenger","town_roleblocker","recruitable_roleblocker","town_jailkeeper","recruitable_jailkeeper","patient_zero"]
+
+      if (!(setup.includes(key))) {
+        continue;
+      };
+    };
+  
+    var role = role_info[key];
+    var info = role.role;
+  
+    if (!ret[info.alignment]) {
+      ret[info.alignment] = new Object();
+    };
+  
+    if (!ret[info.alignment][info.class]) {
+      ret[info.alignment][info.class] = new Array();
+    };
+  
+    ret[info.alignment][info.class].push({id: key, name: info["role-name"]});
+  
+  };
+
+  var guild = message.client.guilds.get(config["server-id"]);
 
   var default_flavour = config["playing"]["flavour"];
 
@@ -80,18 +92,43 @@ module.exports = async function (message, params, config) {
 
     };
 
-    sendable += "\n\n[" + Object.keys(role_info).length + " roles loaded]";
+    if (config["playing"]["expansions"].includes("the-butterfly-effect")) {
 
-    sendable = "```ini" + sendable + "```\n:exclamation: To get more information on a particular role, enter `" + config["command-prefix"] + "role [info/desc/card] <role name>`."
+      var msg = "Setup Info:\n```ini\n[town]\nCitizen, Bulletproof, Neighbour, Lazy Tracker, Tracker, Watcher, Vanilla Cop, Role Cop, Roleblocker, Jailkeeper, Messenger\n\n[mafia team 1]\nBulletproof, Alignment Cop\n\n[mafia team 2]\nBulletproof, Alignment Cop\n\n[recruitable]\nCitizen, Bulletproof, Neighbour, Lazy Tracker, Tracker, Watcher, Vanilla Cop, Role Cop, Roleblocker, Jailkeeper, Messenger\n\n[evil]\nPatient Zero\n\n[27 roles loaded]\n```\n:exclamation: To get more information on a particular role, enter `" + config["command-prefix"] + "role [info/desc/card] <role>`."
 
-    await message.channel.send(sendable);
+      message.channel.send(msg);
+      return null;
 
-    return null;
+    } else {
+
+      sendable += "\n\n[" + Object.keys(role_info).length + " roles loaded]";
+
+      sendable = "```ini" + sendable + "```\n:exclamation: To get more information on a particular role, enter `" + config["command-prefix"] + "role [info/desc/card] <role name>`."
+
+      if (sendable.length < 2000) {
+      
+        message.channel.send(sendable);
+      } else {
+        var channel1 = guild.channels.find(x => x.name === config["channels"]["roles"])
+        message.channel.send(":information_source:  The role list length exceeds the characted limit. Refer to the role list provided in " + channel1.toString() + " instead.");
+      }
+
+      return null;
+    };
 
   };
 
   var roles = new Array();
   for (var key in role_info) {
+
+    if (config["playing"]["expansions"].includes("the-butterfly-effect")) {
+
+      var setup = ["town_citizen","recruitable_citizen","town_bulletproof","recruitable_bulletproof","mafia_team_1_bulletproof","mafia_team_2_bulletproof","town_neighbour","recruitable_neighbour","town_lazy_tracker","recruitable_lazy_tracker","town_tracker","recruitable_tracker","town_watcher","recruitable_watcher","town_vanilla_cop","recruitable_vanilla_cop","town_role_cop","recruitable_role_cop","mafia_team_1_alignment_cop","mafia_team_2_alignment_cop","town_messenger","recruitable_messenger","town_roleblocker","recruitable_roleblocker","town_jailkeeper","recruitable_jailkeeper","patient_zero"]
+
+      if (!(setup.includes(key))) {
+        continue;
+      };
+    };
 
     var role = role_info[key];
 

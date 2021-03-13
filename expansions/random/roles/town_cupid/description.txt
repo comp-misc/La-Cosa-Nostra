@@ -1,0 +1,14 @@
+Role Description:
+
+"Welcome to _____! You are a Town Cupid.
+
+Role Abilities:
+- You can at night, once during the game, choose to match two players. The matched players will receive a common night chat. If for some reason one of the matched players dies, the other will commit suicide over the loss. 
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."
+
+----
+
+Notes: 
+
+1. Can self target.

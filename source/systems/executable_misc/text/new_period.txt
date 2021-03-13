@@ -1,12 +1,5 @@
-~~                                ~~   **{!game_chronos}**   ~~                                ~~
-*({!utc_formatted})*
-
-It is now {!cycle}. There {+is|alive} __{!alive}__ player{+s|alive} alive.
-
-**A summary of __{!game_chronos_last}__'s events:**
+~~                                ~~   **{;game_chronos}**   ~~                                ~~
+{;short_quote}
 
 {;summary}
-
-`{!game_chronos_next} will begin on {!next_utc_formatted}.`
-
-{@alive}
+{;alive_tag}

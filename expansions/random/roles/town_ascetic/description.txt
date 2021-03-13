@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Ascetic.
+
+Role Abilities:
+- You are immune to all actions except for kills.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

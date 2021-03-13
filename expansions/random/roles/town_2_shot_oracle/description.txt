@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town 2-shot Oracle.
+
+Role Abilities:
+- You can at night, twice during the game, choose to select a player. If you die, the role of your last selected player is revealed.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

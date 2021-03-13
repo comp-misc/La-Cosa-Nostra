@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Miller.
+
+Role Abilities:
+- You will appear as «Anti-Town» when visited by an alignment cop.
+
+Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

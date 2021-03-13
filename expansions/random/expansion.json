@@ -1,0 +1,29 @@
+{
+
+  "name": "Random",
+  "type": "Setup",
+  "description": "The first new Saviet Union Mafia- made default setup.",
+
+  "link": "None",
+
+  "authors": ["Unusual"],
+
+  "overrides": {
+
+    "flavours": [],
+
+    "role_win_conditions": [],
+
+    "roles": [
+      "+random/*"
+    ],
+
+    "attributes": [
+      "+random/*"
+    ]
+
+  },
+
+  "dependencies": ["forum-auxiliaries"]
+
+}

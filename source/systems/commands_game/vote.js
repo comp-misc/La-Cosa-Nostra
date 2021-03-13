@@ -80,7 +80,24 @@ module.exports = async function (game, message, params) {
   };
 
   if (result === false) {
-    await message.channel.send(":x: You have used up all your votes for the day.");
+    // reverts the vote and passes the vote onto the other player
+    var voted = game.getVotesBy(self.identifier);
+
+    for (var i = 0; i < voted.length; i++) {
+      game.toggleVote(self, voted[i]);
+    };
+
+    if (game.isVotingNoLynch(self.identifier)) {
+      game.toggleVote(self, "nl");
+    };
+
+    for (var i = 0; i < special_vote_types.length; i++) {
+      if (special_vote_types[i].voters.some(x => x.identifier === self.identifier)) {
+        game.toggleVote(self, special_vote_types[i].identifier, true);
+      };
+    };
+
+    game.toggleVote(self, player);
   } else if (!result) {
     await message.channel.send(":x: You cannot vote on that option right now.");
   };

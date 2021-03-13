@@ -6,6 +6,7 @@
     "spectator": "Spectator",
     "aftermath": "Season Player",
     "pre": "Participant",
+    "backup": "Backup",
     "notify": "Notify"
   }
 }
