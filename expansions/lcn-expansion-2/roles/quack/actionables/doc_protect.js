@@ -1,34 +1,35 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
-  rs.prototypes.powerfulDefense(...arguments);
-  var poisoned = rs.prototypes.removePoison(...arguments);
+	rs.prototypes.powerfulDefense(...arguments)
+	var poisoned = rs.prototypes.removePoison(...arguments)
 
-  game.execute("visit", {visitor: actionable.from,
-    target: actionable.to,
-    priority: actionable.priority,
-    reason: "quack-visit"});
+	game.execute("visit", {
+		visitor: actionable.from,
+		target: actionable.to,
+		priority: actionable.priority,
+		reason: "quack-visit",
+	})
 
-  var from = game.getPlayerByIdentifier(actionable.from);
-  var to = game.getPlayerByIdentifier(actionable.to);
+	var from = game.getPlayerByIdentifier(actionable.from)
+	var to = game.getPlayerByIdentifier(actionable.to)
 
-  if (poisoned) {
-    game.addMessage(from, ":exclamation: You cured your target of poison!");
+	if (poisoned) {
+		game.addMessage(from, ":exclamation: You cured your target of poison!")
 
-    game.addMessage(to, ":exclamation: You were cured of poison!");
-  };
+		game.addMessage(to, ":exclamation: You were cured of poison!")
+	}
 
-  // Add message
-  game.addAction("quack/prot_message", ["attacked"], {
-    name: "Doc-prot-success-message",
-    from: actionable.from,
-    to: actionable.to,
-    expiry: 1,
-    priority: 10
-  });
+	// Add message
+	game.addAction("quack/prot_message", ["attacked"], {
+		name: "Doc-prot-success-message",
+		from: actionable.from,
+		to: actionable.to,
+		expiry: 1,
+		priority: 10,
+	})
+}
 
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

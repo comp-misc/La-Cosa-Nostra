@@ -1,18 +1,15 @@
 {
+	"name": "Hide",
 
-  "name": "Hide",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Protection"},
-      {"name": "Command", "description": "hide <on/off>"},
-      {"name": "Description", "description": "Stops all actions onto the user for one night."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Protection" },
+			{ "name": "Command", "description": "hide <on/off>" },
+			{ "name": "Description", "description": "Stops all actions onto the user for one night." }
+		]
+	}
 }

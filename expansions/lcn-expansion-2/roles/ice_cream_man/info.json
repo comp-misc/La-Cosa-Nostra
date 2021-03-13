@@ -1,11 +1,7 @@
 {
+	"thumbnail": null,
 
-  "thumbnail": null,
+	"abilities": ["Check a player every night to determine if they are a vanilla townie"],
 
-  "abilities": [
-    "Check a player every night to determine if they are a vanilla townie"
-  ],
-
-  "attributes": []
-
+	"attributes": []
 }

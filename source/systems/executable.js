@@ -1,3 +1,3 @@
-var reader = require("./__reader.js");
+var reader = require("./__reader.js")
 
-module.exports = reader("executable_", ".js", __dirname);
+module.exports = reader("executable_", ".js", __dirname)

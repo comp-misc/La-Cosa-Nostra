@@ -1,53 +1,47 @@
 {
+	"name": "The Anarchy of Sol",
+	"type": "Setup",
+	"description": "The Solar System has descended into anarchy. Originally meant to be a closed setup, this game stretched the limits of what the LCN bot was capable of.",
 
-  "name": "The Anarchy of Sol",
-  "type": "Setup",
-  "description": "The Solar System has descended into anarchy. Originally meant to be a closed setup, this game stretched the limits of what the LCN bot was capable of.",
+	"link": null,
 
-  "link": null,
+	"authors": ["ChocoParrot"],
 
-  "authors": ["ChocoParrot"],
+	"overrides": {
+		"flavours": ["+the-anarchy-of-sol/*"],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [
-      "+the-anarchy-of-sol/*"
-    ],
+		"roles": [
+			"-lcn/*",
+			"*/godfather",
+			"*/mafioso",
+			"*/toxicologist",
+			"*/janitor",
+			"*/consigliere",
+			"*/vagrant",
+			"*/one_shot_strongman",
+			"*/lover",
+			"*/sheriff",
+			"*/investigator",
+			"*/doctor",
+			"*/one_shot_vigilante",
+			"*/escort",
+			"*/tracker",
+			"*/lookout",
+			"*/driver",
+			"*/deputy",
+			"*/marshal",
+			"*/influencer",
+			"*/mailman",
+			"*/revolutionary",
+			"*/survivor",
+			"*/jester",
+			"*/jack_of_all_trades"
+		],
 
-    "role_win_conditions": [],
+		"attributes": []
+	},
 
-    "roles": [
-      "-lcn/*",
-      "*/godfather",
-      "*/mafioso",
-      "*/toxicologist",
-      "*/janitor",
-      "*/consigliere",
-      "*/vagrant",
-      "*/one_shot_strongman",
-      "*/lover",
-      "*/sheriff",
-      "*/investigator",
-      "*/doctor",
-      "*/one_shot_vigilante",
-      "*/escort",
-      "*/tracker",
-      "*/lookout",
-      "*/driver",
-      "*/deputy",
-      "*/marshal",
-      "*/influencer",
-      "*/mailman",
-      "*/revolutionary",
-      "*/survivor",
-      "*/jester",
-      "*/jack_of_all_trades"
-    ],
-
-    "attributes": []
-
-  },
-
-  "dependencies": ["lcn-expansion-1"]
-
+	"dependencies": ["lcn-expansion-1"]
 }

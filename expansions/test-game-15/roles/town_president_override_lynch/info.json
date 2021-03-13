@@ -1,8 +1,7 @@
 {
+	"thumbnail": "",
 
-  "thumbnail": "",
+	"abilities": ["Kill a player once anytime during the day, overriding the lynch and ending the day."],
 
-  "abilities": ["Kill a player once anytime during the day, overriding the lynch and ending the day."],
-
-  "attributes": [""]
+	"attributes": [""]
 }

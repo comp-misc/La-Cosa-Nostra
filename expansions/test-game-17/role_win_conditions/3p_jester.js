@@ -1,32 +1,31 @@
 module.exports = function (game) {
+	var jesters = game.findAll(
+		(x) => x.role_identifier === "3p_jester" && !x.isAlive() && x.misc.jester_lynched === true && !x.hasWon()
+	)
 
-  var jesters = game.findAll(x => x.role_identifier === "3p_jester" && !x.isAlive() && x.misc.jester_lynched === true && !x.hasWon());
+	if (jesters.length > 0) {
+		var winners = jesters.filter((x) => x.canWin())
 
-  if (jesters.length > 0) {
+		game.setWins(winners)
+		return true
+	}
 
-    var winners = jesters.filter(x => x.canWin());
+	return false
+}
 
-    game.setWins(winners);
-    return true;
-  };
+module.exports.STOP_GAME = false
+module.exports.STOP_CHECKS = false
 
-  return false;
+module.exports.FACTIONAL = false
 
-};
-
-module.exports.STOP_GAME = false;
-module.exports.STOP_CHECKS = false;
-
-module.exports.FACTIONAL = false;
-
-module.exports.PRIORITY = 0;
-module.exports.CHECK_ONLY_WHEN_GAME_ENDS = false;
+module.exports.PRIORITY = 0
+module.exports.CHECK_ONLY_WHEN_GAME_ENDS = false
 
 // Accepts function
 // Should key in wrt to player
-module.exports.ELIMINATED = [];
-module.exports.SURVIVING = [];
+module.exports.ELIMINATED = []
+module.exports.SURVIVING = []
 
-module.exports.PREVENT_CHECK_ON_WIN = [];
+module.exports.PREVENT_CHECK_ON_WIN = []
 
-module.exports.DESCRIPTION = "Get yourself lynched at all costs.";
+module.exports.DESCRIPTION = "Get yourself lynched at all costs."

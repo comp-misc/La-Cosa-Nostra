@@ -1,13 +1,9 @@
 {
+	"name": "Arbitrary",
 
-  "name": "Arbitrary",
+	"modular": true,
 
-  "modular": true,
-
-  "modular-details": {
-
-    "cluster": "arbitrary"
-
-  }
-
+	"modular-details": {
+		"cluster": "arbitrary"
+	}
 }

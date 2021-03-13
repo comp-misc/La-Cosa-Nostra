@@ -1,7 +1,13 @@
 {
+	"roles": [
+		"mafia_pyromaniac",
+		"3p_arsonist_im_bp",
+		"town_firefighter",
+		"town_vote_influencer",
+		"town_messenger",
+		"town_roleblocker",
+		"mafia_kidnapper"
+	],
 
-  "roles": ["mafia_pyromaniac", "3p_arsonist_im_bp", "town_firefighter", "town_vote_influencer","town_messenger", "town_roleblocker", "mafia_kidnapper"],
-
-  "flavour": "test-game-9"
-
+	"flavour": "test-game-9"
 }

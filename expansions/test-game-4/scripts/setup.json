@@ -1,7 +1,15 @@
 {
+	"roles": [
+		"town_alignment_cop",
+		"town_miller",
+		"mafia_godfather",
+		"mafia_lawyer",
+		"mafia_cop_role_cop",
+		"3p_serial_killer",
+		"3p_serial_killer_im_bp",
+		"3p_arsonist_im_bp",
+		"town_vanilla_townie"
+	],
 
-  "roles": ["town_alignment_cop", "town_miller", "mafia_godfather", "mafia_lawyer","mafia_cop_role_cop", "3p_serial_killer", "3p_serial_killer_im_bp", "3p_arsonist_im_bp", "town_vanilla_townie"],
-
-  "flavour": "test-game-4"
-
+	"flavour": "test-game-4"
 }

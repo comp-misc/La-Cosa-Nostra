@@ -1,3 +1,3 @@
 // Votecount alias
 
-module.exports = require("./votecount.js");
+module.exports = require("./votecount.js")

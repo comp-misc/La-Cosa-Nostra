@@ -1,16 +1,14 @@
-var Timer = require("../game_templates/Timer.js");
-var deleteTimer = require("../game_reset/deleteTimer.js");
+var Timer = require("../game_templates/Timer.js")
+var deleteTimer = require("../game_reset/deleteTimer.js")
 
 module.exports = async function (message, params, config) {
+	var client = message.client
 
-  var client = message.client;
+	deleteTimer(client, config)
 
-  deleteTimer(client, config);
+	var timer = Timer.load(client, config)
 
-  var timer = Timer.load(client, config);
+	process.timer = timer
 
-  process.timer = timer;
-
-  await message.channel.send(":ok: Reloaded save into file and primed the game timer.");
-
-};
+	await message.channel.send(":ok: Reloaded save into file and primed the game timer.")
+}

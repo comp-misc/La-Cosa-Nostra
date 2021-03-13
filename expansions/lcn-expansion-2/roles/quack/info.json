@@ -1,11 +1,7 @@
 {
+	"thumbnail": null,
 
-  "thumbnail": null,
+	"abilities": ["Protect a player at night"],
 
-  "abilities": ["Protect a player at night"],
-
-  "attributes": ["Grants a Powerful defense",
-                "Removes poison",
-                "Can only protect self once"]
-
+	"attributes": ["Grants a Powerful defense", "Removes poison", "Can only protect self once"]
 }

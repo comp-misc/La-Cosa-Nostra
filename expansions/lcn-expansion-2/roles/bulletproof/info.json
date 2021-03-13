@@ -1,9 +1,7 @@
 {
+	"thumbnail": null,
 
-  "thumbnail": null,
+	"abilities": ["1-shot bulletproof"],
 
-  "abilities": ["1-shot bulletproof"],
-
-  "attributes": []
-
+	"attributes": []
 }

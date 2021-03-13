@@ -1,7 +1,5 @@
 // Executes BEFORE introduction
 
 module.exports = function (player) {
-
-  player.addAttribute("invincibility", Infinity, {amount: 1});
-
-};
+	player.addAttribute("invincibility", Infinity, { amount: 1 })
+}

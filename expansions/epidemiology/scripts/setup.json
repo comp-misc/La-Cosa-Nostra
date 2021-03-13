@@ -1,7 +1,14 @@
 {
+	"roles": [
+		"epi_escort",
+		"epi_escort",
+		"epi_escort",
+		"epi_escort",
+		"epi_escort",
+		"epi_escort",
+		"epi_escort",
+		"epi_plaguebearer"
+	],
 
-  "roles": ["epi_escort", "epi_escort", "epi_escort", "epi_escort", "epi_escort", "epi_escort", "epi_escort", "epi_plaguebearer"],
-
-  "flavour": "epidemiology"
-
+	"flavour": "epidemiology"
 }

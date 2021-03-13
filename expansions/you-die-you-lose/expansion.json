@@ -1,25 +1,21 @@
 {
+	"name": "You Die You Lose",
+	"type": "Expansion",
+	"description": "Applies a you-die-you-lose win condition throughout.",
 
-  "name": "You Die You Lose",
-  "type": "Expansion",
-  "description": "Applies a you-die-you-lose win condition throughout.",
+	"link": null,
 
-  "link": null,
+	"authors": ["ChocoParrot"],
 
-  "authors": ["ChocoParrot"],
+	"overrides": {
+		"flavours": [],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [],
+		"roles": [],
 
-    "role_win_conditions": [],
+		"attributes": []
+	},
 
-    "roles": [],
-
-    "attributes": []
-
-  },
-
-  "dependencies": []
-
+	"dependencies": []
 }

@@ -1,29 +1,29 @@
 {
-  "role-name": "The Praetor",
+	"role-name": "The Praetor",
 
-  "alignment": "praetorium",
-  "class": "unclassified",
+	"alignment": "praetorium",
+	"class": "unclassified",
 
-  "see-mafia-chat": false,
+	"see-mafia-chat": false,
 
-  "stats": {
-    "basic-defense": 3,
-    "roleblock-immunity": 1,
-    "detection-immunity": 0,
-    "control-immunity": 1,
+	"stats": {
+		"basic-defense": 3,
+		"roleblock-immunity": 1,
+		"detection-immunity": 0,
+		"control-immunity": 1,
 		"redirection-immunity": 1,
 		"kidnap-immunity": 1,
-    "priority": 6,
-    "vote-offset": 0,
+		"priority": 6,
+		"vote-offset": 0,
 		"vote-magnitude": 1
-  },
+	},
 
-  "investigation": ["Praetor"],
-  "secondary-roles": null,
+	"investigation": ["Praetor"],
+	"secondary-roles": null,
 
-  "tags": [],
+	"tags": [],
 
-  "reveal-role-on-interrogation": true,
+	"reveal-role-on-interrogation": true,
 
-  "win-condition": "praetorium"
+	"win-condition": "praetorium"
 }

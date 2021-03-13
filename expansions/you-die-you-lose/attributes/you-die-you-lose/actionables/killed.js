@@ -1,14 +1,13 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
-  // Set loss
+	// Set loss
 
-  var player = game.getPlayerByIdentifier(actionable.from);
+	var player = game.getPlayerByIdentifier(actionable.from)
 
-  player.setStatus("can-win", false);
+	player.setStatus("can-win", false)
 
-  return true;
-
-};
+	return true
+}

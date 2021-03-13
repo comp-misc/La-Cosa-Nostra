@@ -1,34 +1,28 @@
 module.exports = async function (game) {
+	if (game.channels.mafia !== undefined) {
+		var channel = game.getChannel("mafia")
 
-  if (game.channels.mafia !== undefined) {
+		var post_perms = game.config["base-perms"]["post"]
+		var read_perms = game.config["base-perms"]["read"]
 
-    var channel = game.getChannel("mafia");
+		var mafia = game.findAll((x) => x.see_mafia_chat === true)
 
-    var post_perms = game.config["base-perms"]["post"];
-    var read_perms = game.config["base-perms"]["read"];
+		for (var i = 0; i < mafia.length; i++) {
+			if (!mafia[i].getSpecialChannels().some((x) => x.id === channel.id)) {
+				mafia[i].addSpecialChannel(channel)
+			}
 
-    var mafia = game.findAll(x => x.see_mafia_chat === true);
+			var member = mafia[i].getGuildMember()
 
-    for (var i = 0; i < mafia.length; i++) {
+			if (!member) {
+				continue
+			}
 
-      if (!mafia[i].getSpecialChannels().some(x => x.id === channel.id)) {
-        mafia[i].addSpecialChannel(channel);
-      };
-
-      var member = mafia[i].getGuildMember();
-      
-      if (!member) {
-        continue;
-      };
-
-      if (mafia[i].isAlive()) {
-        await channel.overwritePermissions(member, post_perms);
-      } else {
-        await channel.overwritePermissions(member, read_perms);
-      };
-
-    };
-
-  };
-
-};
+			if (mafia[i].isAlive()) {
+				await channel.overwritePermissions(member, post_perms)
+			} else {
+				await channel.overwritePermissions(member, read_perms)
+			}
+		}
+	}
+}

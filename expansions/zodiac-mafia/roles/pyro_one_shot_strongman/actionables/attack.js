@@ -1,24 +1,20 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	rs.prototypes.unstoppableAttack.reason = "dealt a fatal blow by a member of the __Mafia__"
 
-  rs.prototypes.unstoppableAttack.reason = "dealt a fatal blow by a member of the __Mafia__";
+	var from = game.getPlayerByIdentifier(actionable.from)
+	var to = game.getPlayerByIdentifier(actionable.to)
 
-  var from = game.getPlayerByIdentifier(actionable.from);
-  var to = game.getPlayerByIdentifier(actionable.to);
+	var outcome = rs.prototypes.unstoppableAttack(...arguments)
 
-  var outcome = rs.prototypes.unstoppableAttack(...arguments);
+	if (!outcome) {
+		game.addMessage(from, ":exclamation: Your target could not be attacked last night!")
+	}
 
-  if (!outcome) {
+	from.misc.strongman_kills_left--
+}
 
-    game.addMessage(from, ":exclamation: Your target could not be attacked last night!");
-
-  };
-
-  from.misc.strongman_kills_left--;
-
-};
-
-module.exports.TAGS = ["visit"];
+module.exports.TAGS = ["visit"]

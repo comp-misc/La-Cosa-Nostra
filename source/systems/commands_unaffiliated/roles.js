@@ -1,3 +1,3 @@
 // Alias for role
 
-module.exports = require("./role.js");
+module.exports = require("./role.js")

@@ -1,9 +1,7 @@
 {
+	"thumbnail": "https://image.freepik.com/free-icon/blocked_318-28679.jpg",
 
-  "thumbnail": "https://image.freepik.com/free-icon/blocked_318-28679.jpg",
+	"abilities": ["Roleblock a player once at night"],
 
-  "abilities": ["Roleblock a player once at night"],
-
-  "attributes": ["Roleblocked players are prevented from using their night action"]
-
+	"attributes": ["Roleblocked players are prevented from using their night action"]
 }

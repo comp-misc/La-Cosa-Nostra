@@ -1,3 +1,3 @@
 // Unvote alias
 
-module.exports = require("./unvote.js");
+module.exports = require("./unvote.js")

@@ -1,82 +1,83 @@
 // Executes BEFORE introduction
 
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var auxils = lcn.auxils;
+var auxils = lcn.auxils
 
 module.exports = function (player) {
+	// Find pair
+	// If multiple available, shuffle
 
-  // Find pair
-  // If multiple available, shuffle
+	var game = player.game
+	var config = game.config
 
-  var game = player.game;
-  var config = game.config;
+	// Check if already matched
+	if (player.misc.lover_matched) {
+		game.addAction("town_lover/suicide", ["killed"], {
+			from: player,
+			to: player.misc.lover_matched,
+			expiry: Infinity,
+			tags: ["permanent"],
+		})
 
-  // Check if already matched
-  if (player.misc.lover_matched) {
+		var lover = game.getPlayerByIdentifier(player.misc.lover_matched)
+		player.addIntroMessage(":heart: Your lover is **" + lover.getDisplayName() + "**.")
+		return null
+	}
 
-    game.addAction("town_lover/suicide", ["killed"], {
-      from: player,
-      to: player.misc.lover_matched,
-      expiry: Infinity,
-      tags: ["permanent"]
-    });
+	var others = game.findAll(
+		(x) =>
+			x.role_identifier === "lover" &&
+			x.isAlive() &&
+			x.identifier !== player.identifier &&
+			x.misc.lover_matched === undefined
+	)
 
-    var lover = game.getPlayerByIdentifier(player.misc.lover_matched);
-    player.addIntroMessage(":heart: Your lover is **" + lover.getDisplayName() + "**.");
-    return null;
-  };
+	// Downright throw an error if there is no match
+	if (others.length < 1) {
+		var err = new Error("There should be an even number of Lovers in the game!")
+		throw err
+	}
 
-  var others = game.findAll(x => x.role_identifier === "lover" && x.isAlive() && x.identifier !== player.identifier && x.misc.lover_matched === undefined);
+	var matched = auxils.cryptographicChoice(others)
 
-  // Downright throw an error if there is no match
-  if (others.length < 1) {
-    var err = new Error("There should be an even number of Lovers in the game!");
-    throw err;
-  };
+	// Set chat initiator
+	player.misc.lover_initiator = true
 
-  var matched = auxils.cryptographicChoice(others);
+	// Cross the properties
+	player.misc.lover_matched = matched.identifier
+	matched.misc.lover_matched = player.identifier
 
-  // Set chat initiator
-  player.misc.lover_initiator = true;
+	game.addAction("town_lover/suicide", ["killed"], {
+		from: player,
+		to: player.misc.lover_matched,
+		expiry: Infinity,
+		tags: ["permanent"],
+	})
 
-  // Cross the properties
-  player.misc.lover_matched = matched.identifier;
-  matched.misc.lover_matched = player.identifier;
+	player.addIntroMessage(":heart: Your lover is **" + matched.getDisplayName() + "**.")
 
-  game.addAction("town_lover/suicide", ["killed"], {
-    from: player,
-    to: player.misc.lover_matched,
-    expiry: Infinity,
-    tags: ["permanent"]
-  });
+	createLoverChannels()
 
-  player.addIntroMessage(":heart: Your lover is **" + matched.getDisplayName() + "**.");
+	// Always put lower alphabet first
+	async function createLoverChannels() {
+		var read_perms = config["base-perms"]["read"]
 
-  createLoverChannels();
+		var name = "lovers-" + player.alphabet + "-" + matched.alphabet
 
-  // Always put lower alphabet first
-  async function createLoverChannels () {
+		var channel = await game.createPrivateChannel(name, [
+			{ target: player.getDiscordUser(), permissions: read_perms },
+			{ target: matched.getDiscordUser(), permissions: read_perms },
+		])
 
-    var read_perms = config["base-perms"]["read"];
+		player.misc.lover_channel = channel.id
+		matched.misc.lover_channel = channel.id
 
-    var name = "lovers-" + player.alphabet + "-" + matched.alphabet;
+		player.addSpecialChannel(channel)
+		matched.addSpecialChannel(channel)
 
-    var channel = await game.createPrivateChannel(name, [
-      {target: player.getDiscordUser(), permissions: read_perms},
-      {target: matched.getDiscordUser(), permissions: read_perms}
-    ]);
+		await channel.send("**This is the Lovers' chat.**\n\nThis chat is open to both parties only at night.")
 
-    player.misc.lover_channel = channel.id;
-    matched.misc.lover_channel = channel.id;
-
-    player.addSpecialChannel(channel);
-    matched.addSpecialChannel(channel);
-
-    await channel.send("**This is the Lovers' chat.**\n\nThis chat is open to both parties only at night.");
-
-    game.setChannel(name, channel);
-
-  };
-
-};
+		game.setChannel(name, channel)
+	}
+}

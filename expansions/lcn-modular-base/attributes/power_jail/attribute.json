@@ -1,18 +1,18 @@
 {
+	"name": "Jail",
 
-  "name": "Jail",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Roleblocking"},
-      {"name": "Command", "description": "jail <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Stops the user from using their night action and stops all night actions onto the user, unless the action is unstoppable."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Roleblocking" },
+			{ "name": "Command", "description": "jail <alphabet/name/nobody>" },
+			{
+				"name": "Description",
+				"description": "Stops the user from using their night action and stops all night actions onto the user, unless the action is unstoppable."
+			}
+		]
+	}
 }

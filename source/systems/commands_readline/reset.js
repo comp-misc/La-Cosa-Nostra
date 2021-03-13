@@ -1,1 +1,1 @@
-module.exports = require("../game_reset/reset.js");
+module.exports = require("../game_reset/reset.js")

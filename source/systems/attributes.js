@@ -1,76 +1,66 @@
-var fs = require("fs");
+var fs = require("fs")
 
-var expansions = require("./expansions.js");
-var auxils = require("./auxils.js");
+var expansions = require("./expansions.js")
+var auxils = require("./auxils.js")
 
-var attributes_dir = __dirname + "/../attributes";
-var attributes = fs.readdirSync(attributes_dir).map(x => "lcn/" + x);
+var attributes_dir = __dirname + "/../attributes"
+var attributes = fs.readdirSync(attributes_dir).map((x) => "lcn/" + x)
 
-var rules = new Array();
+var rules = new Array()
 
 // Add expansions
 for (var i = 0; i < expansions.length; i++) {
+	attributes = attributes.concat(expansions[i].additions.attributes.map((x) => expansions[i].identifier + "/" + x))
+	rules = rules.concat(expansions[i].expansion.overrides.attributes)
+}
 
-  attributes = attributes.concat(expansions[i].additions.attributes.map(x => expansions[i].identifier + "/" + x));
-  rules = rules.concat(expansions[i].expansion.overrides.attributes);
+attributes = auxils.ruleFilter(attributes, rules)
 
-};
-
-attributes = auxils.ruleFilter(attributes, rules);
-
-var ret = new Object();
+var ret = new Object()
 
 for (var i = 0; i < attributes.length; i++) {
+	var attribute_info = attributes[i].split("/")
 
-  var attribute_info = attributes[i].split("/");
+	var expansion_identifier = attribute_info[0]
+	var attribute = attribute_info[1]
 
-  var expansion_identifier = attribute_info[0];
-  var attribute = attribute_info[1];
+	if (expansion_identifier === "lcn") {
+		var directory = attributes_dir + "/" + attribute
+	} else {
+		var expansion = expansions.find((x) => x.identifier === expansion_identifier)
+		var directory = expansion.expansion_directory + "/attributes/" + attribute
+	}
 
-  if (expansion_identifier === "lcn") {
+	var usable = new Object()
 
-    var directory = attributes_dir + "/" + attribute;
+	usable.directory = directory
 
-  } else {
+	usable.attribute = attemptGetting(directory + "/attribute.json")
 
-    var expansion = expansions.find(x => x.identifier === expansion_identifier);
-    var directory = expansion.expansion_directory + "/attributes/" + attribute;
+	usable.start = attemptRequiring(directory + "/general/start.js")
+	usable.routines = attemptRequiring(directory + "/general/routines.js")
 
-  };
+	ret[attribute] = usable
+}
 
-  var usable = new Object();
+module.exports = ret
 
-  usable.directory = directory;
+function attemptRequiring(directory) {
+	var available = fs.existsSync(directory)
 
-  usable.attribute = attemptGetting(directory + "/attribute.json");
+	if (available) {
+		return require(directory)
+	} else {
+		return undefined
+	}
+}
 
-  usable.start = attemptRequiring(directory + "/general/start.js");
-  usable.routines = attemptRequiring(directory + "/general/routines.js");
+function attemptGetting(directory) {
+	var available = fs.existsSync(directory)
 
-  ret[attribute] = usable;
-
-};
-
-module.exports = ret;
-
-function attemptRequiring (directory) {
-  var available = fs.existsSync(directory);
-
-  if (available) {
-    return require(directory);
-  } else {
-    return undefined;
-  };
-
-};
-
-function attemptGetting (directory) {
-  var available = fs.existsSync(directory);
-
-  if (available) {
-    return JSON.parse(fs.readFileSync(directory));
-  } else {
-    return undefined;
-  };
-
-};
+	if (available) {
+		return JSON.parse(fs.readFileSync(directory))
+	} else {
+		return undefined
+	}
+}

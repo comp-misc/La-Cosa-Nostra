@@ -1,7 +1,13 @@
 {
+	"roles": [
+		"town_watcher_tracker",
+		"town_watcher",
+		"town_tracker",
+		"town_compulsive_visitor",
+		"mafia_deflector",
+		"mafia_janitor",
+		"town_kidnapper"
+	],
 
-  "roles": ["town_watcher_tracker", "town_watcher", "town_tracker", "town_compulsive_visitor","mafia_deflector", "mafia_janitor", "town_kidnapper"],
-
-  "flavour": "test-game-12"
-
+	"flavour": "test-game-12"
 }

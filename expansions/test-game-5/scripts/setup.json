@@ -1,7 +1,13 @@
 {
+	"roles": [
+		"town_veteran",
+		"town_bomb",
+		"mafia_ascetic",
+		"mafia_jailkeeper",
+		"town_vigilante",
+		"town_dayshooter",
+		"town_bulletproof"
+	],
 
-  "roles": ["town_veteran", "town_bomb", "mafia_ascetic", "mafia_jailkeeper","town_vigilante", "town_dayshooter", "town_bulletproof"],
-
-  "flavour": "test-game-5"
-
+	"flavour": "test-game-5"
 }

@@ -1,18 +1,19 @@
-var mafia = require("../../../../../source/lcn.js");
+var mafia = require("../../../../../source/lcn.js")
 
-var rs = mafia.rolesystem;
+var rs = mafia.rolesystem
 
 module.exports = function (actionable, game, params) {
+	game.execute("visit", {
+		visitor: actionable.from,
+		target: actionable.to,
+		priority: actionable.priority,
+		reason: "Doctor-visit",
+	})
 
-  game.execute("visit", {visitor: actionable.from,
-    target: actionable.to,
-    priority: actionable.priority,
-    reason: "Doctor-visit"});
+	var target = game.getPlayerByIdentifier(actionable.to)
+	var from = game.getPlayerByIdentifier(actionable.from)
 
-  var target = game.getPlayerByIdentifier(actionable.to);
-  var from = game.getPlayerByIdentifier(actionable.from);
-
-  /*
+	/*
   target.misc.protections ? target.misc.protections++ : target.misc.protections = 1;
 
   // Add message
@@ -24,8 +25,7 @@ module.exports = function (actionable, game, params) {
     priority: 1
   });*/
 
-  target.addAttribute("protection", 1, {amount: 1});
+	target.addAttribute("protection", 1, { amount: 1 })
+}
 
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

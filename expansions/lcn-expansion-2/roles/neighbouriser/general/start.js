@@ -1,49 +1,46 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
 // Executes BEFORE introduction
 
-var auxils = lcn.auxils;
+var auxils = lcn.auxils
 
 module.exports = function (player) {
+	var game = player.game
+	var config = game.config
 
-  var game = player.game;
-  var config = game.config;
+	player.misc.neighbourises_left = 2
 
-  player.misc.neighbourises_left = 2;
+	// Set chat initiator
+	player.misc.neighbour_lead = true
+	player.misc.neighbour_players = [player.identifier]
 
-  // Set chat initiator
-  player.misc.neighbour_lead = true;
-  player.misc.neighbour_players = [player.identifier];
+	createNeighbourChannels()
 
-  createNeighbourChannels();
+	game.addAction("neighbouriser/mediator", ["postcycle"], {
+		from: player,
+		to: player,
+		expiry: Infinity,
+		tags: ["permanent"],
+	})
 
-  game.addAction("neighbouriser/mediator", ["postcycle"], {
-    from: player,
-    to: player,
-    expiry: Infinity,
-    tags: ["permanent"]
-  });
+	// Always put lower alphabet first
+	async function createNeighbourChannels() {
+		var read_perms = config["base-perms"]["read"]
 
-  // Always put lower alphabet first
-  async function createNeighbourChannels () {
+		var name = "neighbourhood-" + player.alphabet
 
-    var read_perms = config["base-perms"]["read"];
+		var channel = await game.createPrivateChannel(name, [{ target: player.getDiscordUser(), permissions: read_perms }])
 
-    var name = "neighbourhood-" + player.alphabet;
+		player.misc.neighbour_channel = channel.id
 
-    var channel = await game.createPrivateChannel(name, [
-      {target: player.getDiscordUser(), permissions: read_perms}
-    ]);
+		await game.sendPeriodPin(
+			channel,
+			"**This is a Neighbourhood Chat.**\n\nNew members may be recruited, and the chat is only open at night."
+		)
 
-    player.misc.neighbour_channel = channel.id;
+		game.setChannel(name, channel)
+	}
+}
 
-    await game.sendPeriodPin(channel, "**This is a Neighbourhood Chat.**\n\nNew members may be recruited, and the chat is only open at night.");
-
-    game.setChannel(name, channel);
-
-  };
-
-};
-
-module.exports.DO_NOT_RUN_ON_GAME_START = false;
-module.exports.DO_NOT_RUN_ON_ADDITION = false;
+module.exports.DO_NOT_RUN_ON_GAME_START = false
+module.exports.DO_NOT_RUN_ON_ADDITION = false

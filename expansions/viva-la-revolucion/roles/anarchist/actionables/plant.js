@@ -1,6 +1,6 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 // Defaults to shooting
 // Godfather can override
@@ -8,31 +8,29 @@ var rs = lcn.rolesystem;
 // See godfather/kill_vote
 
 module.exports = function (actionable, game, params) {
+	game.execute("visit", {
+		visitor: actionable.from,
+		target: actionable.to,
+		priority: actionable.priority,
+		reason: "Anarchist-bomb",
+	})
 
-  game.execute("visit", {visitor: actionable.from,
-    target: actionable.to,
-    priority: actionable.priority,
-    reason: "Anarchist-bomb"});
+	var target = game.getPlayerByIdentifier(actionable.to)
 
-  var target = game.getPlayerByIdentifier(actionable.to);
+	if (target.role_identifier !== "bombproof_bomb_defuser") {
+		game.addAction("anarchist/bomb", ["cycle"], {
+			name: "Bomb-kill",
+			expiry: 3,
+			execution: 3,
+			from: actionable.from,
+			to: actionable.to,
+			attack: actionable.target,
+			priority: 12,
+			tags: ["bomb"],
+		})
 
-  if (target.role_identifier !== "bombproof_bomb_defuser") {
+		console.log("PLANT")
+	}
+}
 
-    game.addAction("anarchist/bomb", ["cycle"], {
-      name: "Bomb-kill",
-      expiry: 3,
-      execution: 3,
-      from: actionable.from,
-      to: actionable.to,
-      attack: actionable.target,
-      priority: 12,
-      tags: ["bomb"]
-    });
-
-    console.log("PLANT");
-
-  };
-
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

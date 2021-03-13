@@ -1,18 +1,15 @@
 {
+	"name": "Track",
 
-  "name": "Track",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Investigative"},
-      {"name": "Command", "description": "track <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Sees who the target visited."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Investigative" },
+			{ "name": "Command", "description": "track <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Sees who the target visited." }
+		]
+	}
 }

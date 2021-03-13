@@ -1,9 +1,7 @@
 {
+	"thumbnail": "https://image.freepik.com/darmowe-ikony/okr%C4%85g%C5%82a-ratownik_318-27610.jpg",
 
-  "thumbnail": "https://image.freepik.com/darmowe-ikony/okr%C4%85g%C5%82a-ratownik_318-27610.jpg",
+	"abilities": [],
 
-  "abilities": [],
-
-  "attributes": ["Survive to the end of the game"]
-
+	"attributes": ["Survive to the end of the game"]
 }

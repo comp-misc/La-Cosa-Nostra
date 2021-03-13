@@ -1,3 +1,3 @@
 // Nolynch alias
 
-module.exports = require("./nolynch.js");
+module.exports = require("./nolynch.js")

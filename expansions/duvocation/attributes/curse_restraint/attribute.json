@@ -1,18 +1,15 @@
 {
+	"name": "Restraint (Roleblock)",
 
-  "name": "Restraint (Roleblock)",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "curse",
 
-  "modular-details": {
-    "cluster": "curse",
-
-    "display-field": [
-      {"name": "Category", "description": "Roleblocking"},
-      {"name": "Command", "description": "roleblock <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Curses a user with a roleblock."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Roleblocking" },
+			{ "name": "Command", "description": "roleblock <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Curses a user with a roleblock." }
+		]
+	}
 }

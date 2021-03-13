@@ -1,7 +1,5 @@
 // Executes BEFORE introduction
 
 module.exports = function (player) {
-
-  player.misc.commutes_left = 1;
-
-};
+	player.misc.commutes_left = 1
+}

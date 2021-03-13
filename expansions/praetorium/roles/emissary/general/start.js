@@ -1,47 +1,44 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
 // Executes BEFORE introduction
 
-var auxils = lcn.auxils;
+var auxils = lcn.auxils
 
 module.exports = function (player) {
+	var game = player.game
+	var config = game.config
 
-  var game = player.game;
-  var config = game.config;
+	// Set chat initiator
+	player.misc.emissary_lead = true
+	player.misc.emissary_players = [player.identifier]
 
-  // Set chat initiator
-  player.misc.emissary_lead = true;
-  player.misc.emissary_players = [player.identifier];
+	createEmissaryChannels()
 
-  createEmissaryChannels();
+	game.addAction("emissary/mediator", ["postcycle"], {
+		from: player,
+		to: player,
+		expiry: Infinity,
+		tags: ["permanent"],
+	})
 
-  game.addAction("emissary/mediator", ["postcycle"], {
-    from: player,
-    to: player,
-    expiry: Infinity,
-    tags: ["permanent"]
-  });
+	// Always put lower alphabet first
+	async function createEmissaryChannels() {
+		var read_perms = config["base-perms"]["read"]
 
-  // Always put lower alphabet first
-  async function createEmissaryChannels () {
+		var name = "emissary-" + player.alphabet
 
-    var read_perms = config["base-perms"]["read"];
+		var channel = await game.createPrivateChannel(name, [{ target: player.getDiscordUser(), permissions: read_perms }])
 
-    var name = "emissary-" + player.alphabet;
+		player.misc.emissary_channel = channel.id
 
-    var channel = await game.createPrivateChannel(name, [
-      {target: player.getDiscordUser(), permissions: read_perms}
-    ]);
+		await game.sendPeriodPin(
+			channel,
+			"**This is the Emissary Chat.**\n\nMembers of the Praetorium may be recruited, and the chat is only open at night."
+		)
 
-    player.misc.emissary_channel = channel.id;
+		game.setChannel(name, channel)
+	}
+}
 
-    await game.sendPeriodPin(channel, "**This is the Emissary Chat.**\n\nMembers of the Praetorium may be recruited, and the chat is only open at night.");
-
-    game.setChannel(name, channel);
-
-  };
-
-};
-
-module.exports.DO_NOT_RUN_ON_GAME_START = false;
-module.exports.DO_NOT_RUN_ON_ADDITION = false;
+module.exports.DO_NOT_RUN_ON_GAME_START = false
+module.exports.DO_NOT_RUN_ON_ADDITION = false

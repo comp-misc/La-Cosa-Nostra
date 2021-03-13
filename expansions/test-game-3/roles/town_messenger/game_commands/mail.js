@@ -2,85 +2,82 @@
 
 var mafia = require("../../../../../source/lcn.js")
 
-var rs = mafia.rolesystem;
+var rs = mafia.rolesystem
 
 module.exports = function (game, message, params) {
+	var actions = game.actions
+	var config = game.config
 
-  var actions = game.actions;
-  var config = game.config;
+	// Run checks, etc
 
-  // Run checks, etc
+	if (params[0] === undefined) {
+		message.channel.send(
+			":x: Wrong syntax! Please use `" + config["command-prefix"] + "shoot <alphabet/username/nobody>` instead!"
+		)
+		return null
+	}
 
-  if (params[0] === undefined) {
-    message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "shoot <alphabet/username/nobody>` instead!");
-    return null;
-  };
+	var to = game.getPlayerMatch(params[0])
+	var from = game.getPlayerById(message.author.id)
 
-  var to = game.getPlayerMatch(params[0]);
-  var from = game.getPlayerById(message.author.id);
+	if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		actions.delete((x) => x.from === from.identifier && x.identifier === "town_messenger/mail")
 
-  if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		message.channel.send(":mailbox_with_mail: You have decided not to send anyone a message tonight.")
+		return null
+	}
 
-    actions.delete(x => x.from === from.identifier && x.identifier === "town_messenger/mail");
+	to = to.player
 
-    message.channel.send(":mailbox_with_mail: You have decided not to send anyone a message tonight.");
-    return null;
-  };
+	if (!to.isAlive()) {
+		message.channel.send(":x: You cannot send a message to a dead player!" + rs.misc.sarcasm(true))
+		return null
+	}
 
-  to = to.player;
+	if (to.id === message.author.id) {
+		message.channel.send(":x: You cannot send a message to yourself!" + rs.misc.sarcasm(true))
 
-  if (!to.isAlive()) {
-    message.channel.send(":x: You cannot send a message to a dead player!" + rs.misc.sarcasm(true));
-    return null;
-  };
+		return null
+	} else {
+		if (params.length < 2) {
+			message.channel.send(":x: You cannot send an empty message!")
+			return null
+		}
 
-  if (to.id === message.author.id) {
+		var send = params.splice(1, Infinity).join(" ")
 
-    message.channel.send(":x: You cannot send a message to yourself!" + rs.misc.sarcasm(true));
+		if (/`/g.test(send)) {
+			message.channel.send(":x: Please do not use code formatting in the anonymous message!")
+			return null
+		}
 
-    return null;
+		send = send.trim().replace(/^\s+|\s+$/g, "")
 
-  } else {
+		if (send.length > 1200) {
+			message.channel.send(":x: The message cannot exceed 1,200 characters!")
+			return null
+		}
+		actions.delete((x) => x.from === from.identifier && x.identifier === "town_messenger/mail")
 
-    if (params.length < 2) {
-      message.channel.send(":x: You cannot send an empty message!");
-      return null;
-    };
+		game.addAction("town_messenger/mail", ["cycle"], {
+			name: "Mailman-mail",
+			expiry: 1,
+			from: message.author.id,
+			to: to.id,
+			message: send,
+		})
 
-    var send = params.splice(1, Infinity).join(" ");
+		var mention = to.getDisplayName()
+	}
 
-    if (/`/g.test(send)) {
-      message.channel.send(":x: Please do not use code formatting in the anonymous message!");
-      return null;
-    };
+	message.channel.send(
+		":mailbox_with_mail: You have decided to send **" + mention + "** the following message:\n```fix\n" + send + "```"
+	)
+}
 
-    send = send.trim().replace(/^\s+|\s+$/g, "");
-
-    if (send.length > 1200) {
-      message.channel.send(":x: The message cannot exceed 1,200 characters!");
-      return null;
-    };
-    actions.delete(x => x.from === from.identifier && x.identifier === "town_messenger/mail");
-
-    game.addAction("town_messenger/mail", ["cycle"], {
-      name: "Mailman-mail",
-      expiry: 1,
-      from: message.author.id,
-      to: to.id,
-      message: send
-    });
-
-    var mention = to.getDisplayName();
-
-  };
-
-  message.channel.send(":mailbox_with_mail: You have decided to send **" + mention + "** the following message:\n```fix\n" + send + "```");
-
-};
-
-module.exports.ALLOW_NONSPECIFIC = false;
-module.exports.PRIVATE_ONLY = true;
-module.exports.DEAD_CANNOT_USE = true;
-module.exports.ALIVE_CANNOT_USE = false;
-module.exports.DISALLOW_DAY = true;
-module.exports.DISALLOW_NIGHT = false;
+module.exports.ALLOW_NONSPECIFIC = false
+module.exports.PRIVATE_ONLY = true
+module.exports.DEAD_CANNOT_USE = true
+module.exports.ALIVE_CANNOT_USE = false
+module.exports.DISALLOW_DAY = true
+module.exports.DISALLOW_NIGHT = false

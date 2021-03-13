@@ -1,18 +1,15 @@
 {
+	"name": "Power Swap",
 
-  "name": "Power Swap",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Power Manipulation"},
-      {"name": "Command", "description": "powerswap <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Completely swaps the user and targets’ powers over."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Power Manipulation" },
+			{ "name": "Command", "description": "powerswap <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Completely swaps the user and targets’ powers over." }
+		]
+	}
 }

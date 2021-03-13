@@ -1,9 +1,7 @@
 {
+	"thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRguDYsPjBmgn6BicG1n21PW-hTMfMI7Ffq8fZpwm1soFmm4KPk",
 
-  "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRguDYsPjBmgn6BicG1n21PW-hTMfMI7Ffq8fZpwm1soFmm4KPk",
+	"abilities": ["Remove gasoline from a player at night"],
 
-  "abilities": ["Remove gasoline from a player at night"],
-
-  "attributes": null
-
+	"attributes": null
 }

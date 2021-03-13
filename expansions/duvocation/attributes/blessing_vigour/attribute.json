@@ -1,18 +1,15 @@
 {
+	"name": "Vigor (Influence)",
 
-  "name": "Vigor (Influence)",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "blessing",
 
-  "modular-details": {
-    "cluster": "blessing",
-
-    "display-field": [
-      {"name": "Category", "description": "Voting"},
-      {"name": "Command", "description": "influence <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Blesses a user with influence."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Voting" },
+			{ "name": "Command", "description": "influence <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Blesses a user with influence." }
+		]
+	}
 }

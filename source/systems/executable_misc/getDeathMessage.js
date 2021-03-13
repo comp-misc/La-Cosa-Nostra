@@ -1,35 +1,33 @@
 // Return the death broadcast
 
-var format = require("./__formatter.js");
-var texts = require("./text/texts.js");
+var format = require("./__formatter.js")
+var texts = require("./text/texts.js")
 
 module.exports = function (game, role, reason) {
-  var message = texts.death_message;
+	var message = texts.death_message
 
-  var member = role.getGuildMember();
+	var member = role.getGuildMember()
 
-  message = message.replace(new RegExp("{;player}", "g"), role.getDisplayName());
-  message = message.replace(new RegExp("{;reason}", "g"), reason);
-  message = message.replace(new RegExp("{;role}", "g"), role.getDisplayRole());
+	message = message.replace(new RegExp("{;player}", "g"), role.getDisplayName())
+	message = message.replace(new RegExp("{;reason}", "g"), reason)
+	message = message.replace(new RegExp("{;role}", "g"), role.getDisplayRole())
 
-  if (role.misc.time_of_death==undefined) {
+	if (role.misc.time_of_death == undefined) {
+		role.misc.time_of_death = game.getPeriod() + 0.1
+	}
 
-      role.misc.time_of_death = game.getPeriod() + 0.1;
-  };
+	var will = "We could not find a last will."
 
-  var will = "We could not find a last will.";
+	if (role.will !== undefined) {
+		will = "We found a will next to their body:\n```fix\n" + role.will + "```"
+	}
 
-  if (role.will !== undefined) {
-    will = "We found a will next to their body:\n```fix\n" + role.will + "```";
-  };
+	message = message.replace(new RegExp("{;will_message}", "g"), will)
 
-  message = message.replace(new RegExp("{;will_message}", "g"), will);
+	// Remove trailing
+	message = message.replace(new RegExp("[\n]*$", "g"), "")
 
-  // Remove trailing
-  message = message.replace(new RegExp("[\n]*$", "g"), "");
+	message = message.replace(new RegExp("{@player}", "g"), "<@" + role.id + ">")
 
-  message = message.replace(new RegExp("{@player}", "g"), "<@" + role.id + ">");
-
-  return message;
-
-};
+	return message
+}

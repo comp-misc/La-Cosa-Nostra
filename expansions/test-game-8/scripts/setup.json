@@ -1,7 +1,13 @@
 {
+	"roles": [
+		"town_backup",
+		"town_backup",
+		"town_sheriff_cop",
+		"town_alignment_cop",
+		"town_role_cop",
+		"town_neapolitan",
+		"mafia_cop_role_cop"
+	],
 
-  "roles": ["town_backup", "town_backup", "town_sheriff_cop", "town_alignment_cop", "town_role_cop","town_neapolitan", "mafia_cop_role_cop"],
-
-  "flavour": "test-game-8"
-
+	"flavour": "test-game-8"
 }

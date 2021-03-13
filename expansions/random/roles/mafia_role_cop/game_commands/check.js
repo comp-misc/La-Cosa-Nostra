@@ -1,69 +1,66 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
 // Register heal
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (game, message, params) {
+	var actions = game.actions
+	var config = game.config
 
-  var actions = game.actions;
-  var config = game.config;
+	// Run checks, etc
 
-  // Run checks, etc
+	if (params[0] === undefined) {
+		message.channel.send(
+			":x:  Wrong syntax! Please use `" + config["command-prefix"] + "check <alphabet/username/nobody>` instead!"
+		)
+		return null
+	}
 
-  if (params[0] === undefined) {
-    message.channel.send(":x:  Wrong syntax! Please use `" + config["command-prefix"] + "check <alphabet/username/nobody>` instead!");
-    return null;
-  };
+	var to = game.getPlayerMatch(params[0])
+	var from = game.getPlayerById(message.author.id)
 
-  var to = game.getPlayerMatch(params[0]);
-  var from = game.getPlayerById(message.author.id);
+	if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		actions.delete((x) => x.from === from.identifier && x.identifier === "mafia_role_cop/check")
 
-  if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		message.channel.send(":mag_right:  You have now selected to not check anyone tonight.")
+		game.getChannel("mafia").send(":mag_right:  **" + from.getDisplayName() + "** is not checking anyone tonight.")
+		return null
+	}
 
-    actions.delete(x => x.from === from.identifier && x.identifier === "mafia_role_cop/check");
+	to = to.player
 
-    message.channel.send(":mag_right:  You have now selected to not check anyone tonight.");
-    game.getChannel("mafia").send(":mag_right:  **" + from.getDisplayName() + "** is not checking anyone tonight.");
-    return null;
-  };
+	if (!to.isAlive()) {
+		message.channel.send(":x:  You cannot check a dead player!")
+		return null
+	}
 
-  to = to.player;
+	if (to.id === message.author.id) {
+		message.channel.send(":x:  You cannot check yourself!")
 
-  if (!to.isAlive()) {
-    message.channel.send(":x:  You cannot check a dead player!");
-    return null;
-  };
+		return null
+	} else {
+		actions.delete((x) => x.from === from.identifier && x.identifier === "mafia_role_cop/check")
 
-  if (to.id === message.author.id) {
+		game.addAction("mafia_role_cop/check", ["cycle"], {
+			name: "Mafia-Rolecop-check",
+			expiry: 1,
+			from: message.author.id,
+			to: to.id,
+		})
 
-    message.channel.send(":x:  You cannot check yourself!");
+		var mention = to.getDisplayName()
+	}
 
-    return null;
+	message.channel.send(":mag_right:  You have now selected to check **" + mention + "** tonight.")
+	game
+		.getChannel("mafia")
+		.send(":mag_right:  **" + from.getDisplayName() + "** is checking **" + mention + "** tonight.")
+}
 
-  } else {
-
-    actions.delete(x => x.from === from.identifier && x.identifier === "mafia_role_cop/check");
-
-    game.addAction("mafia_role_cop/check", ["cycle"], {
-      name: "Mafia-Rolecop-check",
-      expiry: 1,
-      from: message.author.id,
-      to: to.id
-    });
-
-    var mention = to.getDisplayName();
-
-  };
-
-  message.channel.send(":mag_right:  You have now selected to check **" + mention + "** tonight.");
-  game.getChannel("mafia").send(":mag_right:  **" + from.getDisplayName() + "** is checking **" + mention + "** tonight.");
-
-};
-
-module.exports.ALLOW_NONSPECIFIC = false;
-module.exports.PRIVATE_ONLY = true;
-module.exports.DEAD_CANNOT_USE = true;
-module.exports.ALIVE_CANNOT_USE = false;
-module.exports.DISALLOW_DAY = true;
-module.exports.DISALLOW_NIGHT = false;
+module.exports.ALLOW_NONSPECIFIC = false
+module.exports.PRIVATE_ONLY = true
+module.exports.DEAD_CANNOT_USE = true
+module.exports.ALIVE_CANNOT_USE = false
+module.exports.DISALLOW_DAY = true
+module.exports.DISALLOW_NIGHT = false

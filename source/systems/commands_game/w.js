@@ -1,3 +1,3 @@
 // Whisper alias
 
-module.exports = require("./whisper.js");
+module.exports = require("./whisper.js")

@@ -1,7 +1,11 @@
 {
+	"roles": [
+		"mafia_odd_night_roleblocker",
+		"town_even_day_interrogator",
+		"town_odd_day_interrogator",
+		"town_neighbour",
+		"town_neighbour"
+	],
 
-  "roles": ["mafia_odd_night_roleblocker", "town_even_day_interrogator", "town_odd_day_interrogator", "town_neighbour", "town_neighbour"],
-
-  "flavour": "test-game-20"
-
+	"flavour": "test-game-20"
 }

@@ -1,7 +1,5 @@
 // Executes BEFORE introduction
 
 module.exports = function (player) {
-
-  player.misc.alien_kidnappings = new Array();
-
-};
+	player.misc.alien_kidnappings = new Array()
+}

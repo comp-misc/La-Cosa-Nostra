@@ -3,21 +3,28 @@
 
 // Function should be synchronous
 
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var auxils = lcn.auxils;
+var auxils = lcn.auxils
 
 module.exports = function (player) {
+	var config = player.game.config
 
-  var config = player.game.config;
+	// Nighttime actions
+	var channel = player.getPrivateChannel()
 
-  // Nighttime actions
-  var channel = player.getPrivateChannel();
+	player.game.sendPeriodPin(
+		channel,
+		":pill: You may choose to heal a player tonight.\n\nYou have __" +
+			player.misc.doc_self_heals +
+			"__ self-heal" +
+			auxils.vocab("s", player.misc.doc_self_heals) +
+			" left.\n\nUse `" +
+			config["command-prefix"] +
+			"heal <alphabet/name/nobody>` to select your target."
+	)
+}
 
-  player.game.sendPeriodPin(channel, ":pill: You may choose to heal a player tonight.\n\nYou have __" + player.misc.doc_self_heals + "__ self-heal" + auxils.vocab("s", player.misc.doc_self_heals) + " left.\n\nUse `" + config["command-prefix"] + "heal <alphabet/name/nobody>` to select your target.");
-
-};
-
-module.exports.ALLOW_DEAD = false;
-module.exports.ALLOW_NIGHT = true;
-module.exports.ALLOW_DAY = false;
+module.exports.ALLOW_DEAD = false
+module.exports.ALLOW_NIGHT = true
+module.exports.ALLOW_DAY = false

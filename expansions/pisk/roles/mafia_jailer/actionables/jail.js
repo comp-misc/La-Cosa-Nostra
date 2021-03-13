@@ -1,14 +1,12 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	var target = game.getPlayerByIdentifier(actionable.to)
 
-  var target = game.getPlayerByIdentifier(actionable.to);
+	rs.prototypes.basicKidnap.reason = "abducted"
+	var outcome = rs.prototypes.basicKidnap(...arguments)
+}
 
-  rs.prototypes.basicKidnap.reason = "abducted";
-  var outcome =rs.prototypes.basicKidnap(...arguments);
-
-};
-
-module.exports.TAGS = ["drivable", "visit"];
+module.exports.TAGS = ["drivable", "visit"]

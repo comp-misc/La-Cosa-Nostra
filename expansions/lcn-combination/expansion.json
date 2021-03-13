@@ -1,27 +1,23 @@
 {
+	"name": "LCN Combination Pack",
+	"type": "Utility",
+	"description": "Adds the standard LCN expansion packs",
 
-  "name": "LCN Combination Pack",
-  "type": "Utility",
-  "description": "Adds the standard LCN expansion packs",
+	"compatibility": ">=4.1.5",
 
-  "compatibility": ">=4.1.5",
+	"link": null,
 
-  "link": null,
+	"authors": ["ChocoParrot"],
 
-  "authors": ["ChocoParrot"],
+	"overrides": {
+		"flavours": [],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [],
+		"roles": [],
 
-    "role_win_conditions": [],
+		"attributes": []
+	},
 
-    "roles": [],
-
-    "attributes": []
-
-  },
-
-  "dependencies": ["memes", "compmeme", "archiver"]
-
+	"dependencies": ["memes", "compmeme", "archiver"]
 }

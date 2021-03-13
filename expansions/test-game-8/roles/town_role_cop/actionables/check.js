@@ -1,50 +1,48 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	game.execute("visit", {
+		visitor: actionable.from,
+		target: actionable.to,
+		priority: actionable.priority,
+		reason: "Rolecop-investigation",
+	})
 
-  game.execute("visit", {visitor: actionable.from,
-    target: actionable.to,
-    priority: actionable.priority,
-    reason: "Rolecop-investigation"});
+	var from = game.getPlayerByIdentifier(actionable.from)
+	var target = game.getPlayerByIdentifier(actionable.to)
 
-  var from = game.getPlayerByIdentifier(actionable.from);
-  var target = game.getPlayerByIdentifier(actionable.to);
+	// Enumerate
+	switch (target.role_identifier) {
+		case "mafia_cop_role_cop":
+			var display_role = "Role and Alignment Cop"
+			break
 
-  // Enumerate
-  switch (target.role_identifier) {
+		case "town_backup":
+			var display_role = "Backup"
+			break
 
-    case "mafia_cop_role_cop":
-      var display_role = "Role and Alignment Cop";
-      break;
+		case "town_role_cop":
+			var display_role = "Role Cop"
+			break
 
-    case "town_backup":
-      var display_role = "Backup";
-      break;
+		case "town_sheriff_cop":
+			var display_role = "Sheriff"
+			break
 
-    case "town_role_cop":
-      var display_role = "Role Cop";
-      break;
+		case "town_alignment_cop":
+			var display_role = "Cop"
+			break
 
-    case "town_sheriff_cop":
-      var display_role = "Sheriff";
-      break;
+		default:
+			var display_role = "Unknown"
+			break
+	}
 
-    case "town_alignment_cop":
-      var display_role = "Cop";
-      break;
+	var response = ":mag: Your target is a __" + display_role + "__."
 
-    default:
-      var display_role = "Unknown";
-      break;
+	game.addMessage(from, response)
+}
 
-  };
-
-  var response = ":mag: Your target is a __" + display_role + "__.";
-
-  game.addMessage(from, response);
-
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

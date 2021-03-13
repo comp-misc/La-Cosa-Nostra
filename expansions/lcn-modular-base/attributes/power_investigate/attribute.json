@@ -1,18 +1,15 @@
 {
+	"name": "Investigate",
 
-  "name": "Investigate",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Investigative"},
-      {"name": "Command", "description": "investigate <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Gets the targets’ role name."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Investigative" },
+			{ "name": "Command", "description": "investigate <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Gets the targets’ role name." }
+		]
+	}
 }

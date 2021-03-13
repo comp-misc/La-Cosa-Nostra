@@ -1,31 +1,21 @@
 {
+	"name": "The Bluerose Hospital",
+	"type": "Setup",
+	"description": "Originally designed to be a closed game, Bluerose features a cursed hospital which descends into utter chaos, in which all roles are modular.",
 
-  "name": "The Bluerose Hospital",
-  "type": "Setup",
-  "description": "Originally designed to be a closed game, Bluerose features a cursed hospital which descends into utter chaos, in which all roles are modular.",
+	"link": null,
 
-  "link": null,
+	"authors": ["ChocoParrot", "Alisha"],
 
-  "authors": ["ChocoParrot", "Alisha"],
+	"overrides": {
+		"flavours": ["+the-bluerose-hospital/*"],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [
-      "+the-bluerose-hospital/*"
-    ],
+		"roles": ["-lcn/*"],
 
-    "role_win_conditions": [],
+		"attributes": ["-lcn/*"]
+	},
 
-    "roles": [
-      "-lcn/*"
-    ],
-
-    "attributes": [
-      "-lcn/*"
-    ]
-
-  },
-
-  "dependencies": ["lcn-modular-base"]
-
+	"dependencies": ["lcn-modular-base"]
 }

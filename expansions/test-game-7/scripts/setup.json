@@ -1,7 +1,5 @@
 {
+	"roles": ["town_oracle", "town_commuter", "town_dayshooter", "town_gunsmith", "mafia_watcher", "mafia_roleblocker"],
 
-  "roles": ["town_oracle", "town_commuter", "town_dayshooter", "town_gunsmith","mafia_watcher", "mafia_roleblocker"],
-
-  "flavour": "test-game-7"
-
+	"flavour": "test-game-7"
 }

@@ -1,27 +1,27 @@
 {
-  "role-name": "Ice Cream Man",
+	"role-name": "Ice Cream Man",
 
-  "alignment": "mafia",
-  "class": "support",
+	"alignment": "mafia",
+	"class": "support",
 
-  "see-mafia-chat": true,
+	"see-mafia-chat": true,
 
-  "stats": {
-    "basic-defense": 0,
-    "roleblock-immunity": 0,
-    "detection-immunity": 0,
-    "control-immunity": 0,
+	"stats": {
+		"basic-defense": 0,
+		"roleblock-immunity": 0,
+		"detection-immunity": 0,
+		"control-immunity": 0,
 		"redirection-immunity": 0,
 		"kidnap-immunity": 0,
-    "priority": 4,
-    "vote-offset": 0,
+		"priority": 4,
+		"vote-offset": 0,
 		"vote-magnitude": 1
-  },
+	},
 
-  "investigation": ["Ice Cream Man"],
-  "secondary-roles": null,
+	"investigation": ["Ice Cream Man"],
+	"secondary-roles": null,
 
-  "reveal-role-on-interrogation": false,
+	"reveal-role-on-interrogation": false,
 
-  "win-condition": "mafia"
+	"win-condition": "mafia"
 }

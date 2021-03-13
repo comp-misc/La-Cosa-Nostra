@@ -1,3 +1,3 @@
-var rs = require("../../../rolesystem/rolesystem.js");
+var rs = require("../../../rolesystem/rolesystem.js")
 
-module.exports = rs.protocol.attacked;
+module.exports = rs.protocol.attacked

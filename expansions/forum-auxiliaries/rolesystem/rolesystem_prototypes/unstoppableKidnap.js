@@ -1,66 +1,76 @@
-module.exports = function (actionable, game, params, notify=true) {
+module.exports = function (actionable, game, params, notify = true) {
+	var target = game.getPlayerByIdentifier(actionable.to)
 
-  var target = game.getPlayerByIdentifier(actionable.to);
+	var stat = target.getStat("kidnap-immunity", Math.max)
 
-  var stat = target.getStat("kidnap-immunity", Math.max);
+	if (stat < 2) {
+		// Seen as visit
+		game.execute("visit", { visitor: actionable.from, target: actionable.to, priority: actionable.priority })
 
-  if (stat < 2) {
+		// Stops all actions to the target that are roleblockable
+		var actions = game.actions.findAll(
+			(x) =>
+				(x.to === actionable.to || x.to === actionable.target) &&
+				x.tags.includes("roleblockable") &&
+				!x.tags.includes("permanent") &&
+				x.execution <= 0
+		)
 
-    // Seen as visit
-    game.execute("visit", {visitor: actionable.from,
-      target: actionable.to,
-      priority: actionable.priority});
+		if (notify) {
+			for (var i = 0; i < actions.length; i++) {
+				// Inform of failure
 
-    // Stops all actions to the target that are roleblockable
-    var actions = game.actions.findAll(x => (x.to === actionable.to || x.to === actionable.target) && x.tags.includes("roleblockable") && !x.tags.includes("permanent") && x.execution <= 0);
+				var action = actions[i]
 
-    if (notify) {
-      for (var i = 0; i < actions.length; i++) {
-        // Inform of failure
+				var affected = game.getPlayerByIdentifier(action.from)
 
-        var action = actions[i];
+				game.addMessage(
+					affected,
+					":exclamation: Your action failed because your target was " + module.exports.reason + "!"
+				)
+			}
+		}
 
-        var affected = game.getPlayerByIdentifier(action.from);
+		if (consider_roleblocked) {
+			for (var i = 0; i < actions.length; i++) {
+				// Inform of failure
 
-        game.addMessage(affected, ":exclamation: Your action failed because your target was " + module.exports.reason + "!");
+				var action = actions[i]
 
-      };
-    };
+				// Consider user roleblocked by default
+				game.execute("roleblock", {
+					roleblocker: actionable.from,
+					target: action.from,
+					priority: actionable.priority,
+					reason: "Kidnapper-roleblock",
+				})
+			}
+		}
 
-    if (consider_roleblocked) {
-      for (var i = 0; i < actions.length; i++) {
-        // Inform of failure
+		target.setStatus("kidnapped", true)
 
-        var action = actions[i];
+		if (consider_roleblocked) {
+			game.execute("roleblock", {
+				roleblocker: actionable.from,
+				target: actionable.to,
+				priority: actionable.priority,
+				reason: "Kidnapper-roleblock",
+			})
+		}
 
-        // Consider user roleblocked by default
-        game.execute("roleblock", {roleblocker: actionable.from,
-          target: action.from,
-          priority: actionable.priority,
-          reason: "Kidnapper-roleblock"});
+		game.actions.delete((x) => x.from === actionable.to && x.tags.includes("visit"))
+		game.actions.delete(
+			(x) =>
+				(x.to === actionable.to || x.to === actionable.target) &&
+				x.tags.includes("visit") &&
+				!x.tags.includes("permanent") &&
+				x.execution <= 0
+		)
 
-      };
+		return true
+	}
 
-    };
+	return false
+}
 
-    target.setStatus("kidnapped", true);
-
-    if (consider_roleblocked) {
-      game.execute("roleblock", {roleblocker: actionable.from,
-        target: actionable.to,
-        priority: actionable.priority,
-        reason: "Kidnapper-roleblock"});
-    };
-
-    game.actions.delete(x => x.from === actionable.to && x.tags.includes("visit"));
-    game.actions.delete(x => (x.to === actionable.to || x.to === actionable.target) && x.tags.includes("visit") && !x.tags.includes("permanent") && x.execution <= 0);
-
-    return true;
-
-  };
-
-  return false;
-
-};
-
-module.exports.reason = "away";
+module.exports.reason = "away"

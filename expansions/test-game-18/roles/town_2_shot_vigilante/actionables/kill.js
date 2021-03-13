@@ -1,15 +1,13 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	var from = game.getPlayerByIdentifier(actionable.from)
 
-  var from = game.getPlayerByIdentifier(actionable.from);
+	var outcome = rs.prototypes.basicAttack(...arguments)
 
-  var outcome = rs.prototypes.basicAttack(...arguments);
+	from.misc.vigilante_kills_left--
+}
 
-  from.misc.vigilante_kills_left--;
-
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

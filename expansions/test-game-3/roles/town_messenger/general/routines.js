@@ -3,21 +3,24 @@
 
 // Function should be synchronous
 
-var mafia = require("../../../../../source/lcn.js");
+var mafia = require("../../../../../source/lcn.js")
 
-var auxils = mafia.auxils;
+var auxils = mafia.auxils
 
 module.exports = function (player) {
+	var config = player.game.config
 
-  var config = player.game.config;
+	// Nighttime actions
+	var channel = player.getPrivateChannel()
 
-  // Nighttime actions
-  var channel = player.getPrivateChannel();
+	player.game.sendPeriodPin(
+		channel,
+		":mailbox_with_mail: You may choose to send a player an anonymous message tonight.\n\nUse `" +
+			config["command-prefix"] +
+			"mail <alphabet/name/nobody> <message>` to select your target."
+	)
+}
 
-  player.game.sendPeriodPin(channel, ":mailbox_with_mail: You may choose to send a player an anonymous message tonight.\n\nUse `" + config["command-prefix"] + "mail <alphabet/name/nobody> <message>` to select your target.");
-
-};
-
-module.exports.ALLOW_DEAD = false;
-module.exports.ALLOW_NIGHT = true;
-module.exports.ALLOW_DAY = false;
+module.exports.ALLOW_DEAD = false
+module.exports.ALLOW_NIGHT = true
+module.exports.ALLOW_DAY = false

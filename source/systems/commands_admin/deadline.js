@@ -1,72 +1,76 @@
-var auxils = require("../auxils.js");
+var auxils = require("../auxils.js")
 
 module.exports = async function (message, params, config) {
+	if (!process.timer || !["pre-game", "playing"].includes(process.timer.game.state)) {
+		await message.channel.send(":x: No game in progress.")
+		return null
+	}
 
-  if (!process.timer || !["pre-game", "playing"].includes(process.timer.game.state)) {
-    await message.channel.send(":x: No game in progress.");
-    return null;
-  };
+	var game = process.timer.game
 
-  var game = process.timer.game;
+	if (params.length < 2) {
+		await message.channel.send(
+			":x: Wrong syntax! Use `" + config["command-prefix"] + "deadline <set/change> <Unix timestamp/seconds>` instead!"
+		)
+		return null
+	}
 
-  if (params.length < 2) {
-    await message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "deadline <set/change> <Unix timestamp/seconds>` instead!");
-    return null;
-  };
+	switch (params[0].toLowerCase()) {
+		case "set":
+			// Set to epoch directly
 
-  switch (params[0].toLowerCase()) {
+			var epoch = parseInt(params[1])
 
-    case "set":
-      // Set to epoch directly
+			if (isNaN(epoch)) {
+				await message.channel.send(":x: Epoch time is invalid.")
+				return null
+			}
 
-      var epoch = parseInt(params[1]);
+			var date = new Date(epoch * 1000)
+			break
 
-      if (isNaN(epoch)) {
-        await message.channel.send(":x: Epoch time is invalid.");
-        return null;
-      };
+		case "change":
+			// Calculate a delta
 
-      var date = new Date(epoch * 1000);
-      break;
+			var delta = parseInt(params[1])
 
-    case "change":
-      // Calculate a delta
+			if (isNaN(delta)) {
+				await message.channel.send(":x: Epoch time is invalid.")
+				return null
+			}
 
-      var delta = parseInt(params[1]);
+			var date = new Date(game.next_action.getTime() + delta * 1000)
+			break
 
-      if (isNaN(delta)) {
-        await message.channel.send(":x: Epoch time is invalid.");
-        return null;
-      };
+		default:
+			await message.channel.send(
+				":x: Wrong syntax! Use `" + config["command-prefix"] + "deadline <set/change> <epoch/milliseconds>` instead!"
+			)
+			break
+	}
 
-      var date = new Date(game.next_action.getTime() + delta * 1000);
-      break;
+	var max = 2147483647
+	var difference = date.getTime() - new Date().getTime()
 
-    default:
-      await message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "deadline <set/change> <epoch/milliseconds>` instead!");
-      break;
+	if (difference > max) {
+		await message.channel.send(":x: You may not increase the deadline by more than " + max / 1000 + " seconds!")
+		return null
+	}
 
-  };
+	if (difference <= 0) {
+		await message.channel.send(
+			":x: That would make the deadline before now! Use `" +
+				config["command-prefix"] +
+				"step` if you want the game to cycle immediately instead!"
+		)
+		return null
+	}
 
-  var max = 2147483647;
-  var difference = date.getTime() - new Date().getTime();
+	game.next_action = date
 
-  if (difference > max) {
-    await message.channel.send(":x: You may not increase the deadline by more than " + max/1000 + " seconds!");
-    return null;
-  };
+	// Reprime the timer and save
+	process.timer.prime()
+	game.save()
 
-  if (difference <= 0) {
-    await message.channel.send(":x: That would make the deadline before now! Use `" + config["command-prefix"] + "step` if you want the game to cycle immediately instead!");
-    return null;
-  };
-
-  game.next_action = date;
-
-  // Reprime the timer and save
-  process.timer.prime();
-  game.save();
-
-  await message.channel.send(":ok: Set new deadline to **" + auxils.formatUTCDate(game.next_action) + "**.");
-
-};
+	await message.channel.send(":ok: Set new deadline to **" + auxils.formatUTCDate(game.next_action) + "**.")
+}

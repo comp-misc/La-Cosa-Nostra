@@ -2,82 +2,89 @@
 
 var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (game, message, params) {
+	var actions = game.actions
+	var config = game.config
 
-  var actions = game.actions;
-  var config = game.config;
+	var from = game.getPlayerById(message.author.id)
 
-  var from = game.getPlayerById(message.author.id);
+	if (from.misc.consecutive_night === true) {
+		message.channel.send(":x:  You may not use an action on two consecutive nights!")
 
-  if (from.misc.consecutive_night === true) {
-    message.channel.send(":x:  You may not use an action on two consecutive nights!");
+		return null
+	}
 
-    return null;
-  };
+	// Run checks, etc
 
-  // Run checks, etc
+	if (params[0] === undefined) {
+		message.channel.send(
+			":x:  Wrong syntax! Please use `" + config["command-prefix"] + "poison <alphabet/username/nobody>` instead!"
+		)
+		return null
+	}
 
-  if (params[0] === undefined) {
-    message.channel.send(":x:  Wrong syntax! Please use `" + config["command-prefix"] + "poison <alphabet/username/nobody>` instead!");
-    return null;
-  };
+	var to = game.getPlayerMatch(params[0])
 
-  var to = game.getPlayerMatch(params[0]);
+	if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		actions.delete(
+			(x) =>
+				x.from === from.identifier &&
+				(x.identifier === "mafia_nonconsecutive_poisoner/poison" ||
+					x.identifier === "mafia_nonconsecutive_poisoner/no_action")
+		)
 
-  if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		game.addAction("mafia_nonconsecutive_poisoner/no_action", ["cycle"], {
+			name: "SE-no_action",
+			expiry: 1,
+			from: message.author.id,
+			to: message.author.id,
+		})
 
-    actions.delete(x => x.from === from.identifier && (x.identifier === "mafia_nonconsecutive_poisoner/poison" || x.identifier === "mafia_nonconsecutive_poisoner/no_action"));
+		message.channel.send(":test_tube:  You have now selected to not poison anyone tonight.")
+		game.getChannel("mafia").send(":test_tube:  **" + from.getDisplayName() + "** is not poisoning anyone tonight.")
+		return null
+	}
 
-    game.addAction("mafia_nonconsecutive_poisoner/no_action", ["cycle"], {
-      name: "SE-no_action",
-      expiry: 1,
-      from: message.author.id,
-      to: message.author.id
-    });
+	to = to.player
 
-    message.channel.send(":test_tube:  You have now selected to not poison anyone tonight.");
-    game.getChannel("mafia").send(":test_tube:  **" + from.getDisplayName() + "** is not poisoning anyone tonight.");
-    return null;
-  };
+	if (!to.isAlive()) {
+		message.channel.send(":x:  You cannot poison a dead player!")
+		return null
+	}
 
-  to = to.player;
+	if (to.id === message.author.id) {
+		message.channel.send(":x:  You cannot poison yourself!")
 
-  if (!to.isAlive()) {
-    message.channel.send(":x:  You cannot poison a dead player!");
-    return null;
-  };
+		return null
+	} else {
+		actions.delete(
+			(x) =>
+				x.from === from.identifier &&
+				(x.identifier === "mafia_nonconsecutive_poisoner/poison" ||
+					x.identifier === "mafia_nonconsecutive_poisoner/no_action")
+		)
 
-  if (to.id === message.author.id) {
+		game.addAction("mafia_nonconsecutive_poisoner/poison", ["cycle"], {
+			name: "Toxicologist-poison",
+			expiry: 1,
+			from: message.author.id,
+			to: to.id,
+		})
 
-    message.channel.send(":x:  You cannot poison yourself!");
+		var mention = to.getDisplayName()
+	}
 
-    return null;
+	message.channel.send(":test_tube:  You have now selected to poison **" + mention + "** tonight.")
+	game
+		.getChannel("mafia")
+		.send(":test_tube:  **" + from.getDisplayName() + "** is poisoning **" + mention + "** tonight.")
+}
 
-  } else {
-    
-    actions.delete(x => x.from === from.identifier && (x.identifier === "mafia_nonconsecutive_poisoner/poison" || x.identifier === "mafia_nonconsecutive_poisoner/no_action"));
-
-    game.addAction("mafia_nonconsecutive_poisoner/poison", ["cycle"], {
-      name: "Toxicologist-poison",
-      expiry: 1,
-      from: message.author.id,
-      to: to.id
-    });
-
-    var mention = to.getDisplayName();
-
-  };
-
-  message.channel.send(":test_tube:  You have now selected to poison **" + mention + "** tonight.");
-  game.getChannel("mafia").send(":test_tube:  **" + from.getDisplayName() + "** is poisoning **" + mention + "** tonight.");
-
-};
-
-module.exports.ALLOW_NONSPECIFIC = false;
-module.exports.PRIVATE_ONLY = true;
-module.exports.DEAD_CANNOT_USE = true;
-module.exports.ALIVE_CANNOT_USE = false;
-module.exports.DISALLOW_DAY = true;
-module.exports.DISALLOW_NIGHT = false;
+module.exports.ALLOW_NONSPECIFIC = false
+module.exports.PRIVATE_ONLY = true
+module.exports.DEAD_CANNOT_USE = true
+module.exports.ALIVE_CANNOT_USE = false
+module.exports.DISALLOW_DAY = true
+module.exports.DISALLOW_NIGHT = false

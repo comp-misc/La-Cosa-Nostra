@@ -1,57 +1,53 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
 // Register heal
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (game, message, params) {
+	var actions = game.actions
+	var config = game.config
 
-  var actions = game.actions;
-  var config = game.config;
+	// Run checks, etc
 
-  // Run checks, etc
+	if (params[0] === undefined) {
+		message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "marshal <on/off>` instead!")
+		return null
+	}
 
-  if (params[0] === undefined) {
-    message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "marshal <on/off>` instead!");
-    return null;
-  };
+	var to = game.getPlayerMatch(params[0])
+	var from = game.getPlayerById(message.author.id)
 
-  var to = game.getPlayerMatch(params[0]);
-  var from = game.getPlayerById(message.author.id);
+	rs.modular.clearModuleActions(game, from.identifier, "power")
 
-  rs.modular.clearModuleActions(game, from.identifier, "power");
+	switch (params[0]) {
+		case "on":
+			game.addAction("a/power_marshal/marshal", ["cycle"], {
+				name: "Modular-marshal",
+				expiry: 1,
+				from: message.author.id,
+				meta: { type: "power" },
+				to: message.author.id,
+				priority: 5,
+			})
 
-  switch (params[0]) {
+			message.channel.send(":octagonal_sign: You have decided to marshal the votes for tomorrow tonight.")
+			break
 
-    case "on":
-      game.addAction("a/power_marshal/marshal", ["cycle"], {
-        name: "Modular-marshal",
-        expiry: 1,
-        from: message.author.id,
-        meta: {type: "power"},
-        to: message.author.id,
-        priority: 5
-      });
+		case "off":
+			message.channel.send(":octagonal_sign: You have decided not to marshal the votes for tomorrow tonight.")
+			break
 
-      message.channel.send(":octagonal_sign: You have decided to marshal the votes for tomorrow tonight.");
-      break;
+		default:
+			message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "marshal <on/off>` instead!")
+	}
 
-    case "off":
-      message.channel.send(":octagonal_sign: You have decided not to marshal the votes for tomorrow tonight.");
-      break;
+	return null
+}
 
-    default:
-      message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "marshal <on/off>` instead!");
-
-  };
-
-  return null;
-
-};
-
-module.exports.ALLOW_NONSPECIFIC = false;
-module.exports.PRIVATE_ONLY = true;
-module.exports.DEAD_CANNOT_USE = true;
-module.exports.ALIVE_CANNOT_USE = false;
-module.exports.DISALLOW_DAY = true;
-module.exports.DISALLOW_NIGHT = false;
+module.exports.ALLOW_NONSPECIFIC = false
+module.exports.PRIVATE_ONLY = true
+module.exports.DEAD_CANNOT_USE = true
+module.exports.ALIVE_CANNOT_USE = false
+module.exports.DISALLOW_DAY = true
+module.exports.DISALLOW_NIGHT = false

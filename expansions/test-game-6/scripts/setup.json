@@ -1,7 +1,13 @@
 {
+	"roles": [
+		"town_doctor_full_prot",
+		"town_doctor_single_prot",
+		"mafia_poisoner",
+		"3p_serial_killer",
+		"mafia_doctor_full_prot",
+		"town_poisoner",
+		"town_bodyguard"
+	],
 
-  "roles": ["town_doctor_full_prot", "town_doctor_single_prot", "mafia_poisoner", "3p_serial_killer","mafia_doctor_full_prot", "town_poisoner", "town_bodyguard"],
-
-  "flavour": "test-game-6"
-
+	"flavour": "test-game-6"
 }

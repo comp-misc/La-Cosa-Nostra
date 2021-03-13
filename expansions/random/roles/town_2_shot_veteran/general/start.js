@@ -1,7 +1,5 @@
 // Executes BEFORE introduction
 
 module.exports = function (player) {
-
-  player.misc.veteran_alerts_left = 2;
-
-};
+	player.misc.veteran_alerts_left = 2
+}

@@ -1,80 +1,89 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
 // Register heal
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (game, message, params) {
+	var actions = game.actions
+	var config = game.config
 
-  var actions = game.actions;
-  var config = game.config;
+	var from = game.getPlayerById(message.author.id)
 
-  var from = game.getPlayerById(message.author.id);
+	if (from.misc.consecutive_night === true) {
+		message.channel.send(":x:  You may not use an action on two consecutive nights!")
 
-  if (from.misc.consecutive_night === true) {
-    message.channel.send(":x:  You may not use an action on two consecutive nights!");
+		return null
+	}
 
-    return null;
-  };
+	// Run checks, etc
 
-  // Run checks, etc
+	if (params[0] === undefined) {
+		message.channel.send(
+			":x:  Wrong syntax! Please use `" + config["command-prefix"] + "protect <alphabet/username/nobody>` instead!"
+		)
+		return null
+	}
 
-  if (params[0] === undefined) {
-    message.channel.send(":x:  Wrong syntax! Please use `" + config["command-prefix"] + "protect <alphabet/username/nobody>` instead!");
-    return null;
-  };
+	var to = game.getPlayerMatch(params[0])
 
-  var to = game.getPlayerMatch(params[0]);
+	if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		actions.delete(
+			(x) =>
+				x.from === from.identifier &&
+				(x.identifier === "mafia_nonconsecutive_doctor/protect" ||
+					x.identifier === "mafia_nonconsecutive_doctor/no_action")
+		)
 
-  if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		game.addAction("mafia_nonconsecutive_doctor/no_action", ["cycle"], {
+			name: "SE-no_action",
+			expiry: 1,
+			from: message.author.id,
+			to: message.author.id,
+		})
 
-    actions.delete(x => x.from === from.identifier && (x.identifier === "mafia_nonconsecutive_doctor/protect" || x.identifier === "mafia_nonconsecutive_doctor/no_action"));
+		message.channel.send(":shield:  You have now selected to not protect anyone tonight.")
+		game.getChannel("mafia").send(":shield:  **" + from.getDisplayName() + "** is not protecting anyone tonight.")
+		return null
+	}
 
-    game.addAction("mafia_nonconsecutive_doctor/no_action", ["cycle"], {
-      name: "SE-no_action",
-      expiry: 1,
-      from: message.author.id,
-      to: message.author.id
-    });
+	to = to.player
 
-    message.channel.send(":shield:  You have now selected to not protect anyone tonight.");
-    game.getChannel("mafia").send(":shield:  **" + from.getDisplayName() + "** is not protecting anyone tonight.");
-    return null;
-  };
+	if (!to.isAlive()) {
+		message.channel.send(":x:  You cannot heal a dead player!")
+		return null
+	}
 
-  to = to.player;
+	if (to.id === message.author.id) {
+		message.channel.send(":x:  You may not protect yourself.")
+		return null
+	}
 
-  if (!to.isAlive()) {
-    message.channel.send(":x:  You cannot heal a dead player!");
-    return null;
-  };
+	actions.delete(
+		(x) =>
+			x.from === from.identifier &&
+			(x.identifier === "mafia_nonconsecutive_doctor/protect" ||
+				x.identifier === "mafia_nonconsecutive_doctor/no_action")
+	)
 
-  if (to.id === message.author.id) {
+	game.addAction("mafia_nonconsecutive_doctor/protect", ["cycle"], {
+		name: "Doc-protect",
+		expiry: 1,
+		from: message.author.id,
+		to: to.id,
+	})
 
-    message.channel.send(":x:  You may not protect yourself.");
-    return null;
+	var mention = to.getDisplayName()
 
-  };
+	message.channel.send(":shield:  You have now selected to protect **" + mention + "** tonight.")
+	game
+		.getChannel("mafia")
+		.send(":shield:  **" + from.getDisplayName() + "** is protecting **" + mention + "** tonight.")
+}
 
-  actions.delete(x => x.from === from.identifier && (x.identifier === "mafia_nonconsecutive_doctor/protect" || x.identifier === "mafia_nonconsecutive_doctor/no_action"));
-
-  game.addAction("mafia_nonconsecutive_doctor/protect", ["cycle"], {
-    name: "Doc-protect",
-    expiry: 1,
-    from: message.author.id,
-    to: to.id
-  });
-
-  var mention = to.getDisplayName();
-
-  message.channel.send(":shield:  You have now selected to protect **" + mention + "** tonight.");
-  game.getChannel("mafia").send(":shield:  **" + from.getDisplayName() + "** is protecting **" + mention + "** tonight.");
-
-};
-
-module.exports.ALLOW_NONSPECIFIC = false;
-module.exports.PRIVATE_ONLY = true;
-module.exports.DEAD_CANNOT_USE = true;
-module.exports.ALIVE_CANNOT_USE = false;
-module.exports.DISALLOW_DAY = true;
-module.exports.DISALLOW_NIGHT = false;
+module.exports.ALLOW_NONSPECIFIC = false
+module.exports.PRIVATE_ONLY = true
+module.exports.DEAD_CANNOT_USE = true
+module.exports.ALIVE_CANNOT_USE = false
+module.exports.DISALLOW_DAY = true
+module.exports.DISALLOW_NIGHT = false

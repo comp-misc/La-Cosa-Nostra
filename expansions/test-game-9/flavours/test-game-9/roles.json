@@ -1,45 +1,57 @@
 {
+	"mafia_pyromaniac": [
+		{
+			"name": "Mafia Pyromaniac",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Pyromaniac!\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_pyromaniac": [{
-    "name": "Mafia Pyromaniac",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Pyromaniac!\n\nAlignment: Mafia"
-  }],
+	"3p_arsonist_im_bp": [
+		{
+			"name": "Arsonist",
+			"banner": "Mafia Goon.png",
+			"description": "You are an Arsonist!\n\nAlignment: Third Party"
+		}
+	],
 
-  "3p_arsonist_im_bp": [{
-    "name": "Arsonist",
-    "banner": "Mafia Goon.png",
-    "description": "You are an Arsonist!\n\nAlignment: Third Party"
-  }],
+	"town_firefighter": [
+		{
+			"name": "Town Firefighter",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Firefighter!\n\nAlignment: Town"
+		}
+	],
 
-  "town_firefighter": [{
-    "name": "Town Firefighter",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Firefighter!\n\nAlignment: Town"
-  }],
+	"town_vote_influencer": [
+		{
+			"name": "Town Vote Influencer",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Vote Influencer!\n\nAlignment: Town"
+		}
+	],
 
-  "town_vote_influencer": [{
-    "name": "Town Vote Influencer",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Vote Influencer!\n\nAlignment: Town"
-  }],
+	"town_messenger": [
+		{
+			"name": "Town Messenger",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Messenger!\n\nAlignment: Town"
+		}
+	],
 
-  "town_messenger": [{
-    "name": "Town Messenger",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Messenger!\n\nAlignment: Town"
-  }],
+	"town_roleblocker": [
+		{
+			"name": "Town Roleblocker",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Roleblocker!\n\nAlignment: Town"
+		}
+	],
 
-  "town_roleblocker": [{
-    "name": "Town Roleblocker",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Roleblocker!\n\nAlignment: Town"
-  }],
-
-  "mafia_kidnapper": [{
-    "name": "Mafia Kidnapper",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Kidnapper!\n\nAlignment: Mafia"
-  }]
-  
+	"mafia_kidnapper": [
+		{
+			"name": "Mafia Kidnapper",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Kidnapper!\n\nAlignment: Mafia"
+		}
+	]
 }

@@ -1,18 +1,15 @@
 {
+	"name": "Security (Protection)",
 
-  "name": "Security (Protection)",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "curse",
 
-  "modular-details": {
-    "cluster": "curse",
-
-    "display-field": [
-      {"name": "Category", "description": "Protection"},
-      {"name": "Command", "description": "protect <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Curses a user with a protection."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Protection" },
+			{ "name": "Command", "description": "protect <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Curses a user with a protection." }
+		]
+	}
 }

@@ -1,29 +1,21 @@
 {
+	"name": "PISK",
+	"type": "Setup",
+	"description": "A semi-open setup.",
 
-  "name": "PISK",
-  "type": "Setup",
-  "description": "A semi-open setup.",
+	"link": "https://docs.google.com/document/d/1ODzHo0N_laspYHANfSEQdEBXUfsk4bzj2N5qacw7GUg",
 
-  "link": "https://docs.google.com/document/d/1ODzHo0N_laspYHANfSEQdEBXUfsk4bzj2N5qacw7GUg",
+	"authors": ["Jobbiis"],
 
-  "authors": ["Jobbiis"],
+	"overrides": {
+		"flavours": [],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [],
+		"roles": ["-lcn/*"],
 
-    "role_win_conditions": [],
+		"attributes": ["-lcn/*"]
+	},
 
-    "roles": [
-      "-lcn/*"
-    ],
-
-    "attributes": [
-      "-lcn/*"
-    ]
-
-  },
-
-  "dependencies": ["forum-auxiliaries"]
-
+	"dependencies": ["forum-auxiliaries"]
 }

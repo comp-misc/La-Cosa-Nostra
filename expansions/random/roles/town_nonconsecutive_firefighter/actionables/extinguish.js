@@ -1,28 +1,27 @@
 var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	// Send visit
+	game.execute("visit", {
+		visitor: actionable.from,
+		target: actionable.to,
+		priority: actionable.priority,
+		reason: "Firefighter-visit",
+	})
 
-  // Send visit
-  game.execute("visit", {visitor: actionable.from,
-    target: actionable.to,
-    priority: actionable.priority,
-    reason: "Firefighter-visit"});
+	// Remove douse
+	var extinguisher = game.getPlayerByIdentifier(actionable.from)
+	var target = game.getPlayerByIdentifier(actionable.to)
 
-  // Remove douse
-  var extinguisher = game.getPlayerByIdentifier(actionable.from);
-  var target = game.getPlayerByIdentifier(actionable.to);
+	if (target.misc.doused === true) {
+		target.misc.doused = false
 
-  if (target.misc.doused === true) {
+		// Is doused
+	}
 
-    target.misc.doused = false;
+	extinguisher.misc.consecutive_night = true
+}
 
-    // Is doused
-  };
-
-  extinguisher.misc.consecutive_night = true;
-
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

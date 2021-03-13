@@ -1,3 +1,3 @@
 // Last will alias
 
-module.exports = require("./will.js");
+module.exports = require("./will.js")

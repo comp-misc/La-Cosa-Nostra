@@ -1,81 +1,81 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	var random = Math.random()
 
-  var random = Math.random();
+	var user = game.getPlayerByIdentifier(actionable.from)
+	var target = game.getPlayerByIdentifier(actionable.to)
 
-  var user = game.getPlayerByIdentifier(actionable.from);
-  var target = game.getPlayerByIdentifier(actionable.to);
+	var private_channel = user.getPrivateChannel()
+	var target_channel = target.getPrivateChannel()
+	var main_channel = game.getMainChannel()
 
-  var private_channel = user.getPrivateChannel();
-  var target_channel = target.getPrivateChannel();
-  var main_channel = game.getMainChannel();
+	if (target.hasAttribute("prosperity_charm")) {
+		user.getPrivateChannel().send(":exclamation: The execution of **" + target.getDisplayName() + "** failed!")
+		user.misc.forgeries_left--
 
-  if (target.hasAttribute("prosperity_charm")) {
+		var attributes = target.attributes
 
-    user.getPrivateChannel().send(":exclamation: The execution of **" + target.getDisplayName() + "** failed!");
-    user.misc.forgeries_left--;
+		attributes.sort((a, b) => a.expiry - b.expiry)
 
-    var attributes = target.attributes;
+		for (var i = 0; i < attributes.length; i++) {
+			if (attributes[i].identifier !== "prosperity_charm") {
+				continue
+			}
 
-    attributes.sort((a, b) => a.expiry - b.expiry);
+			if (typeof attributes[i].tags.amount === "number") {
+				attributes[i].tags.amount--
+			}
 
-    for (var i = 0; i < attributes.length; i++) {
+			if (attributes[i].tags.amount < 1) {
+				// Remove
+				attributes.splice(i, 1)
 
-      if (attributes[i].identifier !== "prosperity_charm") {
-        continue;
-      };
+				if (!target.hasAttribute("prosperity_charm")) {
+					game.actions.delete((x) => x.identifier === "a/prosperity_charm/charm" && x.from === actionable.from)
+					game.actions.delete((x) => x.identifier === "a/prosperity_charm/attacked" && x.from === actionable.from)
+					return true
+				}
 
-      if (typeof attributes[i].tags.amount === "number") {
-        attributes[i].tags.amount--;
-      };
+				return true
+			}
+		}
+	}
 
-      if (attributes[i].tags.amount < 1) {
-        // Remove
-        attributes.splice(i, 1);
+	rs.prototypes.unstoppableAttack.reason = "killed by the __God of War__"
 
-        if (!target.hasAttribute("prosperity_charm")) {
-          game.actions.delete(x => x.identifier === "a/prosperity_charm/charm" && x.from === actionable.from);
-          game.actions.delete(x => x.identifier === "a/prosperity_charm/attacked" && x.from === actionable.from);
-          return true;
-        };
+	var outcome = rs.prototypes.unstoppableAttack(...arguments)
 
-        return true;
-      };
+	private_channel.send(":exclamation: You killed **" + target.getDisplayName() + "**!")
+	target_channel.send(":exclamation: You were executed!")
+	main_channel.send(
+		":crossed_swords: **" +
+			user.getDisplayName() +
+			"** yells a battle cry and races across the area. With a single swing they kill **" +
+			target.getDisplayName() +
+			"**."
+	)
 
-    };
+	user.misc.executions--
 
-  };
+	game.save()
 
-  rs.prototypes.unstoppableAttack.reason = "killed by the __God of War__";
+	var tvl = false
+	if (game.config.game.lynch["top-voted-lynch"]) {
+		var tvl = true
+		game.config.game.lynch["top-voted-lynch"] = false
+	}
 
-  var outcome = rs.prototypes.unstoppableAttack(...arguments);
+	game.fastforward()
 
-  private_channel.send(":exclamation: You killed **" + target.getDisplayName() + "**!");
-  target_channel.send(":exclamation: You were executed!");
-  main_channel.send(":crossed_swords: **" + user.getDisplayName() + "** yells a battle cry and races across the area. With a single swing they kill **" + target.getDisplayName() + "**.");
+	if (tvl) {
+		game.config.game.lynch["top-voted-lynch"] = true
+	}
 
-  user.misc.executions--;
+	// Always return true for instant triggers to null the action
+	return true
+}
 
-  game.save();
-
-  var tvl = false
-  if (game.config.game.lynch["top-voted-lynch"]) {
-    var tvl = true;
-    game.config.game.lynch["top-voted-lynch"] = false;
-  };
-
-  game.fastforward();
-
-  if (tvl) {
-    game.config.game.lynch["top-voted-lynch"] = true;
-  };
-
-  // Always return true for instant triggers to null the action
-  return true;
-
-};
-
-module.exports.TAGS = ["visit", "day_action"];
+module.exports.TAGS = ["visit", "day_action"]

@@ -1,9 +1,7 @@
 {
+	"thumbnail": "",
 
-  "thumbnail": "",
+	"abilities": ["Gift someone a refreshing glass of orange juice each night."],
 
-  "abilities": ["Gift someone a refreshing glass of orange juice each night."],
-
-  "attributes": [""]
-
+	"attributes": [""]
 }

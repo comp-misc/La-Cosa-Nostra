@@ -1,7 +1,13 @@
 {
+	"roles": [
+		"town_bulletproof",
+		"town_cupid",
+		"town_lover",
+		"town_lover",
+		"mafia_bulletproof",
+		"mafia_neapolitan",
+		"town_jailkeeper"
+	],
 
-  "roles": ["town_bulletproof", "town_cupid", "town_lover", "town_lover", "mafia_bulletproof","mafia_neapolitan", "town_jailkeeper"],
-
-  "flavour": "test-game-13"
-
+	"flavour": "test-game-13"
 }

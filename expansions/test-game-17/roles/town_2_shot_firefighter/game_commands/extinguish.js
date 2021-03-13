@@ -1,71 +1,69 @@
 var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (game, message, params) {
+	var actions = game.actions
 
-  var actions = game.actions;
+	// Run checks, etc
 
-  // Run checks, etc
+	if (params[0] === undefined) {
+		message.channel.send(
+			":x: Wrong syntax! Please use `" + config["command-prefix"] + "extinguish <alphabet/username/nobody>` instead!"
+		)
+		return null
+	}
 
-  if (params[0] === undefined) {
-    message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "extinguish <alphabet/username/nobody>` instead!");
-    return null;
-  };
+	var to = game.getPlayerMatch(params[0])
+	var from = game.getPlayerById(message.author.id)
 
-  var to = game.getPlayerMatch(params[0]);
-  var from = game.getPlayerById(message.author.id);
-  
-  if (from.misc.firefighter_extinguishes_left < 1) {
-    message.channel.send(":x: You have no uses left!");
-    return null;
-  };
+	if (from.misc.firefighter_extinguishes_left < 1) {
+		message.channel.send(":x: You have no uses left!")
+		return null
+	}
 
-  if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+	if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		actions.delete((x) => x.from === from.identifier && x.identifier === "town_2_shot_firefighter/extinguish")
 
-    actions.delete(x => x.from === from.identifier && x.identifier === "town_2_shot_firefighter/extinguish");
+		message.channel.send(":fire_engine: You have decided to extinguish nobody tonight.")
+		return null
+	}
 
-    message.channel.send(":fire_engine: You have decided to extinguish nobody tonight.");
-    return null;
-  };
+	to = to.player
 
-  to = to.player;
+	if (!to.isAlive()) {
+		message.channel.send(":x: You cannot extinguish a dead player!" + rs.misc.sarcasm(true))
+		return null
+	}
 
-  if (!to.isAlive()) {
-    message.channel.send(":x: You cannot extinguish a dead player!" + rs.misc.sarcasm(true));
-    return null;
-  };
+	if (to.id === message.author.id) {
+		message.channel.send(":fire_engine: You have decided to extinguish **yourself** tonight.")
 
-  if (to.id === message.author.id) {
-    message.channel.send(":fire_engine: You have decided to extinguish **yourself** tonight.");
+		actions.delete((x) => x.from === from.identifier && x.identifier === "town_2_shot_firefighter/extinguish")
 
-    actions.delete(x => x.from === from.identifier && x.identifier === "town_2_shot_firefighter/extinguish");
+		game.addAction("town_2_shot_firefighter/extinguish", ["cycle"], {
+			name: "Firefighter-extinguish",
+			expiry: 1,
+			from: message.author.id,
+			to: to.id,
+		})
+	} else {
+		message.channel.send(":fire_engine: You have decided to extinguish **" + to.getDisplayName() + "** tonight.")
+	}
 
-    game.addAction("town_2_shot_firefighter/extinguish", ["cycle"], {
-      name: "Firefighter-extinguish",
-      expiry: 1,
-      from: message.author.id,
-      to: to.id
-    });
+	actions.delete((x) => x.from === from.identifier && x.identifier === "town_2_shot_firefighter/extinguish")
 
-  } else {
-    message.channel.send(":fire_engine: You have decided to extinguish **" + to.getDisplayName() + "** tonight.")
-  };
+	game.addAction("town_2_shot_firefighter/extinguish", ["cycle"], {
+		name: "Firefighter-extinguish",
+		expiry: 1,
+		from: message.author.id,
+		to: to.id,
+	})
+}
 
-  actions.delete(x => x.from === from.identifier && x.identifier === "town_2_shot_firefighter/extinguish");
-
-  game.addAction("town_2_shot_firefighter/extinguish", ["cycle"], {
-    name: "Firefighter-extinguish",
-    expiry: 1,
-    from: message.author.id,
-    to: to.id
-  });
-
-};
-
-module.exports.ALLOW_NONSPECIFIC = false;
-module.exports.PRIVATE_ONLY = true;
-module.exports.DEAD_CANNOT_USE = true;
-module.exports.ALIVE_CANNOT_USE = false;
-module.exports.DISALLOW_DAY = true;
-module.exports.DISALLOW_NIGHT = false;
+module.exports.ALLOW_NONSPECIFIC = false
+module.exports.PRIVATE_ONLY = true
+module.exports.DEAD_CANNOT_USE = true
+module.exports.ALIVE_CANNOT_USE = false
+module.exports.DISALLOW_DAY = true
+module.exports.DISALLOW_NIGHT = false

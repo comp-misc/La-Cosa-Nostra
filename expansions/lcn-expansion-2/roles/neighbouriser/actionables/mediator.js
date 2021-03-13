@@ -1,6 +1,6 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 // Defaults to shooting
 // Godfather can override
@@ -8,64 +8,57 @@ var rs = lcn.rolesystem;
 // See godfather/kill_vote
 
 module.exports = function (actionable, game, params) {
+	var config = game.config
 
-  var config = game.config;
+	// Mediated by the lead
+	var lead = game.getPlayerByIdentifier(actionable.from)
+	var neighbours = lead.misc.neighbour_players
 
-  // Mediated by the lead
-  var lead = game.getPlayerByIdentifier(actionable.from);
-  var neighbours = lead.misc.neighbour_players;
+	var channel = game.getChannelById(lead.misc.neighbour_channel)
 
-  var channel = game.getChannelById(lead.misc.neighbour_channel);
+	if (!channel) {
+		return null
+	}
 
-  if (!channel) {
-    return null;
-  };
+	if (!game.isDay()) {
+		// Open the channels
 
-  if (!game.isDay()) {
-    // Open the channels
+		var alive = new Array()
 
-    var alive = new Array();
+		var post_message = false
 
-    var post_message = false;
+		for (var i = 0; i < neighbours.length; i++) {
+			var neighbour = game.getPlayerByIdentifier(neighbours[i])
 
-    for (var i = 0; i < neighbours.length; i++) {
+			if (neighbour.isAlive()) {
+				post_message = true
 
-      var neighbour = game.getPlayerByIdentifier(neighbours[i]);
+				var user = neighbour.getDiscordUser()
 
-      if (neighbour.isAlive()) {
-        post_message = true;
+				if (user) {
+					alive.push(user)
+				}
+			}
+		}
 
-        var user = neighbour.getDiscordUser();
+		if (post_message) {
+			game.sendPeriodPin(
+				channel,
+				"~~                                              ~~    **" + game.getFormattedDay() + "**"
+			)
+		}
 
-        if (user) {
-          alive.push(user);
-        };
+		for (var i = 0; i < alive.length; i++) {
+			channel.overwritePermissions(alive[i], config["base-perms"]["post"])
+		}
+	} else {
+		for (var i = 0; i < neighbours.length; i++) {
+			var neighbour = game.getPlayerByIdentifier(neighbours[i])
+			var user = neighbour.getDiscordUser()
 
-      };
-
-    };
-
-    if (post_message) {
-      game.sendPeriodPin(channel, "~~                                              ~~    **" + game.getFormattedDay() + "**");
-    };
-
-    for (var i = 0; i < alive.length; i++) {
-      channel.overwritePermissions(alive[i], config["base-perms"]["post"]);
-    };
-
-  } else {
-
-    for (var i = 0; i < neighbours.length; i++) {
-
-      var neighbour = game.getPlayerByIdentifier(neighbours[i]);
-      var user = neighbour.getDiscordUser();
-
-      if (user) {
-        channel.overwritePermissions(user, config["base-perms"]["read"]);
-      };
-
-    };
-
-  };
-
-};
+			if (user) {
+				channel.overwritePermissions(user, config["base-perms"]["read"])
+			}
+		}
+	}
+}

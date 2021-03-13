@@ -1,120 +1,123 @@
 // Stores all the executable actions
 
-var logger = process.logger;
+var logger = process.logger
 
-var actionables = require("../actionables.js"); // for now
-var crypto = require("crypto");
-var Player = require("./Player.js");
+var actionables = require("../actionables.js") // for now
+var crypto = require("crypto")
+var Player = require("./Player.js")
 
-var auxils = require("../auxils.js");
+var auxils = require("../auxils.js")
 
 module.exports = class {
+	constructor() {}
 
-  constructor () {
+	init(game) {
+		this.actions = new Array()
+		this.previous = new Array()
 
-  }
+		this.visit_log = new Array()
+		this.previous_visit_log = new Array()
 
-  init (game) {
+		this.game = game
 
-    this.actions = new Array();
-    this.previous = new Array();
+		return this
+	}
 
-    this.visit_log = new Array();
-    this.previous_visit_log = new Array();
+	add(identifier, triggers, options, rearrange = true) {
+		// Actions are calculated relative to the step
 
-    this.game = game;
+		var allowed = [
+			"cycle",
+			"chat",
+			"lynch",
+			"attacked",
+			"killed",
+			"visit",
+			"roleblock",
+			"postcycle",
+			"instant",
+			"outvisit",
+			"retrooutvisit",
+			"retrovisit",
+			"retrocycle",
+			"vote",
+			"unvote",
+			"arbitrary",
+			"miscellaneous",
+		]
 
-    return this;
+		for (var i = 0; i < triggers.length; i++) {
+			if (!allowed.includes(triggers[i])) {
+				var err = "Unknown trigger " + triggers[i] + "."
+				throw new Error(err)
+			}
+		}
 
-  }
+		var actionable = options
 
-  add (identifier, triggers, options, rearrange=true) {
+		if (triggers.includes("retrooutvisit")) {
+			if (triggers.length > 1) {
+				var err = "Retrooutvisit trigger cannot be combined."
+				throw new Error(err)
+			}
+		}
 
-    // Actions are calculated relative to the step
+		if (triggers.includes("retrovisit")) {
+			if (triggers.length > 1) {
+				var err = "Retrovisit trigger cannot be combined."
+				throw new Error(err)
+			}
+		}
 
-    var allowed = ["cycle", "chat", "lynch", "attacked",
-    "killed", "visit", "roleblock", "postcycle", "instant",
-    "outvisit", "retrooutvisit", "retrovisit", "retrocycle", "vote",
-    "unvote", "arbitrary", "miscellaneous"];
+		if (triggers.includes("retrocycle")) {
+			if (triggers.length > 1) {
+				var err = "Retrocycle trigger cannot be combined."
+				throw new Error(err)
+			}
+		}
 
-    for (var i = 0; i < triggers.length; i++) {
-      if (!allowed.includes(triggers[i])) {
-        var err = "Unknown trigger " + triggers[i] + ".";
-        throw new Error(err);
-      };
-    };
+		actionable.id = crypto.randomBytes(4).toString("hex")
+		actionable.identifier = identifier
+		actionable.triggers = triggers
 
-    var actionable = options;
+		actionable.tags = actionable.tags || new Array()
+		actionable.meta = actionable.meta || new Object()
 
-    if (triggers.includes("retrooutvisit")) {
+		if (actionable.tags.includes("system")) {
+			actionable.from = "*"
+			actionable.to = "*"
+		}
 
-      if (triggers.length > 1) {
-        var err = "Retrooutvisit trigger cannot be combined.";
-        throw new Error(err);
-      };
+		if (actionable.from !== "*") {
+			var from = this.game.getPlayer(actionable.from)
+			var implicit_priority = from.getStat("priority", Math.max)
+			actionable.from = from.identifier
+		} else {
+			var implicit_priority = 0
+		}
 
-    };
+		if (actionable.to !== "*") {
+			var to = this.game.getPlayer(actionable.to)
+			actionable.to = to.identifier
+		}
 
-    if (triggers.includes("retrovisit")) {
+		actionable.priority = actionable.priority || implicit_priority
 
-      if (triggers.length > 1) {
-        var err = "Retrovisit trigger cannot be combined.";
-        throw new Error(err);
-      };
+		// Number of "hits" before execution
+		// Defaults to zero - immediately execute when hit
+		actionable.execution = actionable.execution || 0
+		actionable.cycles = 0
 
-    };
+		actionable._scan = new Array()
 
-    if (triggers.includes("retrocycle")) {
+		// Append new tags to array
+		var runnable = actionables[actionable.identifier]
 
-      if (triggers.length > 1) {
-        var err = "Retrocycle trigger cannot be combined.";
-        throw new Error(err);
-      };
+		if (typeof runnable === "function" && Array.isArray(runnable.TAGS)) {
+			actionable.tags = actionable.tags.concat(runnable.TAGS)
+		}
 
-    };
-
-    actionable.id = crypto.randomBytes(4).toString("hex");
-    actionable.identifier = identifier;
-    actionable.triggers = triggers;
-
-    actionable.tags = actionable.tags || new Array();
-    actionable.meta = actionable.meta || new Object();
-
-    if (actionable.tags.includes("system")) {
-      actionable.from = "*";
-      actionable.to = "*";
-    };
-
-    if (actionable.from !== "*") {
-      var from = this.game.getPlayer(actionable.from);
-      var implicit_priority = from.getStat("priority", Math.max);
-      actionable.from = from.identifier;
-    } else {
-      var implicit_priority = 0;
-    };
-
-    if (actionable.to !== "*") {
-      var to = this.game.getPlayer(actionable.to);
-      actionable.to = to.identifier;
-    };
-
-    actionable.priority = actionable.priority || implicit_priority;
-
-    // Number of "hits" before execution
-    // Defaults to zero - immediately execute when hit
-    actionable.execution = actionable.execution || 0;
-    actionable.cycles = 0;
-
-    actionable._scan = new Array();
-
-    // Append new tags to array
-    var runnable = actionables[actionable.identifier];
-
-    if (typeof runnable === "function" && Array.isArray(runnable.TAGS)) {
-      actionable.tags = actionable.tags.concat(runnable.TAGS);
-    };
-
-    /*
+		/*
     var actionable = {
       id: crypto.randomBytes(4).toString("hex"),
       name: name,
@@ -127,402 +130,371 @@ module.exports = class {
       trigger: ["cycle"]
     };*/
 
-    // triggers: cycle, chat, lynch, arbitrary, attacked
-
-    this.actions.push(actionable);
-
-    if (rearrange) {
-      this.sortByPriority(true);
-    };
-
-    if (triggers.includes("instant")) {
-      // Execute immediately
-      this.execute("instant");
-    };
-
-    this.game.tentativeSave();
-
-    return actionable;
-
-  }
-
-  sortByPriority (shuffle_first=false) {
-
-    if (shuffle_first) {
-      this.actions = auxils.shuffle(this.actions);
-    };
-
-    this.actions.sort(function (a, b) {
-
-      if (!a || !b) {
-        return -1;
-      };
-
-      return a.priority - b.priority;
-    });
-  }
-
-  findAllTagged (tag) {
-
-    var ret = new Array();
-
-    for (var i = 0; i < this.actions.length; i++) {
-
-      if (!this.actions[i]) {
-        continue;
-      };
-
-      if (this.actions[i].tags.includes(tag)) {
-        ret.push(this.actions[i]);
-      };
-    };
-
-    return ret;
-
-  }
-
-  find (key, value) {
-
-    for (var i = 0; i < this.actions.length; i++) {
-
-      if (!this.actions[i]) {
-        continue;
-      };
-
-      if (typeof key === "function") {
-        var condition = key(this.actions[i]);
-
-        if (condition) {
-          return this.actions[i];
-        };
-
-      } else {
-
-        if (this.actions[i][key] === value) {
-          return this.actions[i];
-        };
-
-      };
-
-    };
-
-    return undefined;
-
-  }
-
-  findAll (key, value) {
-
-    var ret = new Array();
-
-    for (var i = 0; i < this.actions.length; i++) {
-
-      if (!this.actions[i]) {
-        continue;
-      };
-
-      if (typeof key === "function") {
-        var condition = key(this.actions[i]);
-
-        if (condition) {
-
-          ret.push(this.actions[i]);
-
-        };
-
-      } else if (this.actions[i][key] === value) {
-
-          ret.push(this.actions[i]);
-
-        };
-
-    };
-
-    return ret;
-
-  }
-
-  delete (key, value) {
-
-    var ret = new Array();
-
-    for (var i = this.actions.length - 1; i >= 0; i--) {
-
-      if (!this.actions[i]) {
-        continue;
-      };
-
-      if (typeof key === "function") {
-
-        var condition = key(this.actions[i]);
-
-        if (condition) {
-          ret.push(this.actions[i]);
-          this.actions.splice(i, 1);
-        };
-
-      } else {
-
-        if (this.actions[i][key] === value) {
-          ret.push(this.actions[i]);
-          this.actions.splice(i, 1);
-        };
-
-      };
-
-    };
-
-    return ret;
-
-  }
-
-  exists (key, value) {
-
-    return this.find(key, value) !== undefined;
-
-  }
-
-  get () {
-    return this.actions;
-  }
-
-  step () {
-    // Iterate through actions
-    this.execute("cycle");
-  }
-
-  // "params" is optional
-  execute (type, params, check_expiries=true) {
-
-    // Actions: [from, to, game]
-    // Returns: boolean
-    // If true for chat, lynch, arbitrary types, subtract one
-    // from expiration
-
-    // Create loop identifier
-    var loop_id = crypto.randomBytes(8).toString("hex");
-
-    var game = this.game;
-
-    if (type === "chat") {
-      var sender = game.getPlayerById(params.message.author.id);
-
-      if (!sender) {
-        return null;
-      };
-
-      params.target = sender.identifier;
-
-    };
-
-    if (type === "visit") {
-      this.visit_log.push(params);
-      this.execute("outvisit", params);
-    };
-
-    var i = 0;
-    while (i < this.actions.length) {
-
-      var action = this.actions[i];
-
-      if (!action) {
-        i++;
-        continue;
-      };
-
-      if (action._scan.includes(loop_id)) {
-        i++;
-        continue;
-      };
-
-      action._scan.push(loop_id);
-
-      if (["cycle"].includes(type) && !action.triggers.includes("retrooutvisit") && !action.triggers.includes("retrovisit") && !action.triggers.includes("retrocycle")) {
-
-        action.execution--;
-        action.cycles++;
-
-        if (action.expiry !== Infinity && !action.tags.includes("permanent")) {
-          action.expiry--;
-        };
-
-      };
-
-      if (["retrocycle"].includes(type) && (action.triggers.includes("retrooutvisit") || action.triggers.includes("retrovisit") || action.triggers.includes("retrocycle"))) {
-
-        action.execution--;
-        action.cycles++;
-
-        if (action.expiry !== Infinity && !action.tags.includes("permanent")) {
-          action.expiry--;
-        };
-      };
-
-      if (!action.triggers.includes(type)) {
-        i++;
-        continue;
-      };
-
-      var run = actionables[action.identifier];
-
-      if (!run) {
-        logger.log(3, "Bad undefined function in actions: " + action.identifier + "!");
-        i++;
-        continue;
-      };
-
-      var rerun = false;
-
-      function execute () {
-
-        rerun = true;
-
-        try {
-
-          var result = run(action, game, params);
-          return result;
-
-        } catch (err) {
-
-          logger.logError(err);
-          logger.log(4, "[Error follow-up] attempted to destroy action %s to prevent snowballing.\nFrom: %s\nTo: %s", action.identifier, action.from, action.to);
-          // Attempts to destroy action in event of failure
-          return true;
-
-        };
-
-      };
-
-      // Non-routine triggers
-      if (["chat", "lynch", "attacked", "killed", "visit", "roleblock", "outvisit", "retrooutvisit", "retrovisit", "vote", "unvote", "arbitrary", "miscellaneous"].includes(type)) {
-        var target = action.target || action.to;
-
-        var check = params.target;
-
-        if (["outvisit"].includes(type)) {
-          check = params.visitor;
-        };
-
-        if (check === target || target === "*") {
-
-          if (action.execution <= 0) {
-            var result = execute();
-
-            if (result === true) {
-              // Immediately mark for deletion
-              action.expiry = 0;
-            };
-          };
-
-        };
-
-      };
-
-      // Periodic-triggers
-      if (["cycle", "postcycle", "instant", "retrocycle"].includes(type)) {
-
-        if (action.execution <= 0) {
-          var result = execute();
-
-          if (result === true) {
-            // Immediately mark for deletion
-            action.expiry = 0;
-          };
-
-        };
-
-      };
-
-      /* Had to shift this in;
+		// triggers: cycle, chat, lynch, arbitrary, attacked
+
+		this.actions.push(actionable)
+
+		if (rearrange) {
+			this.sortByPriority(true)
+		}
+
+		if (triggers.includes("instant")) {
+			// Execute immediately
+			this.execute("instant")
+		}
+
+		this.game.tentativeSave()
+
+		return actionable
+	}
+
+	sortByPriority(shuffle_first = false) {
+		if (shuffle_first) {
+			this.actions = auxils.shuffle(this.actions)
+		}
+
+		this.actions.sort(function (a, b) {
+			if (!a || !b) {
+				return -1
+			}
+
+			return a.priority - b.priority
+		})
+	}
+
+	findAllTagged(tag) {
+		var ret = new Array()
+
+		for (var i = 0; i < this.actions.length; i++) {
+			if (!this.actions[i]) {
+				continue
+			}
+
+			if (this.actions[i].tags.includes(tag)) {
+				ret.push(this.actions[i])
+			}
+		}
+
+		return ret
+	}
+
+	find(key, value) {
+		for (var i = 0; i < this.actions.length; i++) {
+			if (!this.actions[i]) {
+				continue
+			}
+
+			if (typeof key === "function") {
+				var condition = key(this.actions[i])
+
+				if (condition) {
+					return this.actions[i]
+				}
+			} else {
+				if (this.actions[i][key] === value) {
+					return this.actions[i]
+				}
+			}
+		}
+
+		return undefined
+	}
+
+	findAll(key, value) {
+		var ret = new Array()
+
+		for (var i = 0; i < this.actions.length; i++) {
+			if (!this.actions[i]) {
+				continue
+			}
+
+			if (typeof key === "function") {
+				var condition = key(this.actions[i])
+
+				if (condition) {
+					ret.push(this.actions[i])
+				}
+			} else if (this.actions[i][key] === value) {
+				ret.push(this.actions[i])
+			}
+		}
+
+		return ret
+	}
+
+	delete(key, value) {
+		var ret = new Array()
+
+		for (var i = this.actions.length - 1; i >= 0; i--) {
+			if (!this.actions[i]) {
+				continue
+			}
+
+			if (typeof key === "function") {
+				var condition = key(this.actions[i])
+
+				if (condition) {
+					ret.push(this.actions[i])
+					this.actions.splice(i, 1)
+				}
+			} else {
+				if (this.actions[i][key] === value) {
+					ret.push(this.actions[i])
+					this.actions.splice(i, 1)
+				}
+			}
+		}
+
+		return ret
+	}
+
+	exists(key, value) {
+		return this.find(key, value) !== undefined
+	}
+
+	get() {
+		return this.actions
+	}
+
+	step() {
+		// Iterate through actions
+		this.execute("cycle")
+	}
+
+	// "params" is optional
+	execute(type, params, check_expiries = true) {
+		// Actions: [from, to, game]
+		// Returns: boolean
+		// If true for chat, lynch, arbitrary types, subtract one
+		// from expiration
+
+		// Create loop identifier
+		var loop_id = crypto.randomBytes(8).toString("hex")
+
+		var game = this.game
+
+		if (type === "chat") {
+			var sender = game.getPlayerById(params.message.author.id)
+
+			if (!sender) {
+				return null
+			}
+
+			params.target = sender.identifier
+		}
+
+		if (type === "visit") {
+			this.visit_log.push(params)
+			this.execute("outvisit", params)
+		}
+
+		var i = 0
+		while (i < this.actions.length) {
+			var action = this.actions[i]
+
+			if (!action) {
+				i++
+				continue
+			}
+
+			if (action._scan.includes(loop_id)) {
+				i++
+				continue
+			}
+
+			action._scan.push(loop_id)
+
+			if (
+				["cycle"].includes(type) &&
+				!action.triggers.includes("retrooutvisit") &&
+				!action.triggers.includes("retrovisit") &&
+				!action.triggers.includes("retrocycle")
+			) {
+				action.execution--
+				action.cycles++
+
+				if (action.expiry !== Infinity && !action.tags.includes("permanent")) {
+					action.expiry--
+				}
+			}
+
+			if (
+				["retrocycle"].includes(type) &&
+				(action.triggers.includes("retrooutvisit") ||
+					action.triggers.includes("retrovisit") ||
+					action.triggers.includes("retrocycle"))
+			) {
+				action.execution--
+				action.cycles++
+
+				if (action.expiry !== Infinity && !action.tags.includes("permanent")) {
+					action.expiry--
+				}
+			}
+
+			if (!action.triggers.includes(type)) {
+				i++
+				continue
+			}
+
+			var run = actionables[action.identifier]
+
+			if (!run) {
+				logger.log(3, "Bad undefined function in actions: " + action.identifier + "!")
+				i++
+				continue
+			}
+
+			var rerun = false
+
+			function execute() {
+				rerun = true
+
+				try {
+					var result = run(action, game, params)
+					return result
+				} catch (err) {
+					logger.logError(err)
+					logger.log(
+						4,
+						"[Error follow-up] attempted to destroy action %s to prevent snowballing.\nFrom: %s\nTo: %s",
+						action.identifier,
+						action.from,
+						action.to
+					)
+					// Attempts to destroy action in event of failure
+					return true
+				}
+			}
+
+			// Non-routine triggers
+			if (
+				[
+					"chat",
+					"lynch",
+					"attacked",
+					"killed",
+					"visit",
+					"roleblock",
+					"outvisit",
+					"retrooutvisit",
+					"retrovisit",
+					"vote",
+					"unvote",
+					"arbitrary",
+					"miscellaneous",
+				].includes(type)
+			) {
+				var target = action.target || action.to
+
+				var check = params.target
+
+				if (["outvisit"].includes(type)) {
+					check = params.visitor
+				}
+
+				if (check === target || target === "*") {
+					if (action.execution <= 0) {
+						var result = execute()
+
+						if (result === true) {
+							// Immediately mark for deletion
+							action.expiry = 0
+						}
+					}
+				}
+			}
+
+			// Periodic-triggers
+			if (["cycle", "postcycle", "instant", "retrocycle"].includes(type)) {
+				if (action.execution <= 0) {
+					var result = execute()
+
+					if (result === true) {
+						// Immediately mark for deletion
+						action.expiry = 0
+					}
+				}
+			}
+
+			/* Had to shift this in;
       yes, yes, I know it slows stuff down;
       but dang it there's no easier way out */
-      if (check_expiries) {
-        this.nullExpiries(type);
-      };
+			if (check_expiries) {
+				this.nullExpiries(type)
+			}
 
-      if (rerun) {
-        i = 0;
-      } else {
-        i++;
-      };
+			if (rerun) {
+				i = 0
+			} else {
+				i++
+			}
+		}
 
-    };
+		// Remove loop ID
+		for (var i = 0; i < this.actions.length; i++) {
+			var action = this.actions[i]
 
-    // Remove loop ID
-    for (var i = 0; i < this.actions.length; i++) {
+			if (!action) {
+				continue
+			}
 
-      var action = this.actions[i];
+			action._scan = this.actions[i]._scan.filter((x) => x !== loop_id)
+		}
 
-      if (!action) {
-        continue;
-      };
+		if (type === "cycle") {
+			for (var i = 0; i < this.visit_log.length; i++) {
+				var visit_log = this.visit_log[i]
 
-      action._scan = this.actions[i]._scan.filter(x => x !== loop_id);
+				this.execute("retrovisit", visit_log)
 
-    };
+				var inverse_log = Object.assign(new Object(), visit_log)
 
-    if (type === "cycle") {
+				inverse_log.visited = inverse_log.target
+				inverse_log.target = inverse_log.visitor
 
-      for (var i = 0; i < this.visit_log.length; i++) {
+				delete inverse_log.visitor
 
-        var visit_log = this.visit_log[i];
+				this.execute("retrooutvisit", inverse_log)
+			}
 
-        this.execute("retrovisit", visit_log);
+			this.execute("retrocycle")
 
-        var inverse_log = Object.assign(new Object(), visit_log);
+			this.previous_visit_log = this.previous_visit_log.concat(this.visit_log)
+			this.visit_log = new Array()
+		}
 
-        inverse_log.visited = inverse_log.target;
-        inverse_log.target = inverse_log.visitor;
+		// Decrement those outside cycle
+		if (check_expiries) {
+			this.nullExpiries()
+			this.removeUndefinedActionables()
+		}
+	}
 
-        delete inverse_log.visitor;
+	reinstantiate(game) {
+		this.game = game
+	}
 
-        this.execute("retrooutvisit", inverse_log);
+	nullExpiries(trigger = null) {
+		// Check expiries, remove
+		for (var i = 0; i < this.actions.length; i++) {
+			if (!this.actions[i]) {
+				continue
+			}
 
-      };
+			if (this.actions[i].expiry < 1 && (this.actions[i].triggers.includes(trigger) || trigger === null)) {
+				// Remove
+				this.previous.push(this.actions[i])
+				delete this.actions[i]
+			}
+		}
+	}
 
-      this.execute("retrocycle");
-
-      this.previous_visit_log = this.previous_visit_log.concat(this.visit_log);
-      this.visit_log = new Array();
-
-    };
-
-    // Decrement those outside cycle
-    if (check_expiries) {
-
-      this.nullExpiries();
-      this.removeUndefinedActionables();
-
-    };
-
-  }
-
-  reinstantiate (game) {
-    this.game = game;
-  }
-
-  nullExpiries (trigger=null) {
-    // Check expiries, remove
-    for (var i = 0; i < this.actions.length; i++) {
-
-      if (!this.actions[i]) {
-        continue;
-      };
-
-      if (this.actions[i].expiry < 1 && (this.actions[i].triggers.includes(trigger) || trigger === null)) {
-        // Remove
-        this.previous.push(this.actions[i]);
-        delete this.actions[i];
-      };
-    };
-
-  }
-
-  removeUndefinedActionables () {
-    for (var i = this.actions.length - 1; i >= 0; i--) {
-      if (!this.actions[i]) {
-        this.actions.splice(i, 1);
-      };
-    };
-  }
-
-};
+	removeUndefinedActionables() {
+		for (var i = this.actions.length - 1; i >= 0; i--) {
+			if (!this.actions[i]) {
+				this.actions.splice(i, 1)
+			}
+		}
+	}
+}

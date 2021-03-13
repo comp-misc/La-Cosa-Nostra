@@ -1,48 +1,47 @@
-var auxils = require("../systems/auxils.js");
+var auxils = require("../systems/auxils.js")
 
 module.exports = function (game) {
+	var aliens = game.findAll(function (x) {
+		if (x.role_identifier === "alien" && x.isAlive) {
+			var probed = x.misc.alien_kidnappings
 
-  var aliens = game.findAll(function (x) {
+			return (
+				game.findAll((y) => y.isAlive() && !probed.includes(y.identifier) && y.identifier !== x.identifier).length < 1
+			)
+		} else {
+			return false
+		}
+	})
 
-    if (x.role_identifier === "alien" && x.isAlive) {
-      var probed = x.misc.alien_kidnappings;
+	if (aliens.length > 0) {
+		var winners = aliens.filter((x) => x.canWin())
 
-      return game.findAll(y => y.isAlive() && !probed.includes(y.identifier) && y.identifier !== x.identifier).length < 1;
-    } else {
-      return false;
-    };
+		// Revolutionaries win
+		game.setWins(winners)
+		game.getMainChannel().send(auxils.getAssetAttachment("alien-wins.png"))
+		game.primeWinLog(
+			"alien",
+			"The extraterrestrial has gathered sufficient information to annihilate and control the planet."
+		)
+		return true
+	}
 
-  });
+	return false
+}
 
-  if (aliens.length > 0) {
+module.exports.STOP_GAME = true
+module.exports.STOP_CHECKS = false
 
-    var winners = aliens.filter(x => x.canWin());
+module.exports.FACTIONAL = false
 
-    // Revolutionaries win
-    game.setWins(winners);
-    game.getMainChannel().send(auxils.getAssetAttachment("alien-wins.png"));
-    game.primeWinLog("alien", "The extraterrestrial has gathered sufficient information to annihilate and control the planet.");
-    return true;
-
-  };
-
-  return false;
-
-};
-
-module.exports.STOP_GAME = true;
-module.exports.STOP_CHECKS = false;
-
-module.exports.FACTIONAL = false;
-
-module.exports.PRIORITY = 1;
-module.exports.CHECK_ONLY_WHEN_GAME_ENDS = false;
+module.exports.PRIORITY = 1
+module.exports.CHECK_ONLY_WHEN_GAME_ENDS = false
 
 // Accepts function
 // Should key in wrt to player
-module.exports.ELIMINATED = [];
-module.exports.SURVIVING = ["alien"];
+module.exports.ELIMINATED = []
+module.exports.SURVIVING = ["alien"]
 
-module.exports.PREVENT_CHECK_ON_WIN = [];
+module.exports.PREVENT_CHECK_ON_WIN = []
 
-module.exports.DESCRIPTION = "Everyone alive in the game has been probed and you are alive at that point in time.";
+module.exports.DESCRIPTION = "Everyone alive in the game has been probed and you are alive at that point in time."

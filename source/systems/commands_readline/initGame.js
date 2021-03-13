@@ -1,1 +1,1 @@
-module.exports = require("../game_setters/initGame.js");
+module.exports = require("../game_setters/initGame.js")

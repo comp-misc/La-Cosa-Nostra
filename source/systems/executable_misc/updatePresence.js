@@ -1,7 +1,5 @@
 module.exports = async function (game, presence) {
+	var client = game.client
 
-  var client = game.client;
-
-  await client.user.setPresence(presence);
-
-};
+	await client.user.setPresence(presence)
+}

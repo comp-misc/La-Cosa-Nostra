@@ -1,23 +1,21 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
-var auxils = lcn.auxils;
+var rs = lcn.rolesystem
+var auxils = lcn.auxils
 
 module.exports = function (actionable, game, params) {
+	// Astral
+	game.addAction("mafia_nonconsecutive_watcher/gather", ["cycle"], {
+		name: "watcher-gather",
+		expiry: 1,
+		from: actionable.from,
+		to: actionable.to,
+		priority: 12,
+	})
 
-  // Astral
-  game.addAction("mafia_nonconsecutive_watcher/gather", ["cycle"], {
-    name: "watcher-gather",
-    expiry: 1,
-    from: actionable.from,
-    to: actionable.to,
-    priority: 12
-  });
+	var from = game.getPlayerByIdentifier(actionable.from)
 
-  var from = game.getPlayerByIdentifier(actionable.from);
+	from.misc.consecutive_night = true
+}
 
-  from.misc.consecutive_night = true;
-
-};
-
-module.exports.TAGS = ["roleblockable", "drivable", "visit"];
+module.exports.TAGS = ["roleblockable", "drivable", "visit"]

@@ -1,1 +1,1 @@
-module.exports = require("./isolate.js");
+module.exports = require("./isolate.js")

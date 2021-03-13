@@ -1,13 +1,9 @@
 {
+	"name": "Strongkill",
 
-  "name": "Strongkill",
+	"modular": true,
 
-  "modular": true,
-
-  "modular-details": {
-    
-    "cluster": "envoy"
-
-  }
-
+	"modular-details": {
+		"cluster": "envoy"
+	}
 }

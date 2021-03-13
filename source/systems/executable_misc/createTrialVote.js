@@ -1,158 +1,148 @@
-var texts = require("./text/texts.js");
-var format = require("./__formatter.js");
-var alphabets = require("../alpha_table.js");
+var texts = require("./text/texts.js")
+var format = require("./__formatter.js")
+var alphabets = require("../alpha_table.js")
 
-var auxils = require("./../auxils.js");
+var auxils = require("./../auxils.js")
 
 module.exports = async function (game) {
+	if (game.getPeriod() == 1) {
+		return null
+	}
 
-  if (game.getPeriod() == 1) {
-    return null;
-  };
+	var roles = game.players
+	var client = game.client
+	var config = game.config
 
-  var roles = game.players;
-  var client = game.client;
-  var config = game.config;
+	var no_lynch_option = game.config["game"]["lynch"]["no-lynch-option"]
 
-  var no_lynch_option = game.config["game"]["lynch"]["no-lynch-option"];
+	var guild = client.guilds.get(config["server-id"])
+	var vote = guild.channels.find((x) => x.name === config["channels"]["voting"])
 
-  var guild = client.guilds.get(config["server-id"]);
-  var vote = guild.channels.find(x => x.name === config["channels"]["voting"]);
+	var message = texts.public_vote
 
-  var message = texts.public_vote;
+	message = message.replace("{;day}", game.getPeriod() / 2)
+	message = message.replace("{;vote_info}", getVoteInfo())
+	message = message.replace("{;public_votes}", getVoteList())
 
-  message = message.replace("{;day}", game.getPeriod()/2);
-  message = message.replace("{;vote_info}", getVoteInfo());
-  message = message.replace("{;public_votes}", getVoteList());
+	message = await vote.send(format(game, message))
 
-  message = await vote.send(format(game, message));
+	var messages = [message]
 
-  var messages = [message];
+	game.save()
 
-  game.save();
+	return messages
 
-  return messages;
+	function getVoteList() {
+		var players_alive = 0
+		var players_voting = new Array()
 
-  function getVoteList () {
+		for (var i = 0; i < roles.length; i++) {
+			if (roles[i].status.alive) {
+				players_alive++
+			}
+		}
 
-    var players_alive = 0;
-    var players_voting = new Array();
+		if (players_alive % 2 == 1) {
+			var lynch_votes = (players_alive + 1) / 2
+			var nolynch_votes = (players_alive + 1) / 2
+		} else {
+			var lynch_votes = (players_alive + 2) / 2
+			var nolynch_votes = players_alive / 2
+		}
 
-    for (var i = 0; i < roles.length; i++) {
-      if (roles[i].status.alive) {
-        players_alive++;
-      };
-    };
+		var displays = new Array()
+		for (var i = 0; i < roles.length; i++) {
+			if (roles[i].status.alive) {
+				// Get display role
 
-    if (players_alive % 2 == 1) {
-      var lynch_votes = (players_alive + 1)/2
-      var nolynch_votes = (players_alive + 1)/2
-    } else {
-      var lynch_votes = (players_alive + 2)/2
-      var nolynch_votes = players_alive/2
-    };
+				if (roles[i].getStatus("lynch-proof")) {
+					displays.push("<@" + roles[i].id + "> (\\✖)")
+					continue
+				}
 
-    var displays = new Array();
-    for (var i = 0; i < roles.length; i++) {
-      if (roles[i].status.alive) {
-        // Get display role
+				// Get people voting against
+				var voting_against = roles[i].votes
+				var concat = new Array()
 
-        if (roles[i].getStatus("lynch-proof")) {
-          displays.push("<@" + roles[i].id + "> (\\✖)");
-          continue;
-        };
+				// Get their display names
+				for (var j = 0; j < voting_against.length; j++) {
+					// Mapped by IDs
+					var player = game.getPlayerByIdentifier(voting_against[j].identifier)
 
-        // Get people voting against
-        var voting_against = roles[i].votes;
-        var concat = new Array();
+					players_voting.push(player)
 
-        // Get their display names
-        for (var j = 0; j < voting_against.length; j++) {
+					concat.push(player.getDisplayName())
+				}
 
-          // Mapped by IDs
-          var player = game.getPlayerByIdentifier(voting_against[j].identifier);
+				var names = auxils.pettyFormat(concat)
 
-          players_voting.push(player)
+				names = voting_against.length > 0 ? ": " + names : ""
 
-          concat.push(player.getDisplayName());
+				displays.push("<@" + roles[i].id + "> (" + roles[i].countVotes() + "/" + lynch_votes + ")" + names)
+			}
+		}
 
-        };
+		if (no_lynch_option) {
+			var voters = game.getNoLynchVoters()
+			var vote_count = game.getNoLynchVoteCount()
 
-        var names = auxils.pettyFormat(concat);
+			players_voting.push(voters.map((x) => game.getPlayerByIdentifier(x)))
 
-        names = voting_against.length > 0 ? ": " + names : "";
+			var concat = voters.map((x) => game.getPlayerByIdentifier(x).getDisplayName())
 
-        displays.push("<@" + roles[i].id + "> (" + roles[i].countVotes() + "/" + lynch_votes + ")" + names);
-      };
-    };
+			var names = auxils.pettyFormat(concat)
 
-    if (no_lynch_option) {
+			names = voters.length > 0 ? ": " + names : ""
 
-      var voters = game.getNoLynchVoters();
-      var vote_count = game.getNoLynchVoteCount();
+			displays.push("No-lynch (" + vote_count + "/" + nolynch_votes + ")" + names)
+		}
 
-      players_voting.push(voters.map(x => game.getPlayerByIdentifier(x)))
+		var special_vote_types = game.getPeriodLog().special_vote_types
 
-      var concat = voters.map(x => game.getPlayerByIdentifier(x).getDisplayName());
+		for (var i = 0; i < special_vote_types.length; i++) {
+			var voters = special_vote_types[i].voters
+			var vote_count = game.getSpecialVoteCount(special_vote_types[i].identifier)
 
-      var names = auxils.pettyFormat(concat);
+			players_voting.push(special_vote_types[i].identifier)
 
-      names = voters.length > 0 ? ": " + names : "";
+			var names = auxils.pettyFormat(voters.map((x) => game.getPlayerByIdentifier(x.identifier).getDisplayName()))
 
-      displays.push("No-lynch (" + vote_count + "/" + nolynch_votes + ")" + names);
+			names = voters.length > 0 ? ": " + names : ""
 
-    };
+			displays.push("**" + special_vote_types[i].name + "** (" + vote_count + ")" + names)
+		}
 
-    var special_vote_types = game.getPeriodLog().special_vote_types;
+		var voters = []
 
-    for (var i = 0; i < special_vote_types.length; i++) {
+		for (var i = 0; i < roles.length; i++) {
+			if (roles[i].status.alive) {
+				if (!players_voting.includes(roles[i])) {
+					voters.push(roles[i].identifier)
+				}
+			}
+		}
 
-      var voters = special_vote_types[i].voters;
-      var vote_count = game.getSpecialVoteCount(special_vote_types[i].identifier);
+		displays.push("\nNot voting (" + voters.length + "/" + players_alive + ")")
 
-      players_voting.push(special_vote_types[i].identifier)
+		return displays.join("\n")
+	}
 
-      var names = auxils.pettyFormat(voters.map(x => game.getPlayerByIdentifier(x.identifier).getDisplayName()));
+	function getVoteInfo() {
+		var players_alive = 0
 
-      names = voters.length > 0 ? ": " + names : "";
+		for (var i = 0; i < roles.length; i++) {
+			if (roles[i].status.alive) {
+				players_alive++
+			}
+		}
 
-      displays.push("**" + special_vote_types[i].name + "** (" + vote_count + ")" + names);
-
-    };
-
-    var voters = [];
-
-    for (var i = 0; i < roles.length; i++) {
-      if (roles[i].status.alive) {
-        if (!players_voting.includes(roles[i])) {
-          voters.push(roles[i].identifier)
-        };
-      };
-    };
-
-    displays.push("\nNot voting (" + voters.length + "/" + players_alive + ")");
-
-    return displays.join("\n");
-
-  };
-
-  function getVoteInfo() {
-
-    var players_alive = 0;
-
-    for (var i = 0; i < roles.length; i++) {
-      if (roles[i].status.alive) {
-        players_alive++;
-      };
-    };
-
-    if (players_alive % 2 == 1) {
-      var lynch_votes = (players_alive + 1)/2
-      var nolynch_votes = (players_alive + 1)/2
-    } else {
-      var lynch_votes = (players_alive + 2)/2
-      var nolynch_votes = players_alive/2
-    };
-    return "There are required **" + lynch_votes + "** votes to lynch, and **" + nolynch_votes + "** votes to no-lynch."
-  };
-};
+		if (players_alive % 2 == 1) {
+			var lynch_votes = (players_alive + 1) / 2
+			var nolynch_votes = (players_alive + 1) / 2
+		} else {
+			var lynch_votes = (players_alive + 2) / 2
+			var nolynch_votes = players_alive / 2
+		}
+		return "There are required **" + lynch_votes + "** votes to lynch, and **" + nolynch_votes + "** votes to no-lynch."
+	}
+}

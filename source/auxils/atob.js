@@ -1,5 +1,5 @@
 // Base64 encode
 
 module.exports = function (string) {
-  return Buffer.from(string).toString("base64");
-};
+	return Buffer.from(string).toString("base64")
+}

@@ -1,29 +1,27 @@
-var texts = require("./text/texts.js");
-var format = require("./__formatter.js");
+var texts = require("./text/texts.js")
+var format = require("./__formatter.js")
 
-var logger = process.logger;
+var logger = process.logger
 
 module.exports = async function (game, from, to) {
+	var client = game.client
+	var config = game.config
 
-  var client = game.client;
-  var config = game.config;
+	var guild = client.guilds.get(config["server-id"])
+	var main = guild.channels.find((x) => x.name === config["channels"]["main"])
 
-  var guild = client.guilds.get(config["server-id"]);
-  var main = guild.channels.find(x => x.name === config["channels"]["main"]);
+	var voter = main.members.get(from)
+	var voted = main.members.get(to)
 
-  var voter = main.members.get(from);
-  var voted = main.members.get(to);
+	var message = texts.changed_lynch
 
-  var message = texts.changed_lynch;
+	if (voted === undefined) {
+		logger.log(1, "Undefined member on voted user. Debugging?")
+		return null
+	}
 
-  if (voted === undefined) {
-    logger.log(1, "Undefined member on voted user. Debugging?");
-    return null;
-  };
+	message = message.replace(new RegExp("{;voter}", "g"), voter.displayName)
+	message = message.replace(new RegExp("{;voted}", "g"), voted.displayName)
 
-  message = message.replace(new RegExp("{;voter}", "g"), voter.displayName);
-  message = message.replace(new RegExp("{;voted}", "g"), voted.displayName);
-
-  await main.send(message);
-
-};
+	await main.send(message)
+}

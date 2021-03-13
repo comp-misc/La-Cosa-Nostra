@@ -1,105 +1,111 @@
 module.exports = async function (game, message, params) {
+	var config = game.config
 
-  var config = game.config;
+	var player = game.getPlayerById(message.author.id)
 
-  var player = game.getPlayerById(message.author.id);
+	// Check existent
+	if (player === null) {
+		await message.channel.send(":x: You are not in the game!")
+		return null
+	}
 
-  // Check existent
-  if (player === null) {
-    await message.channel.send(":x: You are not in the game!");
-    return null;
-  };
+	if (!config["game"]["last-wills"]["allow"]) {
+		await message.channel.send(":x: Last wills are disabled in this game!")
+		return null
+	}
 
-  if (!config["game"]["last-wills"]["allow"]) {
-    await message.channel.send(":x: Last wills are disabled in this game!");
-    return null;
-  };
+	if (!player.status.alive) {
+		await message.channel.send(":x: Dead people cannot write wills!")
+		return null
+	}
 
-  if (!player.status.alive) {
-    await message.channel.send(":x: Dead people cannot write wills!");
-    return null;
-  };
+	// Check private channel
+	if (player.channel.id !== message.channel.id) {
+		await message.channel.send(":x: You cannot use that command here!")
+		return null
+	}
 
-  // Check private channel
-  if (player.channel.id !== message.channel.id) {
-    await message.channel.send(":x: You cannot use that command here!");
-    return null;
-  };
+	if (params.length < 1) {
+		await message.channel.send(
+			":x: Wrong syntax! Use `" + config["command-prefix"] + "will <view/write/clear> [will]` instead!"
+		)
+		return null
+	}
 
-  if (params.length < 1) {
-    await message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "will <view/write/clear> [will]` instead!");
-    return null;
-  };
+	var action = params[0]
+	var will = params.splice(1, Infinity).join(" ")
 
-  var action = params[0];
-  var will = params.splice(1, Infinity).join(" ");
+	switch (action) {
+		case "view":
+			var will = player.getTrueWill()
 
-  switch (action) {
-    case "view":
-      var will = player.getTrueWill();
+			if (will !== undefined) {
+				var send =
+					":pen_fountain: Your current last will:\n```fix\n" +
+					will +
+					"```\n\nUse `" +
+					config["command-prefix"] +
+					"will write <will>` to change it!"
+			} else {
+				var send =
+					":pen_fountain: You do not have a last will yet!\n\nUse `" +
+					config["command-prefix"] +
+					"will write <will>` to change it!"
+			}
 
-      if (will !== undefined) {
-        var send = ":pen_fountain: Your current last will:\n```fix\n" + will + "```\n\nUse `" + config["command-prefix"] + "will write <will>` to change it!";
-      } else {
-        var send = ":pen_fountain: You do not have a last will yet!\n\nUse `" + config["command-prefix"] + "will write <will>` to change it!";
-      };
+			await message.channel.send(send)
+			break
 
-      await message.channel.send(send);
-      break;
+		case "write":
+			if (/`/g.test(will)) {
+				await message.channel.send(":x: Please do not use code formatting in last wills!")
+				return null
+			}
 
-    case "write":
+			will = will.trim().replace(/^\s+|\s+$/g, "")
 
-      if (/`/g.test(will)) {
-        await message.channel.send(":x: Please do not use code formatting in last wills!");
-        return null;
-      };
+			var char_limit = config["game"]["last-wills"]["character-count-limit"]
 
-      will = will.trim().replace(/^\s+|\s+$/g, "");
+			if (will.length > char_limit) {
+				await message.channel.send(":x: Last wills cannot exceed " + char_limit + " characters!")
+				return null
+			}
 
-      var char_limit = config["game"]["last-wills"]["character-count-limit"];
+			if (will.length === 0) {
+				// Unset
 
-      if (will.length > char_limit) {
-        await message.channel.send(":x: Last wills cannot exceed " + char_limit + " characters!");
-        return null;
-      };
+				player.setWill(undefined)
 
-      if (will.length === 0) {
-        // Unset
+				var send = ":pen_ballpoint: You have removed your last will."
+				await message.channel.send(send)
+			} else {
+				player.setWill(will)
 
-        player.setWill(undefined);
+				var send =
+					":pen_ballpoint: You have changed your last will.\n\nUse `" +
+					config["command-prefix"] +
+					"will view` to view it."
+				await message.channel.send(send)
+			}
+			break
 
-        var send = ":pen_ballpoint: You have removed your last will."
-        await message.channel.send(send);
+		case "clear":
+			// Unset
 
-      } else {
+			player.setWill(undefined)
 
-        player.setWill(will);
+			var send = ":pen_ballpoint: You have removed your last will."
+			await message.channel.send(send)
+			break
 
-        var send = ":pen_ballpoint: You have changed your last will.\n\nUse `" + config["command-prefix"] + "will view` to view it.";
-        await message.channel.send(send);
+		default:
+			message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "will <view/write> [will]` instead!")
+			break
+	}
 
-      };
-      break;
+	game.save()
+}
 
-    case "clear":
-      // Unset
-
-      player.setWill(undefined);
-
-      var send = ":pen_ballpoint: You have removed your last will."
-      await message.channel.send(send);
-      break;
-
-    default:
-      message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "will <view/write> [will]` instead!");
-      break;
-
-  };
-
-  game.save();
-
-};
-
-module.exports.ALLOW_PREGAME = false;
-module.exports.ALLOW_GAME = true;
-module.exports.ALLOW_POSTGAME = false;
+module.exports.ALLOW_PREGAME = false
+module.exports.ALLOW_GAME = true
+module.exports.ALLOW_POSTGAME = false

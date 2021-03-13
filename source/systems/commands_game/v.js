@@ -1,3 +1,3 @@
 // Vote alias
 
-module.exports = require("./vote.js");
+module.exports = require("./vote.js")

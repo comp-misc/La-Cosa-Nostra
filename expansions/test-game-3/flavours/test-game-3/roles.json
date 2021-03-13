@@ -1,375 +1,497 @@
 {
+	"3p_arsonist_im_bp": [
+		{
+			"name": "Arsonist",
+			"banner": "Mafia Goon.png",
+			"description": "You are an Arsonist with Investigative Immunity or 1x Bulletproof vest.\n\nAlignment: Third Party"
+		}
+	],
 
-  "3p_arsonist_im_bp": [{
-    "name": "Arsonist",
-    "banner": "Mafia Goon.png",
-    "description": "You are an Arsonist with Investigative Immunity or 1x Bulletproof vest.\n\nAlignment: Third Party"
-  }],
+	"3p_fool": [
+		{
+			"name": "Fool",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Fool!\n\nAlignment: Third Party"
+		}
+	],
 
-  "3p_fool": [{
-    "name": "Fool",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Fool!\n\nAlignment: Third Party"
-  }],
+	"3p_haunted_jester": [
+		{
+			"name": "Haunted Jester",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Haunted Jester!\n\nAlignment: Third Party"
+		}
+	],
 
-  "3p_haunted_jester": [{
-    "name": "Haunted Jester",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Haunted Jester!\n\nAlignment: Third Party"
-  }],
+	"3p_jester": [
+		{
+			"name": "Jester",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Jester!\n\nAlignment: Third Party"
+		}
+	],
 
-  "3p_jester": [{
-    "name": "Jester",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Jester!\n\nAlignment: Third Party"
-  }],
+	"3p_serial_killer": [
+		{
+			"name": "SeriaI Killer",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Sociopath!\n\nAlignment: Third Party"
+		}
+	],
 
-  "3p_serial_killer": [{
-    "name": "SeriaI Killer",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Sociopath!\n\nAlignment: Third Party"
-  }],
+	"3p_serial_killer_im_bp": [
+		{
+			"name": "Serial Killer",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Serial Killer with Investigative Immunity or 1x Bulletproof vest.\n\nAlignment: Third Party"
+		}
+	],
 
-  "3p_serial_killer_im_bp": [{
-    "name": "Serial Killer",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Serial Killer with Investigative Immunity or 1x Bulletproof vest.\n\nAlignment: Third Party"
-  }],
+	"3p_survivor": [
+		{
+			"name": "Survivor",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Survivor.\n\nAlignment: Third Party"
+		}
+	],
 
-  "3p_survivor": [{
-    "name": "Survivor",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Survivor.\n\nAlignment: Third Party"
-  }],
+	"mafia_ascetic": [
+		{
+			"name": "Mafia Ascetic",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Ascetic.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_ascetic": [{
-    "name": "Mafia Ascetic",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Ascetic.\n\nAlignment: Mafia"
-  }],
+	"mafia_bulletproof": [
+		{
+			"name": "Mafia Bulletproof",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Bulletproof.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_bulletproof": [{
-    "name": "Mafia Bulletproof",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Bulletproof.\n\nAlignment: Mafia"
-  }],
+	"mafia_cop_role_cop": [
+		{
+			"name": "Mafia Role and Alignment Cop",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Role and Alignment Cop.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_cop_role_cop": [{
-    "name": "Mafia Role and Alignment Cop",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Role and Alignment Cop.\n\nAlignment: Mafia"
-  }],
+	"mafia_deflector": [
+		{
+			"name": "Mafia Deflector",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Deflector.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_deflector": [{
-    "name": "Mafia Deflector",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Deflector.\n\nAlignment: Mafia"
-  }],
+	"mafia_doctor_full_prot": [
+		{
+			"name": "Mafia Doctor",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Doctor.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_doctor_full_prot": [{
-    "name": "Mafia Doctor",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Doctor.\n\nAlignment: Mafia"
-  }],
+	"mafia_godfather": [
+		{
+			"name": "Godfather",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Godfather.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_godfather": [{
-    "name": "Godfather",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Godfather.\n\nAlignment: Mafia"
-  }],
+	"mafia_goon": [
+		{
+			"name": "Mafia Goon",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Goon.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_goon": [{
-    "name": "Mafia Goon",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Goon.\n\nAlignment: Mafia"
-  }],
+	"mafia_jailkeeper": [
+		{
+			"name": "Mafia Jailkeeper",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Jailekeeper.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_jailkeeper": [{
-    "name": "Mafia Jailkeeper",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Jailekeeper.\n\nAlignment: Mafia"
-  }],
+	"mafia_janitor": [
+		{
+			"name": "Mafia Janitor",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Janitor.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_janitor": [{
-    "name": "Mafia Janitor",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Janitor.\n\nAlignment: Mafia"
-  }],
+	"mafia_kidnapper": [
+		{
+			"name": "Mafia Kidnapper",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Kidnapper.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_kidnapper": [{
-    "name": "Mafia Kidnapper",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Kidnapper.\n\nAlignment: Mafia"
-  }],
+	"mafia_lawyer": [
+		{
+			"name": "Mafia Lawyer",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Lawyer.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_lawyer": [{
-    "name": "Mafia Lawyer",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Lawyer.\n\nAlignment: Mafia"
-  }],
+	"mafia_neapolitan": [
+		{
+			"name": "Mafia Neapolitan",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Neapolitan.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_neapolitan": [{
-    "name": "Mafia Neapolitan",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Neapolitan.\n\nAlignment: Mafia"
-  }],
+	"mafia_poisoner": [
+		{
+			"name": "Mafia Poisoner",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Poisoner.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_poisoner": [{
-    "name": "Mafia Poisoner",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Poisoner.\n\nAlignment: Mafia"
-  }],
+	"mafia_pyromaniac": [
+		{
+			"name": "Mafia Pyromaniac",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Pyromaniac.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_pyromaniac": [{
-    "name": "Mafia Pyromaniac",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Pyromaniac.\n\nAlignment: Mafia"
-  }],
+	"mafia_role_cop": [
+		{
+			"name": "Mafia Role Cop",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Role Cop.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_role_cop": [{
-    "name": "Mafia Role Cop",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Role Cop.\n\nAlignment: Mafia"
-  }],
+	"mafia_roleblocker": [
+		{
+			"name": "Mafia Roleblocker",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Roleblocker.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_roleblocker": [{
-    "name": "Mafia Roleblocker",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Roleblocker.\n\nAlignment: Mafia"
-  }],
+	"mafia_strongman": [
+		{
+			"name": "Mafia Strongman",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Strongman.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_strongman": [{
-    "name": "Mafia Strongman",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Strongman.\n\nAlignment: Mafia"
-  }],
+	"mafia_tracker": [
+		{
+			"name": "Mafia Tracker",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Tracker.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_tracker": [{
-    "name": "Mafia Tracker",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Tracker.\n\nAlignment: Mafia"
-  }],
+	"mafia_traitor": [
+		{
+			"name": "Traitor",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Traitor.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_traitor": [{
-    "name": "Traitor",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Traitor.\n\nAlignment: Mafia"
-  }],
+	"mafia_vote_influencer": [
+		{
+			"name": "Mafia Vote Influencer",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Vote Influencer.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_vote_influencer": [{
-    "name": "Mafia Vote Influencer",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Vote Influencer.\n\nAlignment: Mafia"
-  }],
+	"mafia_watcher": [
+		{
+			"name": "Mafia Watcher",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Watcher.\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_watcher": [{
-    "name": "Mafia Watcher",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Watcher.\n\nAlignment: Mafia"
-  }],
+	"town_alignment_cop": [
+		{
+			"name": "Town Alignment Cop",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Alignment Cop.\n\nAlignment: Town"
+		}
+	],
 
-  "town_alignment_cop": [{
-    "name": "Town Alignment Cop",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Alignment Cop.\n\nAlignment: Town"
-  }],
+	"town_ascetic": [
+		{
+			"name": "Town Ascetic",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Ascetic.\n\nAlignment: Town"
+		}
+	],
 
-  "town_ascetic": [{
-    "name": "Town Ascetic",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Ascetic.\n\nAlignment: Town"
-  }],
+	"town_backup": [
+		{
+			"name": "Town Backup",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Backup.\n\nAlignment: Town"
+		}
+	],
 
-  "town_backup": [{
-    "name": "Town Backup",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Backup.\n\nAlignment: Town"
-  }],
+	"town_bodyguard": [
+		{
+			"name": "Town Bodyguard",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Bodyguard.\n\nAlignment: Town"
+		}
+	],
 
-  "town_bodyguard": [{
-    "name": "Town Bodyguard",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Bodyguard.\n\nAlignment: Town"
-  }],
+	"town_bomb": [
+		{
+			"name": "Town Bomb",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Bomb.\n\nAlignment: Town"
+		}
+	],
 
-  "town_bomb": [{
-    "name": "Town Bomb",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Bomb.\n\nAlignment: Town"
-  }],
+	"town_bulletproof": [
+		{
+			"name": "Town Bulletproof",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Bulletproof.\n\nAlignment: Town"
+		}
+	],
 
-  "town_bulletproof": [{
-    "name": "Town Bulletproof",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Bulletproof.\n\nAlignment: Town"
-  }],
+	"town_commuter": [
+		{
+			"name": "Town Commuter",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Commuter.\n\nAlignment: Town"
+		}
+	],
 
-  "town_commuter": [{
-    "name": "Town Commuter",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Commuter.\n\nAlignment: Town"
-  }],
+	"town_compulsive_visitor": [
+		{
+			"name": "Town Compulsive Visitor",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Compulsive Visitor.\n\nAlignment: Town"
+		}
+	],
 
-  "town_compulsive_visitor": [{
-    "name": "Town Compulsive Visitor",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Compulsive Visitor.\n\nAlignment: Town"
-  }],
+	"town_cupid": [
+		{
+			"name": "Town Cupid",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Cupid.\n\nAlignment: Town"
+		}
+	],
 
-  "town_cupid": [{
-    "name": "Town Cupid",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Cupid.\n\nAlignment: Town"
-  }],
+	"town_dayshooter": [
+		{
+			"name": "Town Dayshooter",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Dayshooter.\n\nAlignment: Town"
+		}
+	],
 
-  "town_dayshooter": [{
-    "name": "Town Dayshooter",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Dayshooter.\n\nAlignment: Town"
-  }],
+	"town_doctor_full_prot": [
+		{
+			"name": "Town Doctor",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Doctor.\n\nAlignment: Town"
+		}
+	],
 
-  "town_doctor_full_prot": [{
-    "name": "Town Doctor",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Doctor.\n\nAlignment: Town"
-  }],
+	"town_doctor_single_prot": [
+		{
+			"name": "Town Doctor",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Doctor.\n\nAlignment: Town"
+		}
+	],
 
-  "town_doctor_single_prot": [{
-    "name": "Town Doctor",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Doctor.\n\nAlignment: Town"
-  }],
+	"town_firefighter": [
+		{
+			"name": "Town Firefighter",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Firefighter.\n\nAlignment: Town"
+		}
+	],
 
-  "town_firefighter": [{
-    "name": "Town Firefighter",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Firefighter.\n\nAlignment: Town"
-  }],
+	"town_governor": [
+		{
+			"name": "Town Governor",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Governor.\n\nAlignment: Town"
+		}
+	],
 
-  "town_governor": [{
-    "name": "Town Governor",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Governor.\n\nAlignment: Town"
-  }],
+	"town_gunsmith": [
+		{
+			"name": "Town Gunsmith",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Gunsmith.\n\nAlignment: Town"
+		}
+	],
 
-  "town_gunsmith": [{
-    "name": "Town Gunsmith",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Gunsmith.\n\nAlignment: Town"
-  }],
+	"town_jailkeeper": [
+		{
+			"name": "Town Jailkeeper",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Jailkeeper.\n\nAlignment: Town"
+		}
+	],
 
-  "town_jailkeeper": [{
-    "name": "Town Jailkeeper",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Jailkeeper.\n\nAlignment: Town"
-  }],
+	"town_lazy_tracker": [
+		{
+			"name": "Town Lazy Tracker",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Lazy Tracker.\n\nAlignment: Town"
+		}
+	],
 
-  "town_lazy_tracker": [{
-    "name": "Town Lazy Tracker",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Lazy Tracker.\n\nAlignment: Town"
-  }],
+	"town_lazy_watcher": [
+		{
+			"name": "Town Lazy Watcher",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Lazy Watcher.\n\nAlignment: Town"
+		}
+	],
 
-  "town_lazy_watcher": [{
-    "name": "Town Lazy Watcher",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Lazy Watcher.\n\nAlignment: Town"
-  }],
+	"town_lover": [
+		{
+			"name": "Lover",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Lover.\n\nAlignment: Town"
+		}
+	],
 
-  "town_lover": [{
-    "name": "Lover",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Lover.\n\nAlignment: Town"
-  }],
+	"town_messenger": [
+		{
+			"name": "Town Messenger",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Messenger.\n\nAlignment: Town"
+		}
+	],
 
-  "town_messenger": [{
-    "name": "Town Messenger",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Messenger.\n\nAlignment: Town"
-  }],
+	"town_miller": [
+		{
+			"name": "Town Miller",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Miller.\n\nAlignment: Town"
+		}
+	],
 
-  "town_miller": [{
-    "name": "Town Miller",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Miller.\n\nAlignment: Town"
-  }],
+	"town_neapolitan": [
+		{
+			"name": "Town Neapolitan",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Neapolitan.\n\nAlignment: Town"
+		}
+	],
 
-  "town_neapolitan": [{
-    "name": "Town Neapolitan",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Neapolitan.\n\nAlignment: Town"
-  }],
+	"town_oracle": [
+		{
+			"name": "Town Oracle",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Oracle.\n\nAlignment: Town"
+		}
+	],
 
-  "town_oracle": [{
-    "name": "Town Oracle",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Oracle.\n\nAlignment: Town"
-  }],
+	"town_poisoner": [
+		{
+			"name": "Town Poisoner",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Poisoner.\n\nAlignment: Town"
+		}
+	],
 
-  "town_poisoner": [{
-    "name": "Town Poisoner",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Poisoner.\n\nAlignment: Town"
-  }],
+	"town_role_cop": [
+		{
+			"name": "Town Role Cop",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Role Cop.\n\nAlignment: Town"
+		}
+	],
 
-  "town_role_cop": [{
-    "name": "Town Role Cop",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Role Cop.\n\nAlignment: Town"
-  }],
+	"town_roleblocker": [
+		{
+			"name": "Town Roleblocker",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Roleblocker.\n\nAlignment: Town"
+		}
+	],
 
-  "town_roleblocker": [{
-    "name": "Town Roleblocker",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Roleblocker.\n\nAlignment: Town"
-  }],
+	"town_sheriff_cop": [
+		{
+			"name": "Sheriff",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Sheriff.\n\nAlignment: Town"
+		}
+	],
 
-  "town_sheriff_cop": [{
-    "name": "Sheriff",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Sheriff.\n\nAlignment: Town"
-  }],
+	"town_tracker": [
+		{
+			"name": "Town Tracker",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Tracker.\n\nAlignment: Town"
+		}
+	],
 
-  "town_tracker": [{
-    "name": "Town Tracker",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Tracker.\n\nAlignment: Town"
-  }],
+	"town_vanilla_townie": [
+		{
+			"name": "Vanilla Townie",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Vanilla Townie.\n\nAlignment: Town"
+		}
+	],
 
-  "town_vanilla_townie": [{
-    "name": "Vanilla Townie",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Vanilla Townie.\n\nAlignment: Town"
-  }],
+	"town_veteran": [
+		{
+			"name": "Town Veteran",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Veteran.\n\nAlignment: Town"
+		}
+	],
 
-  "town_veteran": [{
-    "name": "Town Veteran",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Veteran.\n\nAlignment: Town"
-  }],
+	"town_vigilante": [
+		{
+			"name": "Town Vigilante",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Vigilante.\n\nAlignment: Town"
+		}
+	],
 
-  "town_vigilante": [{
-    "name": "Town Vigilante",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Vigilante.\n\nAlignment: Town"
-  }],
+	"town_vote_influencer": [
+		{
+			"name": "Town Vote Influencer",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Vote Influencer.\n\nAlignment: Town"
+		}
+	],
 
-  "town_vote_influencer": [{
-    "name": "Town Vote Influencer",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Vote Influencer.\n\nAlignment: Town"
-  }],
+	"town_watcher": [
+		{
+			"name": "Town Watcher",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Watcher.\n\nAlignment: Town"
+		}
+	],
 
-  "town_watcher": [{
-    "name": "Town Watcher",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Watcher.\n\nAlignment: Town"
-  }],
-
-  "town_watcher_tracker": [{
-    "name": "Town Tracking Watcher",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Tracking Watcher.\n\nAlignment: Town"
-  }]
-
+	"town_watcher_tracker": [
+		{
+			"name": "Town Tracking Watcher",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Tracking Watcher.\n\nAlignment: Town"
+		}
+	]
 }

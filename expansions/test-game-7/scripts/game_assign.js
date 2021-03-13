@@ -1,11 +1,9 @@
-var mafia = require("../../../source/lcn.js");
-var fs = require("fs");
+var mafia = require("../../../source/lcn.js")
+var fs = require("fs")
 
 module.exports = function (playing) {
+	var roles_override = JSON.parse(fs.readFileSync(__dirname + "/setup.json"))
+	playing = mafia.auxils.objectOverride(playing, roles_override)
 
-  var roles_override = JSON.parse(fs.readFileSync(__dirname + "/setup.json"));
-  playing = mafia.auxils.objectOverride(playing, roles_override);
-
-  return playing;
-
-};
+	return playing
+}

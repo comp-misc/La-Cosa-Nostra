@@ -1,53 +1,45 @@
-var fs = require("fs");
+var fs = require("fs")
 
-var expansions = require("./expansions.js");
-var auxils = require("./auxils.js");
+var expansions = require("./expansions.js")
+var auxils = require("./auxils.js")
 
-var ret = new Object();
-var scripts_dir = __dirname + "/../role_win_conditions/";
+var ret = new Object()
+var scripts_dir = __dirname + "/../role_win_conditions/"
 
-var scripts = fs.readdirSync(scripts_dir).map(x => "lcn/" + x);
+var scripts = fs.readdirSync(scripts_dir).map((x) => "lcn/" + x)
 
-var rules = new Array();
+var rules = new Array()
 
 // Add expansions
 for (var i = 0; i < expansions.length; i++) {
+	scripts = scripts.concat(expansions[i].additions.role_win_conditions.map((x) => expansions[i].identifier + "/" + x))
+	rules = rules.concat(expansions[i].expansion.overrides.role_win_conditions)
+}
 
-  scripts = scripts.concat(expansions[i].additions.role_win_conditions.map(x => expansions[i].identifier + "/" + x));
-  rules = rules.concat(expansions[i].expansion.overrides.role_win_conditions);
-
-};
-
-scripts = auxils.ruleFilter(scripts, rules);
+scripts = auxils.ruleFilter(scripts, rules)
 
 for (var i = 0; i < scripts.length; i++) {
+	var script_info = scripts[i].split("/")
 
-  var script_info = scripts[i].split("/");
+	var expansion_identifier = script_info[0]
+	var script = script_info[1]
 
-  var expansion_identifier = script_info[0];
-  var script = script_info[1];
+	if (expansion_identifier === "lcn") {
+		var directory = scripts_dir + "/" + script
+	} else {
+		var expansion = expansions.find((x) => x.identifier === expansion_identifier)
+		var directory = expansion.expansion_directory + "/role_win_conditions/" + script
+	}
 
-  if (expansion_identifier === "lcn") {
+	if (!scripts[i].endsWith(".js")) {
+		continue
+	}
 
-    var directory = scripts_dir + "/" + script;
+	var runnable = require(directory)
 
-  } else {
+	var key = script.substring(0, script.length - 3)
 
-    var expansion = expansions.find(x => x.identifier === expansion_identifier);
-    var directory = expansion.expansion_directory + "/role_win_conditions/" + script;
+	ret[key] = runnable
+}
 
-  };
-
-  if (!scripts[i].endsWith(".js")) {
-    continue;
-  };
-
-  var runnable = require(directory);
-
-  var key = script.substring(0, script.length - 3);
-
-  ret[key] = runnable;
-
-};
-
-module.exports = ret;
+module.exports = ret

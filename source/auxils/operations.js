@@ -1,77 +1,65 @@
 module.exports = {
+	addition: function () {
+		var arr = Array.from(arguments)
 
-  addition: function () {
+		var ret = new Number()
 
-    var arr = Array.from(arguments);
+		for (var i = 0; i < arguments.length; i++) {
+			ret += arguments[i]
+		}
 
-    var ret = new Number();
+		return ret
+	},
 
-    for (var i = 0; i < arguments.length; i++) {
-      ret += arguments[i];
-    };
+	subtraction: function () {
+		var arr = Array.from(arguments)
 
-    return ret;
+		var ret = arr[0]
 
-  },
+		for (var i = 1; i < arr.length; i++) {
+			ret += arr[i]
+		}
 
-  subtraction: function () {
+		return ret
+	},
 
-    var arr = Array.from(arguments);
+	multiplication: function () {
+		var arr = Array.from(arguments)
 
-    var ret = arr[0];
+		var ret = 1
 
-    for (var i = 1; i < arr.length; i++) {
-      ret += arr[i];
-    };
+		for (var i = 0; i < arr.length; i++) {
+			ret *= arr[i]
+		}
 
-    return ret;
+		return ret
+	},
 
-  },
+	division: function () {
+		var arr = Array.from(arguments)
 
-  multiplication: function () {
+		var ret = arr[0]
 
-    var arr = Array.from(arguments);
+		for (var i = 1; i < arr.length; i++) {
+			ret /= arr[i]
+		}
 
-    var ret = 1;
+		return ret
+	},
 
-    for (var i = 0; i < arr.length; i++) {
-      ret *= arr[i];
-    };
+	modulo: function () {
+		var arr = Array.from(arguments)
 
-    return ret;
+		var ret = arr[0]
 
-  },
+		for (var i = 1; i < arr.length; i++) {
+			ret %= arr[i]
+		}
 
-  division: function () {
+		return ret
+	},
 
-    var arr = Array.from(arguments);
+	max: Math.max,
 
-    var ret = arr[0];
-
-    for (var i = 1; i < arr.length; i++) {
-      ret /= arr[i];
-    };
-
-    return ret;
-
-  },
-
-  modulo: function () {
-
-    var arr = Array.from(arguments);
-
-    var ret = arr[0];
-
-    for (var i = 1; i < arr.length; i++) {
-      ret %= arr[i];
-    };
-
-    return ret;
-
-  },
-
-  max: Math.max,
-
-  min: Math.min
-
+	min: Math.min,
 }

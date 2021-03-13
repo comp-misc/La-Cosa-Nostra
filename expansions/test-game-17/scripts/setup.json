@@ -1,7 +1,21 @@
 {
+	"roles": [
+		"mafia_1_shot_tracker",
+		"mafia_2_shot_tracker",
+		"mafia_even_night_tracker",
+		"mafia_odd_night_tracker",
+		"mafia_nonconsecutive_tracker",
+		"town_1_shot_firefighter",
+		"town_2_shot_firefighter",
+		"town_even_night_firefighter",
+		"town_odd_night_firefighter",
+		"town_nonconsecutive_firefighter",
+		"town_1_shot_vigilante",
+		"town_2_shot_vigilante",
+		"town_even_night_vigilante",
+		"town_odd_night_vigilante",
+		"town_nonconsecutive_vigilante"
+	],
 
-  "roles": ["mafia_1_shot_tracker", "mafia_2_shot_tracker", "mafia_even_night_tracker", "mafia_odd_night_tracker","mafia_nonconsecutive_tracker", "town_1_shot_firefighter","town_2_shot_firefighter", "town_even_night_firefighter", "town_odd_night_firefighter", "town_nonconsecutive_firefighter", "town_1_shot_vigilante", "town_2_shot_vigilante", "town_even_night_vigilante", "town_odd_night_vigilante", "town_nonconsecutive_vigilante"],
-
-  "flavour": "test-game-17"
-
+	"flavour": "test-game-17"
 }

@@ -1,7 +1,22 @@
 {
+	"roles": [
+		"3p_fool",
+		"3p_haunted_jester",
+		"3p_jester",
+		"mafia_2_shot_role_cop",
+		"mafia_neighbour",
+		"mafia_neighbour",
+		"mafia_odd_night_roleblocker",
+		"town_2_shot_roleblocker",
+		"town_even_day_dayshooter",
+		"town_even_day_interrogator",
+		"town_governor",
+		"town_innocent_child",
+		"town_nonconsecutive_role_cop",
+		"town_odd_day_dayshooter",
+		"town_odd_day_interrogator",
+		"town_president"
+	],
 
-  "roles": ["3p_fool", "3p_haunted_jester", "3p_jester", "mafia_2_shot_role_cop", "mafia_neighbour", "mafia_neighbour", "mafia_odd_night_roleblocker", "town_2_shot_roleblocker", "town_even_day_dayshooter", "town_even_day_interrogator", "town_governor", "town_innocent_child", "town_nonconsecutive_role_cop", "town_odd_day_dayshooter", "town_odd_day_interrogator", "town_president"],
-
-  "flavour": "test-game-19"
-
+	"flavour": "test-game-19"
 }

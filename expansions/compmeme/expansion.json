@@ -1,25 +1,21 @@
 {
+	"name": "CompMeme",
+	"type": "Commands",
+	"description": "Adds meme commands. Sorry Silicon Valley!",
 
-  "name": "CompMeme",
-  "type": "Commands",
-  "description": "Adds meme commands. Sorry Silicon Valley!",
+	"link": null,
 
-  "link": null,
+	"authors": ["ChocoParrot", "Comp"],
 
-  "authors": ["ChocoParrot", "Comp"],
+	"overrides": {
+		"flavours": [],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [],
+		"roles": [],
 
-    "role_win_conditions": [],
+		"attributes": []
+	},
 
-    "roles": [],
-
-    "attributes": []
-
-  },
-
-  "dependencies": []
-
+	"dependencies": []
 }

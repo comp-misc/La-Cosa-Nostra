@@ -1,6 +1,6 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 // Defaults to shooting
 // Godfather can override
@@ -8,68 +8,61 @@ var rs = lcn.rolesystem;
 // See godfather/kill_vote
 
 module.exports = function (actionable, game, params) {
+	var config = game.config
 
-  var config = game.config;
+	// Mediated by the lead
+	var lead = game.getPlayerByIdentifier(actionable.from)
+	var cultists = lead.misc.cult_all_members
 
-  // Mediated by the lead
-  var lead = game.getPlayerByIdentifier(actionable.from);
-  var cultists = lead.misc.cult_all_members;
+	var channel = game.getChannelById(lead.misc.cult_channel)
 
-  var channel = game.getChannelById(lead.misc.cult_channel);
+	if (!channel) {
+		return null
+	}
 
-  if (!channel) {
-    return null;
-  };
+	if (!game.isDay()) {
+		// Open the channels
 
-  if (!game.isDay()) {
-    // Open the channels
+		var alive = new Array()
 
-    var alive = new Array();
+		var post_message = false
 
-    var post_message = false;
+		for (var i = 0; i < cultists.length; i++) {
+			var cultist = game.getPlayerByIdentifier(cultists[i])
 
-    for (var i = 0; i < cultists.length; i++) {
+			if (cultist.isAlive()) {
+				post_message = true
 
-      var cultist = game.getPlayerByIdentifier(cultists[i]);
+				var user = cultist.getDiscordUser()
 
-      if (cultist.isAlive()) {
-        post_message = true;
+				if (user) {
+					alive.push(user)
+				}
+			}
+		}
 
-        var user = cultist.getDiscordUser();
+		if (post_message) {
+			game.sendPeriodPin(
+				channel,
+				"~~                                              ~~    **" + game.getFormattedDay() + "**"
+			)
+		}
 
-        if (user) {
-          alive.push(user);
-        };
+		for (var i = 0; i < alive.length; i++) {
+			channel.overwritePermissions(alive[i], config["base-perms"]["post"])
+		}
+	} else {
+		for (var i = 0; i < cultists.length; i++) {
+			var cultist = game.getPlayerByIdentifier(cultists[i])
+			var user = cultist.getDiscordUser()
 
-      };
+			if (user) {
+				channel.overwritePermissions(user, config["base-perms"]["read"])
+			}
+		}
+	}
 
-    };
-
-    if (post_message) {
-      game.sendPeriodPin(channel, "~~                                              ~~    **" + game.getFormattedDay() + "**");
-    };
-
-    for (var i = 0; i < alive.length; i++) {
-      channel.overwritePermissions(alive[i], config["base-perms"]["post"]);
-    };
-
-  } else {
-
-    for (var i = 0; i < cultists.length; i++) {
-
-      var cultist = game.getPlayerByIdentifier(cultists[i]);
-      var user = cultist.getDiscordUser();
-
-      if (user) {
-        channel.overwritePermissions(user, config["base-perms"]["read"]);
-      };
-
-    };
-
-  };
-
-  if (!lead.isAlive()) {
-    return true;
-  };
-
-};
+	if (!lead.isAlive()) {
+		return true
+	}
+}

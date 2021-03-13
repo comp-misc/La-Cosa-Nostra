@@ -1,5 +1,5 @@
 module.exports = function (message, params, config) {
-  var endpoint = "https://imgur.com/a/PVRcAUc";
+	var endpoint = "https://imgur.com/a/PVRcAUc"
 
-  message.channel.send(endpoint);
-};
+	message.channel.send(endpoint)
+}

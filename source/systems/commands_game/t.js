@@ -1,3 +1,3 @@
 // Time alias
 
-module.exports = require("./time.js");
+module.exports = require("./time.js")

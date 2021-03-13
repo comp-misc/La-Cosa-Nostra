@@ -1,14 +1,12 @@
-var rs = require("../../../rolesystem/rolesystem.js");
+var rs = require("../../../rolesystem/rolesystem.js")
 
 module.exports = function (actionable, game, params) {
+	var self = game.getPlayerByIdentifier(actionable.from)
 
-  var self = game.getPlayerByIdentifier(actionable.from);
+	self.misc.jester_lynched = true
+	self.misc.jester_lynchers = params.votes
 
-  self.misc.jester_lynched = true;
-  self.misc.jester_lynchers = params.votes;
+	self.getPrivateChannel().send(":black_joker: You successfully got yourself lynched!")
 
-  self.getPrivateChannel().send(":black_joker: You successfully got yourself lynched!");
-
-  return true;
-
-};
+	return true
+}

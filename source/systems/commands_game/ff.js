@@ -1,3 +1,3 @@
 // Fast forward alias
 
-module.exports = require("./fastforward.js");
+module.exports = require("./fastforward.js")

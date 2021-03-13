@@ -1,12 +1,10 @@
-var rs = require("../../../rolesystem/rolesystem.js");
-var auxils = require("../../../systems/auxils.js");
+var rs = require("../../../rolesystem/rolesystem.js")
+var auxils = require("../../../systems/auxils.js")
 
 module.exports = function (actionable, game, params) {
+	var influencer = game.getPlayerByIdentifier(actionable.from)
 
-  var influencer = game.getPlayerByIdentifier(actionable.from);
+	influencer.misc.influencer_log.unshift(null)
 
-  influencer.misc.influencer_log.unshift(null);
-
-  return true;
-
-};
+	return true
+}

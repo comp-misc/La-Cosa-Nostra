@@ -1,18 +1,15 @@
 {
+	"name": "Power Copy",
 
-  "name": "Power Copy",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Power Manipulation"},
-      {"name": "Command", "description": "powercopy <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Copies a maximum of 2 random powers from the target with 1 use only."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Power Manipulation" },
+			{ "name": "Command", "description": "powercopy <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Copies a maximum of 2 random powers from the target with 1 use only." }
+		]
+	}
 }

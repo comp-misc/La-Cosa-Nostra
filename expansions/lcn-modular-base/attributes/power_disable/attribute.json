@@ -1,18 +1,18 @@
 {
+	"name": "Disable",
 
-  "name": "Disable",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Roleblocking"},
-      {"name": "Command", "description": "disable <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Stops the user from using their night action the next night. Is unstoppable."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Roleblocking" },
+			{ "name": "Command", "description": "disable <alphabet/name/nobody>" },
+			{
+				"name": "Description",
+				"description": "Stops the user from using their night action the next night. Is unstoppable."
+			}
+		]
+	}
 }

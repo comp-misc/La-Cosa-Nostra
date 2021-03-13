@@ -1,21 +1,19 @@
-var mafia = require("../../../../../source/lcn.js");
+var mafia = require("../../../../../source/lcn.js")
 
-var rs = mafia.rolesystem;
+var rs = mafia.rolesystem
 
 module.exports = function (actionable, game, params) {
+	// Target was attacked
+	var cleaned = game.getPlayerByIdentifier(actionable.to)
+	var cleaner = game.getPlayerByIdentifier(actionable.from)
 
-  // Target was attacked
-  var cleaned = game.getPlayerByIdentifier(actionable.to);
-  var cleaner = game.getPlayerByIdentifier(actionable.from);
+	cleaned.misc.role_cleaned = true
 
-  cleaned.misc.role_cleaned = true;
+	cleaned.setDisplayRole("Cleaned")
 
-  cleaned.setDisplayRole("Cleaned");
+	cleaned.setPrecedentWill(null)
 
-  cleaned.setPrecedentWill(null);
+	cleaner.misc.janitor_cleans_left--
 
-  cleaner.misc.janitor_cleans_left--;
-
-  return true;
-
-};
+	return true
+}

@@ -1,22 +1,23 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	game.execute("visit", {
+		visitor: actionable.from,
+		target: actionable.to,
+		priority: actionable.priority,
+		reason: "Doctor-visit",
+	})
 
-  game.execute("visit", {visitor: actionable.from,
-    target: actionable.to,
-    priority: actionable.priority,
-    reason: "Doctor-visit"});
+	var target = game.getPlayerByIdentifier(actionable.to)
+	var from = game.getPlayerByIdentifier(actionable.from)
 
-  var target = game.getPlayerByIdentifier(actionable.to);
-  var from = game.getPlayerByIdentifier(actionable.from);
+	if (target.misc.poisoned === true) {
+		target.misc.poisoned = false
+	}
 
-  if (target.misc.poisoned === true) {
-    target.misc.poisoned = false;
-  };
-
-  /*
+	/*
   target.misc.protections ? target.misc.protections++ : target.misc.protections = 1;
 
   // Add message
@@ -28,8 +29,7 @@ module.exports = function (actionable, game, params) {
     priority: 1
   });*/
 
-  target.addAttribute("protection", 1, {amount: 1});
+	target.addAttribute("protection", 1, { amount: 1 })
+}
 
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

@@ -1,6 +1,6 @@
-var mafia = require("../../../../../source/lcn.js");
+var mafia = require("../../../../../source/lcn.js")
 
-var rs = mafia.rolesystem;
+var rs = mafia.rolesystem
 
 // Defaults to shooting
 // Godfather can override
@@ -8,9 +8,7 @@ var rs = mafia.rolesystem;
 // See godfather/kill_vote
 
 module.exports = function (actionable, game, params) {
+	rs.prototypes.basicAttack(...arguments)
+}
 
-  rs.prototypes.basicAttack(...arguments);
-
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

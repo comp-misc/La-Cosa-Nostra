@@ -1,4 +1,4 @@
-var rs = require("../../../rolesystem/rolesystem.js");
+var rs = require("../../../rolesystem/rolesystem.js")
 
 // Defaults to shooting
 // Godfather can override
@@ -6,21 +6,17 @@ var rs = require("../../../rolesystem/rolesystem.js");
 // See godfather/kill_vote
 
 module.exports = function (actionable, game, params) {
+	rs.prototypes.basicAttack.reason = "shot by a member of the __Mafia__"
 
-  rs.prototypes.basicAttack.reason = "shot by a member of the __Mafia__";
+	var outcome = rs.prototypes.basicAttack(...arguments)
 
-  var outcome = rs.prototypes.basicAttack(...arguments);
+	var from = game.getPlayerByIdentifier(actionable.from)
 
-  var from = game.getPlayerByIdentifier(actionable.from);
+	if (!outcome) {
+		var to = game.getPlayerByIdentifier(actionable.to)
 
-  if (!outcome) {
+		game.addMessage(from, ":exclamation: Your target could not be attacked last night!")
+	}
+}
 
-    var to = game.getPlayerByIdentifier(actionable.to);
-
-    game.addMessage(from, ":exclamation: Your target could not be attacked last night!");
-
-  };
-
-};
-
-module.exports.TAGS = ["drivable", "roleblockable", "visit"];
+module.exports.TAGS = ["drivable", "roleblockable", "visit"]

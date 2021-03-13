@@ -1,145 +1,134 @@
-var conditions = require("../win_conditions.js");
+var conditions = require("../win_conditions.js")
 
 module.exports = function (game) {
+	var players = game.players
 
-  var players = game.players;
+	var win_conditions = new Array()
 
-  var win_conditions = new Array();
+	for (var i = 0; i < game.players.length; i++) {
+		if (win_conditions.includes(game.players[i].role["win-condition"].toLowerCase())) {
+			continue
+		}
 
-  for (var i = 0; i < game.players.length; i++) {
+		if (!game.players[i].role["win-condition"]) {
+			var err = new Error("Every role should have a win condition!")
+			throw err
+		}
 
-    if (win_conditions.includes(game.players[i].role["win-condition"].toLowerCase())) {
-      continue;
-    };
+		win_conditions.push(game.players[i].role["win-condition"])
+	}
 
-    if (!game.players[i].role["win-condition"]) {
-      var err = new Error("Every role should have a win condition!");
-      throw err;
-    };
+	// Sort by priority
+	win_conditions.sort((a, b) => conditions[a].PRIORITY - conditions[b].PRIORITY)
 
-    win_conditions.push(game.players[i].role["win-condition"]);
+	// Boolean that is changed if game is to be ended
+	var end_game = false
+	var skip_condition = new Array()
 
-  };
+	// Execute the win conditions
+	for (var i = 0; i < win_conditions.length; i++) {
+		if (skip_condition.includes(win_conditions[i])) {
+			continue
+		}
 
-  // Sort by priority
-  win_conditions.sort((a, b) => conditions[a].PRIORITY - conditions[b].PRIORITY);
+		var condition = conditions[win_conditions[i]]
 
-  // Boolean that is changed if game is to be ended
-  var end_game = false;
-  var skip_condition = new Array();
+		if (typeof condition !== "function") {
+			var err = new Error(win_conditions[i] + " is not a valid win condition!")
+			throw err
+		}
 
-  // Execute the win conditions
-  for (var i = 0; i < win_conditions.length; i++) {
+		if (!end_game && condition.CHECK_ONLY_WHEN_GAME_ENDS) {
+			// Special attribute for roles such as Survivor
+			continue
+		}
 
-    if (skip_condition.includes(win_conditions[i])) {
-      continue;
-    };
+		// Check all the nitty gritty configurations of the condition
 
-    var condition = conditions[win_conditions[i]];
+		var eliminated = true
+		for (var j = 0; j < (condition.ELIMINATED || new Array()).length; j++) {
+			// Check if all dead
+			var query = condition.ELIMINATED[j]
 
-    if (typeof condition !== "function") {
-      var err = new Error(win_conditions[i] + " is not a valid win condition!");
-      throw err;
-    };
+			var out = roleCheck(query)
 
-    if (!end_game && condition.CHECK_ONLY_WHEN_GAME_ENDS) {
-      // Special attribute for roles such as Survivor
-      continue;
-    };
+			if (out) {
+				eliminated = false
+				break
+			}
+		}
 
-    // Check all the nitty gritty configurations of the condition
+		var surviving = false
+		for (var j = 0; j < (condition.SURVIVING || new Array()).length; j++) {
+			// Check if all dead
+			var query = condition.SURVIVING[j]
 
-    var eliminated = true;
-    for (var j = 0; j < (condition.ELIMINATED || new Array()).length; j++) {
-      // Check if all dead
-      var query = condition.ELIMINATED[j];
+			var out = roleCheck(query)
 
-      var out = roleCheck(query);
+			if (out) {
+				surviving = true
+				break
+			}
+		}
 
-      if (out) {
-        eliminated = false;
-        break;
-      };
+		if (condition.SURVIVING.length < 1 || !condition.SURVIVING) {
+			surviving = true
+		}
 
-    };
+		if (eliminated && surviving) {
+			// Run the condition
+			var response = condition(game)
 
-    var surviving = false;
-    for (var j = 0; j < (condition.SURVIVING || new Array()).length; j++) {
-      // Check if all dead
-      var query = condition.SURVIVING[j];
+			// Winners would already have been declared
+			// by condition function
 
-      var out = roleCheck(query);
+			if (response && Array.isArray(condition.PREVENT_CHECK_ON_WIN)) {
+				skip_condition = skip_condition.concat(condition.PREVENT_CHECK_ON_WIN.map((x) => x.toLowerCase()))
+			}
 
-      if (out) {
-        surviving = true;
-        break;
-      };
+			if (response && condition.STOP_GAME) {
+				// Game has ended
+				end_game = true
+			}
 
-    };
+			if (response && condition.STOP_CHECKS) {
+				// Equivalent to sole winner
+				// However can be used otherwise
+				break
+			}
+		}
+	}
 
-    if (condition.SURVIVING.length < 1 || !condition.SURVIVING) {
-      surviving = true;
-    };
+	if (end_game) {
+		// Kill the game
+		game.postWinLog()
+		game.endGame()
+	}
 
-    if (eliminated && surviving) {
-      // Run the condition
-      var response = condition(game);
+	function roleCheck(condition) {
+		if (typeof condition === "function") {
+			// Check
+			return game.exists(condition)
+		} else if (typeof condition === "string") {
+			condition = condition.toLowerCase()
 
-      // Winners would already have been declared
-      // by condition function
+			// Check separately
+			var cond1 = game.exists((x) => x.isAlive() && x.role_identifier === condition)
+			var cond2 = game.exists((x) => x.isAlive() && x.role.alignment === condition)
+			var cond3 = game.exists((x) => x.isAlive() && x.role.class === condition)
 
-      if (response && Array.isArray(condition.PREVENT_CHECK_ON_WIN)) {
-        skip_condition = skip_condition.concat(condition.PREVENT_CHECK_ON_WIN.map(x => x.toLowerCase()));
-      };
+			var cond4 = false
 
-      if (response && condition.STOP_GAME) {
-        // Game has ended
-        end_game = true;
-      };
+			if (condition.includes("-")) {
+				condition = condition.split("-")
+				var cond4 = game.exists(
+					(x) => x.isAlive() && x.role.alignment === condition[0] && x.role.class === condition[1]
+				)
+			}
 
-      if (response && condition.STOP_CHECKS) {
-        // Equivalent to sole winner
-        // However can be used otherwise
-        break;
-      };
-
-    };
-
-  };
-
-  if (end_game) {
-    // Kill the game
-    game.postWinLog();
-    game.endGame();
-  };
-
-  function roleCheck (condition) {
-
-    if (typeof condition === "function") {
-      // Check
-      return game.exists(condition);
-    } else if (typeof condition === "string") {
-
-      condition = condition.toLowerCase();
-
-      // Check separately
-      var cond1 = game.exists(x => x.isAlive() && x.role_identifier === condition);
-      var cond2 = game.exists(x => x.isAlive() && x.role.alignment === condition);
-      var cond3 = game.exists(x => x.isAlive() && x.role.class === condition);
-
-      var cond4 = false;
-
-      if (condition.includes("-")) {
-        condition = condition.split("-");
-        var cond4 = game.exists(x => x.isAlive() && x.role.alignment === condition[0] && x.role.class === condition[1]);
-      };
-
-      return cond1 || cond2 || cond3 || cond4;
-
-    } else {
-      return null;
-    };
-
-  };
-
-};
+			return cond1 || cond2 || cond3 || cond4
+		} else {
+			return null
+		}
+	}
+}

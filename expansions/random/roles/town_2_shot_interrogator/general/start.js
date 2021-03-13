@@ -1,7 +1,5 @@
 // Executes BEFORE introduction
 
 module.exports = function (player) {
-
-  player.misc.interrogates_left = 2;
-
-};
+	player.misc.interrogates_left = 2
+}

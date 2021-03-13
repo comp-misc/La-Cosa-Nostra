@@ -1,5 +1,5 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
-module.exports = rs.protocol.attacked;
+module.exports = rs.protocol.attacked

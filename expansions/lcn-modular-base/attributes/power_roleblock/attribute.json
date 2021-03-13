@@ -1,18 +1,15 @@
 {
+	"name": "Roleblock",
 
-  "name": "Roleblock",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Roleblocking"},
-      {"name": "Command", "description": "roleblock <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Stops the user from using their night action."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Roleblocking" },
+			{ "name": "Command", "description": "roleblock <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Stops the user from using their night action." }
+		]
+	}
 }

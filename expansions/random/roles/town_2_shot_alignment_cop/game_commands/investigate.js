@@ -1,72 +1,67 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
 // Register heal
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (game, message, params) {
+	var actions = game.actions
+	var config = game.config
 
-  var actions = game.actions;
-  var config = game.config;
+	// Run checks, etc
 
-  // Run checks, etc
+	if (params[0] === undefined) {
+		message.channel.send(
+			":x:  Wrong syntax! Please use `" + config["command-prefix"] + "investigate <alphabet/username/nobody>` instead!"
+		)
+		return null
+	}
 
-  if (params[0] === undefined) {
-    message.channel.send(":x:  Wrong syntax! Please use `" + config["command-prefix"] + "investigate <alphabet/username/nobody>` instead!");
-    return null;
-  };
+	var to = game.getPlayerMatch(params[0])
+	var from = game.getPlayerById(message.author.id)
 
-  var to = game.getPlayerMatch(params[0]);
-  var from = game.getPlayerById(message.author.id);
+	if (from.misc.cop_investigations_left < 1) {
+		message.channel.send(":x:  You have run out of poisons!")
+		return null
+	}
 
-  if (from.misc.cop_investigations_left < 1) {
-    message.channel.send(":x:  You have run out of poisons!");
-    return null;
-  };
+	if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		actions.delete((x) => x.from === from.identifier && x.identifier === "town_2_shot_alignment_cop/investigate")
 
-  if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		message.channel.send(":mag_right:  You have now selected to not investigate anyone tonight.")
+		return null
+	}
 
-    actions.delete(x => x.from === from.identifier && x.identifier === "town_2_shot_alignment_cop/investigate");
+	to = to.player
 
-    message.channel.send(":mag_right:  You have now selected to not investigate anyone tonight.");
-    return null;
-  };
+	if (!to.isAlive()) {
+		message.channel.send(":x:  You cannot investigate a dead player!")
+		return null
+	}
 
-  to = to.player;
+	if (to.id === message.author.id) {
+		message.channel.send(":x:  You cannot investigate yourself!")
 
-  if (!to.isAlive()) {
-    message.channel.send(":x:  You cannot investigate a dead player!");
-    return null;
-  };
+		return null
+	} else {
+		actions.delete((x) => x.from === from.identifier && x.identifier === "town_2_shot_alignment_cop/investigate")
 
-  if (to.id === message.author.id) {
+		game.addAction("town_2_shot_alignment_cop/investigate", ["cycle"], {
+			name: "Cop-investigation",
+			expiry: 1,
+			from: message.author.id,
+			to: to.id,
+		})
 
-    message.channel.send(":x:  You cannot investigate yourself!");
+		var mention = to.getDisplayName()
+	}
 
-    return null;
+	message.channel.send(":mag_right:  You have now selected to investigate **" + mention + "** tonight.")
+}
 
-  } else {
-
-    actions.delete(x => x.from === from.identifier && x.identifier === "town_2_shot_alignment_cop/investigate");
-
-    game.addAction("town_2_shot_alignment_cop/investigate", ["cycle"], {
-      name: "Cop-investigation",
-      expiry: 1,
-      from: message.author.id,
-      to: to.id
-    });
-
-    var mention = to.getDisplayName();
-
-  };
-
-  message.channel.send(":mag_right:  You have now selected to investigate **" + mention + "** tonight.");
-
-};
-
-module.exports.ALLOW_NONSPECIFIC = false;
-module.exports.PRIVATE_ONLY = true;
-module.exports.DEAD_CANNOT_USE = true;
-module.exports.ALIVE_CANNOT_USE = false;
-module.exports.DISALLOW_DAY = true;
-module.exports.DISALLOW_NIGHT = false;
+module.exports.ALLOW_NONSPECIFIC = false
+module.exports.PRIVATE_ONLY = true
+module.exports.DEAD_CANNOT_USE = true
+module.exports.ALIVE_CANNOT_USE = false
+module.exports.DISALLOW_DAY = true
+module.exports.DISALLOW_NIGHT = false

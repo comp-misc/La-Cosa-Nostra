@@ -1,18 +1,15 @@
 {
+	"name": "Selfwatch",
 
-  "name": "Selfwatch",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Investigative"},
-      {"name": "Command", "description": "selfwatch <on/off>"},
-      {"name": "Description", "description": "Sees who visited the user."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Investigative" },
+			{ "name": "Command", "description": "selfwatch <on/off>" },
+			{ "name": "Description", "description": "Sees who visited the user." }
+		]
+	}
 }

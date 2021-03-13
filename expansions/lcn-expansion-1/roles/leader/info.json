@@ -1,10 +1,7 @@
 {
+	"thumbnail": null,
 
-  "thumbnail": null,
+	"abilities": ["Revealed as being leader on game start", "Vote magnitude of five"],
 
-  "abilities": ["Revealed as being leader on game start",
-                "Vote magnitude of five"],
-
-  "attributes": []
-
+	"attributes": []
 }

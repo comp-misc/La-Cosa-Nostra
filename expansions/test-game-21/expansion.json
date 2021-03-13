@@ -1,29 +1,21 @@
 {
+	"name": "Test Game 21",
+	"type": "Setup",
+	"description": "A game for testing how if different variations of a role work properly.",
 
-  "name": "Test Game 21",
-  "type": "Setup",
-  "description": "A game for testing how if different variations of a role work properly.",
+	"link": "None",
 
-  "link": "None",
+	"authors": ["Unusual"],
 
-  "authors": ["Unusual"],
+	"overrides": {
+		"flavours": [],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [],
+		"roles": ["+test-game-21/*"],
 
-    "role_win_conditions": [],
+		"attributes": ["+test-game-21/*"]
+	},
 
-    "roles": [
-      "+test-game-21/*"
-    ],
-
-    "attributes": [
-      "+test-game-21/*"
-    ]
-
-  },
-
-  "dependencies": ["forum-auxiliaries"]
-
+	"dependencies": ["forum-auxiliaries"]
 }

@@ -1,21 +1,20 @@
 var beasts = [
-  ":tiger:",
-  ":bear:",
-  ":lion_face:",
-  ":boar:",
-  ":wolf:",
-  ":ram:",
-  ":water_buffalo:",
-  ":crocodile:",
-  ":rhino:",
-  ":gorilla:"
+	":tiger:",
+	":bear:",
+	":lion_face:",
+	":boar:",
+	":wolf:",
+	":ram:",
+	":water_buffalo:",
+	":crocodile:",
+	":rhino:",
+	":gorilla:",
 ]
 
-module.exports = function (prepend_space=false) {
+module.exports = function (prepend_space = false) {
+	// Inserts a sarcastic remark
 
-  // Inserts a sarcastic remark
+	var index = Math.floor(Math.random() * beasts.length)
 
-  var index = Math.floor(Math.random() * beasts.length);
-
-  return prepend_space ? " " + beasts[index] : beasts[index];
-};
+	return prepend_space ? " " + beasts[index] : beasts[index]
+}

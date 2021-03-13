@@ -1,26 +1,24 @@
-var mafia = require("../../../../../source/lcn.js");
+var mafia = require("../../../../../source/lcn.js")
 
-var rs = mafia.rolesystem;
-var auxils = mafia.auxils;
+var rs = mafia.rolesystem
+var auxils = mafia.auxils
 
 module.exports = function (actionable, game, params) {
+	var dead_replaceable = game.exists((x) => x.role.tags.includes("deputy_replaceable") && !x.isAlive())
 
-  var dead_replaceable = game.exists(x => x.role.tags.includes("deputy_replaceable") && !x.isAlive());
+	if (!dead_replaceable) {
+		return null
+	}
 
-  if (!dead_replaceable) {
-    return null;
-  };
+	var replaceable = game.findAll((x) => x.role.tags.includes("deputy_replaceable") && !x.isAlive())
 
-  var replaceable = game.findAll(x => x.role.tags.includes("deputy_replaceable") && !x.isAlive());
+	var role_to_replace = auxils.cryptographicChoice(replaceable)
 
-  var role_to_replace = auxils.cryptographicChoice(replaceable);
+	// Promote the player to Mafioso
+	var player = game.getPlayerByIdentifier(actionable.to)
 
-  // Promote the player to Mafioso
-  var player = game.getPlayerByIdentifier(actionable.to);
+	player.changeRole(role_to_replace.role_identifier)
+	game.addMessage(player, ":exclamation: Your role is now **" + player.getRole() + "**.")
 
-  player.changeRole(role_to_replace.role_identifier);
-  game.addMessage(player, ":exclamation: Your role is now **" + player.getRole() + "**.");
-
-  return true;
-
-};
+	return true
+}

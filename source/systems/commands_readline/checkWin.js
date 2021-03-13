@@ -1,7 +1,5 @@
 module.exports = function (client, config) {
+	process.timer.game.checkWin()
 
-  process.timer.game.checkWin();
-
-  console.log("Win check complete.");
-
-};
+	console.log("Win check complete.")
+}

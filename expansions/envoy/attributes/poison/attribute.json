@@ -1,13 +1,9 @@
 {
+	"name": "Poison",
 
-  "name": "Poison",
+	"modular": true,
 
-  "modular": true,
-
-  "modular-details": {
-
-    "cluster": "envoy"
-
-  }
-
+	"modular-details": {
+		"cluster": "envoy"
+	}
 }

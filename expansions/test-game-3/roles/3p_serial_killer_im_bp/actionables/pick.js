@@ -1,37 +1,33 @@
-var mafia = require("../../../../../source/lcn.js");
+var mafia = require("../../../../../source/lcn.js")
 
-var rs = mafia.rolesystem;
+var rs = mafia.rolesystem
 
 module.exports = function (actionable, game, params) {
+	var choice = actionable.choice
 
-  var choice = actionable.choice;
+	var serial_killer = game.getPlayerByIdentifier(actionable.from)
 
-  var serial_killer = game.getPlayerByIdentifier(actionable.from);
+	var channel = serial_killer.getPrivateChannel()
 
-  var channel = serial_killer.getPrivateChannel();
+	switch (choice) {
+		case "bulletproof":
+			serial_killer.addAttribute("protection", Infinity, { amount: 1 })
+			serial_killer.misc.can_pick = false
+			channel.send(":exclamation: You have chosen the 1-shot bulletproof perk.")
+			break
 
-  switch (choice) {
+		case "investigation":
+			serial_killer.setPermanentStat("detection-immunity", 1, "set")
+			serial_killer.misc.can_pick = false
+			channel.send(":exclamation: You have chosen the investigation immunity perk.")
+			break
 
-    case "bulletproof":
-      serial_killer.addAttribute("protection", Infinity, {amount: 1});
-      serial_killer.misc.can_pick = false;
-      channel.send(":exclamation: You have chosen the 1-shot bulletproof perk.");
-      break;
+		default:
+			return true
+	}
 
-    case "investigation":
-      serial_killer.setPermanentStat("detection-immunity", 1, "set");
-      serial_killer.misc.can_pick = false;
-      channel.send(":exclamation: You have chosen the investigation immunity perk.");
-      break;
+	// Remove
+	game.actions.delete((x) => x.identifier === "3p_serial_killer_im_bp/pick_expiry" && x.from === actionable.from)
 
-    default:
-      return true;
-
-  };
-
-  // Remove
-  game.actions.delete(x => x.identifier === "3p_serial_killer_im_bp/pick_expiry" && x.from === actionable.from);
-
-  return true;
-
-};
+	return true
+}

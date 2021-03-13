@@ -1,18 +1,15 @@
 {
+	"name": "Kill",
 
-  "name": "Kill",
+	"modular": true,
 
-  "modular": true,
+	"modular-details": {
+		"cluster": "power",
 
-  "modular-details": {
-    "cluster": "power",
-
-    "display-field": [
-      {"name": "Category", "description": "Lethal"},
-      {"name": "Command", "description": "kill <alphabet/name/nobody>"},
-      {"name": "Description", "description": "Deals the target an attack."}
-    ]
-
-  }
-
+		"display-field": [
+			{ "name": "Category", "description": "Lethal" },
+			{ "name": "Command", "description": "kill <alphabet/name/nobody>" },
+			{ "name": "Description", "description": "Deals the target an attack." }
+		]
+	}
 }

@@ -1,29 +1,21 @@
 {
+	"name": "Friends of Cosa Nostra: C9++",
+	"type": "Setup",
+	"description": "A modified C9++ setup to be run with conspiracy channels",
 
-  "name": "Friends of Cosa Nostra: C9++",
-  "type": "Setup",
-  "description": "A modified C9++ setup to be run with conspiracy channels",
+	"link": "https://wiki.mafiascum.net/index.php?title=C9%2B%2B",
 
-  "link": "https://wiki.mafiascum.net/index.php?title=C9%2B%2B",
+	"authors": ["ChocoParrot", "Fiasco"],
 
-  "authors": ["ChocoParrot", "Fiasco"],
+	"overrides": {
+		"flavours": [],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [],
+		"roles": ["-lcn/*"],
 
-    "role_win_conditions": [],
+		"attributes": ["-lcn/*"]
+	},
 
-    "roles": [
-      "-lcn/*"
-    ],
-
-    "attributes": [
-      "-lcn/*"
-    ]
-
-  },
-
-  "dependencies": ["c9++", "conspiracy-channels"]
-
+	"dependencies": ["c9++", "conspiracy-channels"]
 }

@@ -1,39 +1,49 @@
 {
+	"town_cupid": [
+		{
+			"name": "Town Cupid",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Cupid!\n\nAlignment: Town"
+		}
+	],
 
-  "town_cupid": [{
-    "name": "Town Cupid",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Cupid!\n\nAlignment: Town"
-  }],
+	"town_lover": [
+		{
+			"name": "Lover",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Lover!\n\nAlignment: Town"
+		}
+	],
 
-  "town_lover": [{
-    "name": "Lover",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Lover!\n\nAlignment: Town"
-  }],
+	"mafia_bulletproof": [
+		{
+			"name": "Mafia Bulletproof",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Bulletproof!\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_bulletproof": [{
-    "name": "Mafia Bulletproof",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Bulletproof!\n\nAlignment: Mafia"
-  }],
+	"mafia_neapolitan": [
+		{
+			"name": "Mafia Neapolitan",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Mafia Neapolitan!\n\nAlignment: Mafia"
+		}
+	],
 
-  "mafia_neapolitan": [{
-    "name": "Mafia Neapolitan",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Mafia Neapolitan!\n\nAlignment: Mafia"
-  }],
+	"town_jailkeeper": [
+		{
+			"name": "Town Jailkeeper",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Jailkeeper!\n\nAlignment: Town"
+		}
+	],
 
-  "town_jailkeeper": [{
-    "name": "Town Jailkeeper",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Jailkeeper!\n\nAlignment: Town"
-  }],
-
-  "town_bulletproof": [{
-    "name": "Town Bulletproof",
-    "banner": "Mafia Goon.png",
-    "description": "You are a Town Bulletproof!\n\nAlignment: Town"
-  }]
-
+	"town_bulletproof": [
+		{
+			"name": "Town Bulletproof",
+			"banner": "Mafia Goon.png",
+			"description": "You are a Town Bulletproof!\n\nAlignment: Town"
+		}
+	]
 }

@@ -1,21 +1,19 @@
 // Post when a lynch on someone is reached
 
-var texts = require("./text/texts.js");
-var format = require("./__formatter.js");
+var texts = require("./text/texts.js")
+var format = require("./__formatter.js")
 
 module.exports = async function (game) {
+	var config = game.config
+	var client = game.client
 
-  var config = game.config;
-  var client = game.client;
+	var guild = client.guilds.get(config["server-id"])
 
-  var guild = client.guilds.get(config["server-id"]);
+	var main_channel = guild.channels.find((x) => x.name === config["channels"]["main"])
 
-  var main_channel = guild.channels.find(x => x.name === config["channels"]["main"]);
+	var message = texts.nolynch_reached
 
-  var message = texts.nolynch_reached;
+	message = message.replace(new RegExp("{;votes}", "g"), game.getNoLynchVotesRequired())
 
-  message = message.replace(new RegExp("{;votes}", "g"), game.getNoLynchVotesRequired());
-
-  await main_channel.send(message);
-
-};
+	await main_channel.send(message)
+}

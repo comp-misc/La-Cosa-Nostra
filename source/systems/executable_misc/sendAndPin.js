@@ -1,11 +1,9 @@
-var pinMessage = require("./pinMessage.js");
+var pinMessage = require("./pinMessage.js")
 
 module.exports = async function (channel, message) {
+	var pinnable = await channel.send(message)
 
-  var pinnable = await channel.send(message);
+	await pinMessage(pinnable)
 
-  await pinMessage(pinnable);
-
-  return pinnable;
-
-};
+	return pinnable
+}

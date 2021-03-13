@@ -1,29 +1,21 @@
 {
+	"name": "Test Game 14",
+	"type": "Setup",
+	"description": "A game for testing a set of roles.",
 
-  "name": "Test Game 14",
-  "type": "Setup",
-  "description": "A game for testing a set of roles.",
+	"link": "None",
 
-  "link": "None",
+	"authors": ["Unusual"],
 
-  "authors": ["Unusual"],
+	"overrides": {
+		"flavours": [],
 
-  "overrides": {
+		"role_win_conditions": [],
 
-    "flavours": [],
+		"roles": ["+test-game-14/*"],
 
-    "role_win_conditions": [],
+		"attributes": ["+test-game-14/*"]
+	},
 
-    "roles": [
-      "+test-game-14/*"
-    ],
-
-    "attributes": [
-      "+test-game-14/*"
-    ]
-
-  },
-
-  "dependencies": ["forum-auxiliaries"]
-
+	"dependencies": ["forum-auxiliaries"]
 }

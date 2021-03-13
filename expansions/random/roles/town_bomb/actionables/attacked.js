@@ -1,21 +1,18 @@
-var lcn = require("../../../../../source/lcn.js");
+var lcn = require("../../../../../source/lcn.js")
 
-var rs = lcn.rolesystem;
+var rs = lcn.rolesystem
 
 module.exports = function (actionable, game, params) {
+	var main = game.getMainChannel()
 
-  var main = game.getMainChannel();
+	var attacker = game.getPlayerByIdentifier(params.attacker)
+	var attacked = game.getPlayerByIdentifier(actionable.from)
 
-  var attacker = game.getPlayerByIdentifier(params.attacker);
-  var attacked = game.getPlayerByIdentifier(actionable.from);
+	var visit_log = game.actions.visit_log
 
-  var visit_log = game.actions.visit_log;
-
-  for (var i = 0; i < visit_log.length; i++) {
-    if (visit_log[i].target === attacked) {
-      rs.prototypes.basicAttack({from: attacked.id, to: attacker.id}, game, params);
-    };
-  };
-
-
-};
+	for (var i = 0; i < visit_log.length; i++) {
+		if (visit_log[i].target === attacked) {
+			rs.prototypes.basicAttack({ from: attacked.id, to: attacker.id }, game, params)
+		}
+	}
+}

@@ -1,18 +1,16 @@
 module.exports = async function (game, role) {
+	var client = game.client
+	var config = game.config
 
-  var client = game.client;
-  var config = game.config;
+	var lynchable = role.lynchable()
 
-  var lynchable = role.lynchable();
+	if (!lynchable) {
+		return false
+	}
 
-  if (!lynchable) {
-    return false;
-  };
+	var lynches = Array.from(role.votes)
 
-  var lynches = Array.from(role.votes);
+	game.execute("lynch", { target: role.identifier, votes: lynches })
 
-  game.execute("lynch", {target: role.identifier, votes: lynches});
-
-  return lynchable;
-
-};
+	return lynchable
+}

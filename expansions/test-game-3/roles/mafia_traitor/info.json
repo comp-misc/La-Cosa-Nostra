@@ -1,11 +1,11 @@
 {
+	"thumbnail": "https://image.freepik.com/iconen-gratis/misdadige-hand-print-silhouet_318-56281.jpg",
 
-  "thumbnail": "https://image.freepik.com/iconen-gratis/misdadige-hand-print-silhouet_318-56281.jpg",
+	"abilities": [],
 
-  "abilities": [],
-
-  "attributes": ["Belong to the Mafia, but not informed of who they are",
-                "Mafia also does not know who this individual is",
-                "Seen as not suspicious to investigative roles"]
-
+	"attributes": [
+		"Belong to the Mafia, but not informed of who they are",
+		"Mafia also does not know who this individual is",
+		"Seen as not suspicious to investigative roles"
+	]
 }

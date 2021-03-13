@@ -1,24 +1,24 @@
-var mafia = require("../../../../../source/lcn.js");
+var mafia = require("../../../../../source/lcn.js")
 
-var rs = mafia.rolesystem;
-var auxils = mafia.auxils;
+var rs = mafia.rolesystem
+var auxils = mafia.auxils
 
 module.exports = function (actionable, game, params) {
+	// Visit the target
+	game.execute("visit", {
+		visitor: actionable.from,
+		target: actionable.to,
+		priority: actionable.priority,
+		reason: "Watcher-watch",
+	})
 
-  // Visit the target
-  game.execute("visit", {visitor: actionable.from,
-    target: actionable.to,
-    priority: actionable.priority,
-    reason: "Watcher-watch"});
+	game.addAction("town_watcher/gather", ["cycle"], {
+		name: "watcher-gather",
+		expiry: 1,
+		from: actionable.from,
+		to: actionable.to,
+		priority: 12,
+	})
+}
 
-  game.addAction("town_watcher/gather", ["cycle"], {
-    name: "watcher-gather",
-    expiry: 1,
-    from: actionable.from,
-    to: actionable.to,
-    priority: 12
-  });
-
-};
-
-module.exports.TAGS = ["roleblockable", "drivable", "visit"];
+module.exports.TAGS = ["roleblockable", "drivable", "visit"]

@@ -1,89 +1,90 @@
 // Register heal
 
-var rs = require("../../../rolesystem/rolesystem.js");
+var rs = require("../../../rolesystem/rolesystem.js")
 
 module.exports = function (game, message, params) {
+	var actions = game.actions
+	var config = game.config
 
-  var actions = game.actions;
-  var config = game.config;
+	// Run checks, etc
 
-  // Run checks, etc
+	if (params[0] === undefined) {
+		message.channel.send(
+			":x: Wrong syntax! Please use `" + config["command-prefix"] + "block <alphabet/username/nobody>` instead!"
+		)
+		return null
+	}
 
-  if (params[0] === undefined) {
-    message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "block <alphabet/username/nobody>` instead!");
-    return null;
-  };
+	var to = game.getPlayerMatch(params[0])
+	var from = game.getPlayerById(message.author.id)
 
-  var to = game.getPlayerMatch(params[0]);
-  var from = game.getPlayerById(message.author.id);
+	actions.delete(
+		(x) =>
+			(x.from === from.identifier &&
+				(x.identifier === "influencer/influence" || x.identifier === "influencer/block")) ||
+			x.identifier === "influencer/no_action"
+	)
 
-  actions.delete(x => x.from === from.identifier && (x.identifier === "influencer/influence" || x.identifier === "influencer/block") || x.identifier === "influencer/no_action");
+	if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
+		message.channel.send(":ballot_box: You have decided not to block or influence the vote of anyone tonight.")
 
-  if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
-    message.channel.send(":ballot_box: You have decided not to block or influence the vote of anyone tonight.");
+		game.addAction("influencer/no_action", ["cycle"], {
+			name: "Influencer-no_action",
+			expiry: 1,
+			from: message.author.id,
+			to: message.author.id,
+		})
 
-    game.addAction("influencer/no_action", ["cycle"], {
-      name: "Influencer-no_action",
-      expiry: 1,
-      from: message.author.id,
-      to: message.author.id
-    });
+		return null
+	}
 
-    return null;
-  };
+	to = to.player
 
-  to = to.player;
+	if (!to.isAlive()) {
+		message.channel.send(":x: You cannot block the vote of a dead player!" + rs.misc.sarcasm(true))
 
-  if (!to.isAlive()) {
-    message.channel.send(":x: You cannot block the vote of a dead player!" + rs.misc.sarcasm(true));
+		game.addAction("influencer/no_action", ["cycle"], {
+			name: "Influencer-no_action",
+			expiry: 1,
+			from: message.author.id,
+			to: message.author.id,
+		})
 
-    game.addAction("influencer/no_action", ["cycle"], {
-      name: "Influencer-no_action",
-      expiry: 1,
-      from: message.author.id,
-      to: message.author.id
-    });
+		return null
+	}
 
-    return null;
-  };
+	if (from.misc.influencer_log[0] === to.identifier) {
+		message.channel.send(":x: You cannot block or influence the vote of the same player consecutively!")
 
-  if (from.misc.influencer_log[0] === to.identifier) {
-    message.channel.send(":x: You cannot block or influence the vote of the same player consecutively!");
+		game.addAction("influencer/no_action", ["cycle"], {
+			name: "Influencer-no_action",
+			expiry: 1,
+			from: message.author.id,
+			to: message.author.id,
+		})
 
-    game.addAction("influencer/no_action", ["cycle"], {
-      name: "Influencer-no_action",
-      expiry: 1,
-      from: message.author.id,
-      to: message.author.id
-    });
+		return null
+	}
 
-    return null;
-  };
+	if (to.id === message.author.id) {
+		var mention = "yourself"
+	} else {
+		var mention = to.getDisplayName()
+	}
 
-  if (to.id === message.author.id) {
+	game.addAction("influencer/block", ["cycle"], {
+		name: "Influencer-block",
+		expiry: 1,
+		from: message.author.id,
+		to: to.id,
+	})
 
-    var mention = "yourself";
+	message.channel.send(":ballot_box: You have decided to block the vote of **" + mention + "** tonight.")
+}
 
-  } else {
-
-    var mention = to.getDisplayName();
-
-  };
-
-  game.addAction("influencer/block", ["cycle"], {
-    name: "Influencer-block",
-    expiry: 1,
-    from: message.author.id,
-    to: to.id
-  });
-
-  message.channel.send(":ballot_box: You have decided to block the vote of **" + mention + "** tonight.");
-
-};
-
-module.exports.ALLOW_NONSPECIFIC = false;
-module.exports.PRIVATE_ONLY = true;
-module.exports.DEAD_CANNOT_USE = true;
-module.exports.ALIVE_CANNOT_USE = false;
-module.exports.DISALLOW_DAY = true;
-module.exports.DISALLOW_NIGHT = false;
+module.exports.ALLOW_NONSPECIFIC = false
+module.exports.PRIVATE_ONLY = true
+module.exports.DEAD_CANNOT_USE = true
+module.exports.ALIVE_CANNOT_USE = false
+module.exports.DISALLOW_DAY = true
+module.exports.DISALLOW_NIGHT = false
