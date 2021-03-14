@@ -5,7 +5,6 @@ import Discord, {
 	Message,
 	MessageAdditions,
 	MessageOptions,
-	Permissions,
 	TextChannel,
 } from "discord.js"
 import dotenv from "dotenv"
