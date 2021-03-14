@@ -1,4 +1,4 @@
-import { RoleRoutine } from "../../../../../source/systems/Role"
+import { RoleRoutine } from "../../../../../systems/Role"
 
 const routines: RoleRoutine = (player) => player.setGameStat("basic-defense", 2, Math.max)
 

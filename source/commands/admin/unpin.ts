@@ -15,7 +15,7 @@ const unpin: AdminCommand = async (message, params) => {
 
 	for (let i = 0; i < limit; i += 100) {
 		const messages = await (
-			await message.channel.fetchMessages({ limit: Math.min(limit - i, 100), before: before })
+			await message.channel.messages.fetch({ limit: Math.min(limit - i, 100), before: before })
 		).array()
 
 		arr = [...arr, ...messages]

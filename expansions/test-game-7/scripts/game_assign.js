@@ -1,4 +1,4 @@
-var mafia = require("../../../source/lcn")
+var mafia = require("../../../lcn")
 var fs = require("fs")
 
 module.exports = function (playing) {

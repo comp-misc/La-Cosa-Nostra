@@ -155,7 +155,7 @@ export = async (game: Game, ended = false): Promise<void> => {
 
 	const channel = game.findTextChannel(log.trial_vote.channel)
 
-	const display_message = await channel.fetchMessage(log.trial_vote.messages[0])
+	const display_message = await channel.messages.fetch(log.trial_vote.messages[0])
 
 	let message: string
 	if (ended) {

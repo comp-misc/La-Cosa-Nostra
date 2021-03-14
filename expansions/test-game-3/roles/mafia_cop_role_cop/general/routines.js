@@ -3,7 +3,7 @@
 
 // Function should be synchronous
 
-var auxils = require("../../../../../source/lcn")
+var auxils = require("../../../../../lcn")
 
 module.exports = function (player) {
 	var config = player.game.config

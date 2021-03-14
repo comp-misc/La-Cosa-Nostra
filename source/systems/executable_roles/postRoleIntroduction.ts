@@ -32,7 +32,7 @@ export = async (player: Player, stagger = 400): Promise<void> => {
 	const channel = player.getPrivateChannel()
 	if (flavour_role?.banner && flavour && flavour.assets[flavour_role.banner]) {
 		// Flavour role card available
-		const attachment = new Discord.Attachment(flavour.assets[flavour_role.banner], "role_card.png")
+		const attachment = new Discord.MessageAttachment(flavour.assets[flavour_role.banner], "role_card.png")
 
 		// Post
 		const message = await channel.send(undefined, attachment)
@@ -41,7 +41,7 @@ export = async (player: Player, stagger = 400): Promise<void> => {
 
 	if (role.role_card && flavour_info["show-vanilla-banner"]) {
 		// Role card available
-		const attachment = new Discord.Attachment(await role.role_card, "role_card.png")
+		const attachment = new Discord.MessageAttachment(await role.role_card, "role_card.png")
 
 		// Post
 		const message = await channel.send(undefined, attachment)

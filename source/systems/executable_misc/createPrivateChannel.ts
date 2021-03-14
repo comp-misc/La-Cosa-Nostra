@@ -1,4 +1,4 @@
-import { PermissionObject, Role, TextChannel, User } from "discord.js"
+import { CategoryChannel, PermissionObject, Permissions, Role, TextChannel, User } from "discord.js"
 import Game from "../game_templates/Game"
 
 export interface RolePermission {
@@ -12,23 +12,22 @@ export default async (game: Game, channel_name: string, permissions: RolePermiss
 
 	const guild = game.getGuild()
 
-	const spectator = guild.roles.find((x) => x.name === config["permissions"]["spectator"])
-	const admin = guild.roles.find((x) => x.name === config["permissions"]["admin"])
+	const spectator = guild.roles.cache.find((x) => x.name === config.permissions.spectator)
+	const admin = guild.roles.cache.find((x) => x.name === config.permissions.admin)
 
-	permissions = [
-		{ target: spectator, permissions: config["base-perms"]["read"] },
-		{ target: admin, permissions: config["base-perms"]["manage"] },
-		...permissions,
-	]
+	if (spectator) {
+		permissions.unshift({ target: spectator, permissions: config["base-perms"].read })
+	}
+	if (admin) {
+		permissions.unshift({ target: admin, permissions: config["base-perms"].manage })
+	}
 
 	const category = config["categories"]["private"]
-	const cat_channel = client.channels.find(
-		(x) => x instanceof TextChannel && x.name === category && x.type === "category"
-	)
+	const cat_channel = client.channels.cache.find((x) => x instanceof CategoryChannel && x.name === category)
 
-	const channel = (await guild.createChannel(channel_name, {
+	const channel = (await guild.channels.create(channel_name, {
 		type: "text",
-		permissionOverwrites: [{ id: guild.id, deny: ["READ_MESSAGES"] }],
+		permissionOverwrites: [{ id: guild.id, deny: [Permissions.FLAGS.READ_MESSAGE_HISTORY] }],
 		parent: cat_channel,
 		position: 0,
 	})) as TextChannel
@@ -39,7 +38,7 @@ export default async (game: Game, channel_name: string, permissions: RolePermiss
 			continue
 		}
 
-		await channel.overwritePermissions(permissions[i].target, permissions[i].permissions)
+		await channel.createOverwrite(permissions[i].target, permissions[i].permissions)
 	}
 
 	game.setChannel(channel_name, channel)

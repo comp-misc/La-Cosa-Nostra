@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn")
+var lcn = require("../../../../../lcn")
 
 // Routines
 // Runs every cycle
@@ -32,10 +32,10 @@ module.exports = function (player) {
 
 	if (game.isDay()) {
 		// Day time
-		channel.overwritePermissions(member, config["base-perms"]["read"])
+		channel.createOverwrite(member, config["base-perms"]["read"])
 	} else {
 		// Night time
-		channel.overwritePermissions(member, config["base-perms"]["post"])
+		channel.createOverwrite(member, config["base-perms"]["post"])
 	}
 }
 

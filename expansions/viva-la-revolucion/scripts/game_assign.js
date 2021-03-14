@@ -1,4 +1,4 @@
-var lcn = require("../../../source/lcn")
+var lcn = require("../../../lcn")
 
 module.exports = function (playing_config) {
 	var logger = process.logger

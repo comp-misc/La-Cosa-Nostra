@@ -1,9 +1,9 @@
-var lcn = require("../../../source/lcn")
+var lcn = require("../../../lcn")
 
 var auxils = lcn.auxils
 
-var town_win_condition = require("../../../source/role_win_conditions/town")
-var mafia_win_condition = require("../../../source/role_win_conditions/mafia")
+var town_win_condition = require("../../../role_win_conditions/town")
+var mafia_win_condition = require("../../../role_win_conditions/mafia")
 
 module.exports = function (game) {
 	var players = game.players

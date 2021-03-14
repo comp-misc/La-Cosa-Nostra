@@ -15,11 +15,21 @@ import Timer from "../game_templates/Timer"
 import getLogger from "../../getLogger"
 import { getTimer, hasTimer } from "../../getTimer"
 
+export class GameStartError extends Error {
+	constructor(message: string) {
+		super(message)
+	}
+}
+
 const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 	const logger = getLogger()
-	await client.user.setPresence({
+	const user = client.user
+	if (!user) {
+		throw new Error(`User not logged in`)
+	}
+	await user.setPresence({
 		status: "dnd",
-		game: { name: "setting up...", type: "PLAYING" },
+		activity: { name: "setting up...", type: "PLAYING" },
 	})
 
 	// Destroy previous timer
@@ -68,4 +78,4 @@ const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 	return timer
 }
 
-export = initGame
+export default initGame

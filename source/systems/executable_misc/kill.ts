@@ -11,31 +11,37 @@ export = async (game: Game, role: Player): Promise<void> => {
 	// Remove alive role
 	const guild = game.getGuild()
 
-	const alive_role = guild.roles.find((x) => x.name === config.permissions.alive)
-	const dead_role = guild.roles.find((x) => x.name === config.permissions.dead)
+	const alive_role = guild.roles.cache.find((x) => x.name === config.permissions.alive)
+	const dead_role = guild.roles.cache.find((x) => x.name === config.permissions.dead)
+	if (!alive_role) {
+		throw new Error("No alive role found")
+	}
+	if (!dead_role) {
+		throw new Error("No dead role found")
+	}
 
-	const member = guild.members.get(role.id)
+	const member = guild.members.cache.get(role.id)
 
-	if (member === undefined) {
+	if (!member) {
 		logger.log(3, "Trying to kill undefined user. Debugging?")
 		return
 	}
 
-	member.addRole(dead_role)
-	member.removeRole(alive_role)
+	await member.roles.add(dead_role)
+	await member.roles.remove(alive_role)
 
 	// Remove read permissions from all special channels
 	const special_channels = role.getSpecialChannels()
-	const read_perms = game.config["base-perms"]["read"]
+	const read_perms = game.config["base-perms"].read
 
 	for (let i = 0; i < special_channels.length; i++) {
-		const channel = guild.channels.get(special_channels[i].id)
+		const channel = guild.channels.cache.get(special_channels[i].id)
 
 		if (!channel) {
 			logger.log(4, "Removing read perms from undefined channel.")
 			continue
 		}
 
-		await channel.overwritePermissions(member, read_perms)
+		await channel.createOverwrite(member, read_perms)
 	}
 }

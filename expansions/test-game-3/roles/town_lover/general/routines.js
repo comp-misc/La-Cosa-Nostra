@@ -3,7 +3,7 @@
 
 // Function should be synchronous
 
-var mafia = require("../../../../../source/lcn")
+var mafia = require("../../../../../lcn")
 
 var auxils = mafia.auxils
 
@@ -27,10 +27,10 @@ module.exports = function (player) {
 
 	if (game.isDay()) {
 		// Day time
-		channel.overwritePermissions(member, config["base-perms"]["read"])
+		channel.createOverwrite(member, config["base-perms"]["read"])
 	} else {
 		// Night time
-		channel.overwritePermissions(member, config["base-perms"]["post"])
+		channel.createOverwrite(member, config["base-perms"]["post"])
 	}
 }
 

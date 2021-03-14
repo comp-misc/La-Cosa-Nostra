@@ -3,7 +3,7 @@ import getGuild from "../../getGuild"
 
 const resetNicks = async (client: Client): Promise<void> => {
 	const guild = getGuild(client)
-	const members = guild.members.array()
+	const members = (await guild.members.fetch()).array()
 
 	// Remove all nickname prefixes
 

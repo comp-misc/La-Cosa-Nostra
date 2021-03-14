@@ -2,7 +2,7 @@ import { CommandProperties, UnaffiliatedCommand } from "../../CommandType"
 import createSignupCommand, { addRole, removePlayer, removeSpectator } from "../../createSignupCommand"
 
 const command = createSignupCommand(async (msg, params, config) => {
-	if (msg.member.roles.some((r) => r.name === config.permissions.backup)) {
+	if (msg.member.roles.cache.some((r) => r.name === config.permissions.backup)) {
 		await msg.reply(`:x:  You are already a backup!`)
 		return
 	}

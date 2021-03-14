@@ -1,6 +1,6 @@
 // TODO: rewrite and assign by player instance
 
-import { CategoryChannel, Client, TextChannel } from "discord.js"
+import { CategoryChannel, Client, OverwriteData, Permissions, TextChannel } from "discord.js"
 import delay from "../../auxils/delay"
 import getGuild from "../../getGuild"
 import { LcnConfig } from "../../LcnConfig"
@@ -9,22 +9,19 @@ import Player from "../game_templates/Player"
 const createPrivate = async (client: Client, config: LcnConfig, roles: Player[]): Promise<TextChannel | null> => {
 	// Create private channels [A-Z]; mafia chat-log
 	const category = config.categories.private
+	const guild = getGuild(client)
 
-	// Bug with discord.js
-	const cat_channel = client.channels.find(
-		(x) => x.type === "category" && (x as CategoryChannel).name === category
-	) as CategoryChannel
-
-	// Check if category configuration is correct
+	let cat_channel = guild.channels.cache.find((x) => x instanceof CategoryChannel && x.name === category)
 	if (!cat_channel) {
-		const err = "Private category is invalid or non-existent!"
-		throw new Error(err)
+		cat_channel = await guild.channels.create(category, { type: "category" })
+		await delay(5000)
 	}
 
 	const createPrivateChannel = async (name: string, assign_permissions_async = false): Promise<TextChannel> => {
-		const channel = await guild.createChannel(name, {
+		const overwriteData: OverwriteData = { id: guild.id, deny: [Permissions.FLAGS.READ_MESSAGE_HISTORY] }
+		const channel = await guild.channels.create(name, {
 			type: "text",
-			permissionOverwrites: [{ id: guild.id, deny: ["READ_MESSAGES"] }],
+			permissionOverwrites: [overwriteData],
 			parent: cat_channel,
 		})
 
@@ -32,9 +29,9 @@ const createPrivate = async (client: Client, config: LcnConfig, roles: Player[])
 			const read_perms = config["base-perms"]["read"]
 			const manage_perms = config["base-perms"]["manage"]
 
-			//await channel.overwritePermissions(everyone, {READ_MESSAGES: false, SEND_MESSAGES: false});
-			await channel.overwritePermissions(spectator, read_perms)
-			await channel.overwritePermissions(admin, manage_perms)
+			if (spectator) await channel.createOverwrite(spectator, read_perms)
+			if (admin) await channel.createOverwrite(admin, manage_perms)
+			//await channel.createOverwrite(everyone, {READ_MESSAGES: false, SEND_MESSAGES: false});
 		}
 
 		if (assign_permissions_async) {
@@ -52,31 +49,20 @@ const createPrivate = async (client: Client, config: LcnConfig, roles: Player[])
 		return channel
 	}
 
-	const spectator = cat_channel.guild.roles.find((x) => x.name === config.permissions.spectator)
-	const admin = cat_channel.guild.roles.find((x) => x.name === config.permissions.admin)
-
-	const guild = getGuild(client)
+	const spectator = guild.roles.cache.find((x) => x.name === config.permissions.spectator)
+	const admin = guild.roles.cache.find((x) => x.name === config.permissions.admin)
 
 	// Create resolvables so channel creation is quicker
-	const resolvables = []
-
-	// Create A-Z chats
-	for (let i = 0; i < roles.length; i++) {
-		resolvables.push(assignChannel(roles[i]))
-
-		// Short hiatus to prevent ENOTFOUND connection error
-		// Critical, apparently
-		await delay(500)
-	}
+	await Promise.all(roles.map((role) => assignChannel(role)))
 
 	// If mafia has rendezvous chat
 	let mafia: TextChannel | null
-	if (config["game"]["mafia"]["has-chat"]) {
-		mafia = await createPrivateChannel(config["game"]["mafia"]["chat-name"])
+	if (config.game.mafia["has-chat"]) {
+		mafia = await createPrivateChannel(config.game.mafia["chat-name"])
 	} else {
 		mafia = null
 	}
-	await Promise.all(resolvables)
+
 	return mafia
 }
 

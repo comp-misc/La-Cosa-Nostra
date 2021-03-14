@@ -22,7 +22,7 @@ module.exports = async function (game) {
 				continue
 			}
 
-			await channel.overwritePermissions(member, read_perms)
+			await channel.createOverwrite(member, read_perms)
 		}
 	} else {
 		// Open channels
@@ -33,7 +33,7 @@ module.exports = async function (game) {
 				continue
 			}
 
-			await channel.overwritePermissions(member, post_perms)
+			await channel.createOverwrite(member, post_perms)
 		}
 	}
 }

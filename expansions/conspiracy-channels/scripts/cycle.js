@@ -107,7 +107,7 @@ module.exports = async function (game) {
 				continue
 			}
 
-			cache.push(channel.overwritePermissions(permissions[i].target, permissions[i].permissions))
+			cache.push(channel.createOverwrite(permissions[i].target, permissions[i].permissions))
 		}
 
 		await Promise.all(cache)

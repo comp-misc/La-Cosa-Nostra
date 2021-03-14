@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn")
+var lcn = require("../../../../../lcn")
 
 // Executes BEFORE introduction
 

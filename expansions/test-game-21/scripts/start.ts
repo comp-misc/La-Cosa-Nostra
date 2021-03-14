@@ -1,5 +1,5 @@
-import objectOverride from "../../../source/auxils/objectOverride"
-import { StartScript } from "../../../source/systems/Expansion"
+import objectOverride from "../../../auxils/objectOverride"
+import { StartScript } from "../../../systems/Expansion"
 import override from "./override.json"
 
 const start: StartScript = (config) => objectOverride(config, override)

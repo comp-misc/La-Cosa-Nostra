@@ -1,13 +1,13 @@
-import { GuildChannel, PermissionOverwriteOptions, Snowflake } from "discord.js"
+import { GuildChannel, PermissionObject, Snowflake } from "discord.js"
 import getLogger from "../../getLogger"
 import { LcnConfig } from "../../LcnConfig"
 import Player from "../game_templates/Player"
 
-const setRoleOf = async (channel: GuildChannel, id: Snowflake, perms: PermissionOverwriteOptions): Promise<void> => {
-	const member = channel.guild.members.get(id)
+const setRoleOf = async (channel: GuildChannel, id: Snowflake, perms: PermissionObject): Promise<void> => {
+	const member = channel.guild.members.cache.get(id)
 
 	if (member) {
-		await channel.overwritePermissions(member, perms)
+		await channel.createOverwrite(member, perms)
 	}
 }
 

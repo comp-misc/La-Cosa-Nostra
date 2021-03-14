@@ -1,10 +1,14 @@
 import { Guild, GuildChannel, PermissionObject } from "discord.js"
+import filterDefined from "../../auxils/filterDefined"
+import getGuild from "../../getGuild"
 import { getTimer, hasTimer } from "../../getTimer"
 import { AdminCommand } from "../CommandType"
 
 const setPerms = async (guild: Guild, roles: string[], channels: GuildChannel[], perms: PermissionObject) => {
-	const validRoles = roles.map((role) => guild.roles.find((x) => x.name == role)).filter((role) => !!role)
-	await Promise.all(channels.flatMap((channel) => validRoles.map((role) => channel.overwritePermissions(role, perms))))
+	const validRoles = filterDefined(
+		roles.map((role) => guild.roles.cache.find((x) => x.name == role)).filter((role) => !!role)
+	)
+	await Promise.all(channels.flatMap((channel) => validRoles.map((role) => channel.createOverwrite(role, perms))))
 }
 
 const _archive: AdminCommand = async (message, params, config) => {
@@ -23,26 +27,25 @@ const _archive: AdminCommand = async (message, params, config) => {
 
 	await message.channel.send(":hourglass_flowing_sand: Archiving channels.")
 
-	const client = message.client
-	const guild = client.guilds.find((x) => x.id === process.env["server-id"])
+	const guild = getGuild(message.client)
 
 	const name = params.join(" ")
 
-	const category = await guild.createChannel("Archive " + name, "category")
+	const category = await guild.channels.create("Archive " + name, { type: "category" })
 
 	const channels = await Promise.all(
-		Object.entries(config.channels)
-			.filter(([key]) => key !== "welcome-channel")
-			.map(([, channel_name]) => guild.channels.find((x) => x.name === channel_name))
-			.filter((ch) => !!ch)
-			.map((channel) => {
-				return (async () => {
-					await channel.setName(name + "-" + channel.name)
-					await channel.setParent(category)
+		filterDefined(
+			Object.entries(config.channels)
+				.filter(([key]) => key !== "welcome-channel")
+				.map(([, channel_name]) => guild.channels.cache.find((x) => x.name === channel_name))
+		).map((channel) => {
+			return (async () => {
+				await channel.setName(name + "-" + channel.name)
+				await channel.setParent(category)
 
-					return channel
-				})()
-			})
+				return channel
+			})()
+		})
 	)
 
 	const all_channels = Array.from(channels)

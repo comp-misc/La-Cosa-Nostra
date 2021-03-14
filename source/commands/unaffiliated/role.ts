@@ -80,7 +80,7 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 	const flavour_identifier = hasTimer() ? getTimer().game.flavour_identifier : default_flavour
 
 	if (params.length < 1) {
-		let sendable = new String()
+		let sendable = ""
 
 		for (const alignment in ret) {
 			sendable += "\n\n[" + capitaliseFirstLetter(alignment) + "]"
@@ -126,10 +126,10 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 			if (sendable.length < 2000) {
 				message.channel.send(sendable)
 			} else {
-				const channel1 = guild.channels.find((x) => x.name === config["channels"]["roles"])
+				const channel1 = guild.channels.cache.find((x) => x.name === config.channels.roles)
 				message.channel.send(
 					":information_source:  The role list length exceeds the characted limit. Refer to the role list provided in " +
-						channel1.toString() +
+						channel1?.toString() +
 						" instead."
 				)
 			}
@@ -206,7 +206,7 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 	if (["info"].includes(action)) {
 		const standard_role = role.role
 
-		const embed = new Discord.RichEmbed()
+		const embed = new Discord.MessageEmbed()
 
 		embed.setColor("BLUE")
 		embed.setTitle(role.name)
@@ -247,7 +247,7 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 			const cond2 = info.attributes.length > 0
 
 			if (cond1 || cond2) {
-				embed.addBlankField()
+				embed.addField("", "")
 			}
 
 			if (cond1) {
@@ -259,7 +259,7 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 			}
 
 			if (cond1 || cond2) {
-				embed.addBlankField()
+				embed.addField("", "")
 			}
 
 			if (info.thumbnail) {
@@ -296,7 +296,7 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 			return
 		}
 
-		const attachment = new Discord.Attachment(await role.role_card, "role_card.png")
+		const attachment = new Discord.MessageAttachment(await role.role_card, "role_card.png")
 		await message.channel.send(attachment)
 		return
 	}

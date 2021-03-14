@@ -3,7 +3,7 @@
 
 // Function should be synchronous
 
-var mafia = require("../../../../../source/lcn")
+var mafia = require("../../../../../lcn")
 
 var auxils = mafia.auxils
 

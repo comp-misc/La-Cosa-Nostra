@@ -1,7 +1,9 @@
 import { GuildMember, Role } from "discord.js"
 
 const removeRole = async (member: GuildMember, roles: Role[]): Promise<void> => {
-	await Promise.all(roles.filter((role) => role && member.roles.has(role.id)).map((role) => member.removeRole(role.id)))
+	await Promise.all(
+		roles.filter((role) => role && member.roles.cache.has(role.id)).map((role) => member.roles.remove(role))
+	)
 }
 
 export = removeRole

@@ -11,28 +11,31 @@ const qcheck: AdminCommand = async (message) => {
 
 	const game = getTimer().game
 
-	const alwchannel = message.guild.channels.find((channel) => channel.name === "qcheck")
+	const alwchannel = message.guild.channels.cache.find((channel) => channel.name === "qcheck")
 
 	const roles = game.players
 
 	// checks if channel doesn't exist
 	if (!alwchannel) {
 		// checks if user has role "Host"
-		if (message.member.roles.find((r) => r.name === "Host")) {
+		if (message.member.roles.cache.find((r) => r.name === "Host")) {
 			// Logs action
 			console.log("Checking channel not found, creating one...")
 			// Creates channel with permissions for everyone disabled, but for host enabled
-			const channel = await message.guild.createChannel("qcheck", "text")
-			await channel.overwritePermissions(message.guild.roles.find("name", "@everyone"), {
+			const channel = await message.guild.channels.create("qcheck", { type: "text" })
+			await channel.createOverwrite(message.guild.roles.everyone, {
 				CREATE_INSTANT_INVITE: false,
 				VIEW_CHANNEL: false,
 				SEND_MESSAGES: false,
 			})
 
-			await channel.overwritePermissions(message.guild.roles.find("name", "Host"), {
-				VIEW_CHANNEL: true,
-				SEND_MESSAGES: true,
-			})
+			const host = message.guild.roles.cache.find((r) => r.name === "Host")
+			if (host) {
+				await channel.createOverwrite(host, {
+					VIEW_CHANNEL: true,
+					SEND_MESSAGES: true,
+				})
+			}
 		}
 		return
 	} else if (!(alwchannel instanceof TextChannel)) {
@@ -61,7 +64,7 @@ const qcheck: AdminCommand = async (message) => {
 					concat.push(player.getDisplayName())
 				}
 
-				const embed = new Discord.RichEmbed()
+				const embed = new Discord.MessageEmbed()
 					.setColor(0xff0000)
 					.setDescription(`\n\n **${"<@" + roles[i].id + ">** - __" + roles[i].getDisplayRole(false)}__`)
 				alwchannel.send(embed)

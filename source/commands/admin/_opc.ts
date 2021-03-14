@@ -19,9 +19,9 @@ const _opc: AdminCommand = async (message, params, config) => {
 
 	let role: Role | undefined
 	if (role_name.toLowerCase() === "everyone") {
-		role = guild.roles.find((x) => x.id === guild.id)
+		role = guild.roles.everyone
 	} else {
-		role = guild.roles.find((x) => x.name.toLowerCase() === role_name.toLowerCase())
+		role = guild.roles.cache.find((x) => x.name.toLowerCase() === role_name.toLowerCase())
 	}
 
 	if (!role) {
@@ -29,7 +29,7 @@ const _opc: AdminCommand = async (message, params, config) => {
 		return
 	}
 
-	const category = guild.channels.find((x) => x.name === config.categories.private && x.type === "category")
+	const category = guild.channels.cache.find((x) => x.name === config.categories.private && x.type === "category")
 	if (!category) {
 		await message.channel.send(":x: Cannot find the channel!")
 		return
@@ -41,7 +41,7 @@ const _opc: AdminCommand = async (message, params, config) => {
 
 	const setPerms = async (role: Role, channels: GuildChannel[], perms: PermissionObject) => {
 		for (let i = 0; i < channels.length; i++) {
-			await channels[i].overwritePermissions(role, perms)
+			await channels[i].createOverwrite(role, perms)
 		}
 	}
 

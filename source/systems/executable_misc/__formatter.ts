@@ -46,9 +46,9 @@ export = (game: Game, message: string): string => {
 		const search = "{@" + role + "}"
 
 		if (message.includes(search)) {
-			const role = guild.roles.find((x) => x.name === name)
+			const role = guild.roles.cache.find((x) => x.name === name)
 
-			if (role !== null) {
+			if (role) {
 				// Set the ping
 				message = message.replace(new RegExp(search, "g"), "<@&" + role.id + ">")
 			}
@@ -57,9 +57,9 @@ export = (game: Game, message: string): string => {
 
 	Object.entries(config.channels).forEach(([type, name]) => {
 		const search = "{#" + type + "}"
-		const channel = guild.channels.find((x) => x.name === name)
+		const channel = guild.channels.cache.find((x) => x.name === name)
 
-		if (channel !== null) {
+		if (channel) {
 			message = message.replace(new RegExp(search, "g"), "<#" + channel.id + ">")
 		}
 	})

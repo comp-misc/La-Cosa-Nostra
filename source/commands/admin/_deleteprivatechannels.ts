@@ -5,7 +5,7 @@ import { AdminCommand } from "../CommandType"
 const _deleteprivatechannels: AdminCommand = async (message, _, config): Promise<void> => {
 	const guild = getGuild(message.client)
 
-	const category = guild.channels.find((x) => x.name === config.categories.private && x.type === "category")
+	const category = guild.channels.cache.find((x) => x.name === config.categories.private && x.type === "category")
 	if (!category) {
 		await message.channel.send(":exclamation: No private channels to delete")
 		return

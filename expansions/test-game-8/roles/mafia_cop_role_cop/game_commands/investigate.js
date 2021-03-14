@@ -1,6 +1,6 @@
 // Register heal
 
-var rs = require("../../../../../source/lcn")
+var rs = require("../../../../../lcn")
 
 module.exports = function (game, message, params) {
 	var actions = game.actions

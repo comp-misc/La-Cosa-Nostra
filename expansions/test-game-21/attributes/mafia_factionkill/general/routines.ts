@@ -1,4 +1,4 @@
-import { RoleRoutine } from "../../../../../source/systems/Role"
+import { RoleRoutine } from "../../../../../systems/Role"
 
 // Routines
 // Runs every cycle

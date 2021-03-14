@@ -5,7 +5,7 @@ export = (client: Client): Guild => {
 	if (!serverId) {
 		throw new Error("No value specified for 'server-id'")
 	}
-	const guild = client.guilds.get(serverId)
+	const guild = client.guilds.cache.get(serverId)
 	if (!guild) {
 		throw new Error("Unable to find guild")
 	}

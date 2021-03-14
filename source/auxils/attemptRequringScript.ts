@@ -5,7 +5,7 @@ const attemptRequiringScript = <T>(
 	scriptName: string,
 	fileExtensions = ["js", "ts"]
 ): T | undefined => {
-	for (const extension in fileExtensions) {
+	for (const extension of fileExtensions) {
 		const result = attemptRequiring<T>(`${directory}/${scriptName}.${extension}`)
 		if (result !== undefined) {
 			return result

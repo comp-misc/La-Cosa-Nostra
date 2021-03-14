@@ -1,4 +1,4 @@
-var lcn = require("../../../../source/lcn")
+var lcn = require("../../../../lcn")
 
 var auxils = lcn.auxils
 var expansion_config = require("../../miscellaneous/config")
@@ -361,8 +361,8 @@ module.exports = async function (game, message, params) {
 			}
 		}
 
-		var spectator = guild.roles.find((x) => x.name === config["permissions"]["spectator"])
-		var admin = guild.roles.find((x) => x.name === config["permissions"]["admin"])
+		var spectator = guild.roles.cache.find((x) => x.name === config["permissions"]["spectator"])
+		var admin = guild.roles.cache.find((x) => x.name === config["permissions"]["admin"])
 
 		var standard_permissions = [
 			{ target: spectator, permissions: config["base-perms"]["read"] },
@@ -447,7 +447,7 @@ module.exports = async function (game, message, params) {
 				continue
 			}
 
-			cache.push(channel.overwritePermissions(permissions[i].target, permissions[i].permissions))
+			cache.push(channel.createOverwrite(permissions[i].target, permissions[i].permissions))
 		}
 
 		await Promise.all(cache)

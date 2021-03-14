@@ -5,8 +5,8 @@ import { AdminCommand } from "../CommandType"
 const sudo: AdminCommand = async (message, params) => {
 	const client = message.client
 
-	const user = client.users.get(params[0])
-	const member = message.guild.members.get(params[0])
+	const user = client.users.fetch(params[0])
+	const member = message.guild.members.fetch(params[0])
 
 	if (!member) {
 		await message.channel.send(":x: That user has an invalid ID and cannot be sudo'd.")

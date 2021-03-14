@@ -16,9 +16,9 @@ module.exports = async function (message, params, config) {
 	var guild = message.client.guilds.get(process.env["server-id"])
 
 	if (role_name.toLowerCase() === "everyone") {
-		var role = guild.roles.find((x) => x.id === guild.id)
+		var role = guild.roles.cache.find((x) => x.id === guild.id)
 	} else {
-		var role = guild.roles.find((x) => x.name.toLowerCase() === role_name.toLowerCase())
+		var role = guild.roles.cache.find((x) => x.name.toLowerCase() === role_name.toLowerCase())
 	}
 
 	if (!role) {
@@ -60,7 +60,7 @@ module.exports = async function (message, params, config) {
 
 	async function setPerms(role, channels, perms) {
 		for (var i = 0; i < channels.length; i++) {
-			await channels[i].overwritePermissions(role, perms)
+			await channels[i].createOverwrite(role, perms)
 		}
 	}
 }

@@ -25,11 +25,11 @@ export = async (game: Game, identifier: string): Promise<void> => {
 	const messages = period_log.trial_vote.messages
 
 	for (let i = 0; i < messages.length; i++) {
-		const message = await trial.fetchMessage(messages[i])
+		const message = await trial.messages.fetch(messages[i])
 
-		const emote = message.reactions.get(target_emote)
+		const emote = message.reactions.resolve(target_emote)
 
-		if (emote !== undefined) {
+		if (emote) {
 			await emote.remove()
 		}
 	}

@@ -1,5 +1,5 @@
-import { RoleActionable } from "../../../../../source/systems/actionables"
-import { rolesystem } from "../../../../../source/lcn"
+import { RoleActionable } from "../../../../../systems/actionables"
+import { rolesystem } from "../../../../../lcn"
 
 // Defaults to shooting
 // Godfather can override

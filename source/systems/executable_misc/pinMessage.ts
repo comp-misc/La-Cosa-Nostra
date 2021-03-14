@@ -12,7 +12,7 @@ export = async (message: Message): Promise<boolean> => {
 	}
 	try {
 		// Create collector
-		const collector = message.channel.createMessageCollector(pinFunction, { maxMatches: 3, time: 4000 })
+		const collector = message.channel.createMessageCollector(pinFunction, { max: 3, time: 4000 })
 		collector.on("collect", async (message) => {
 			if (message.type === "PINS_ADD" && message.system && !message.delete) {
 				await message.delete()

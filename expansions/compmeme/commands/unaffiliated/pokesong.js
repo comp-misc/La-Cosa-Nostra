@@ -1,6 +1,4 @@
-var lcn = require("../../../../source/lcn")
-
-var auxils = lcn.auxils
+const auxils = require("../../../../systems/auxils")
 
 module.exports = function (message, params, config) {
 	var phrases = [

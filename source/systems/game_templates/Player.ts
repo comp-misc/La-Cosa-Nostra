@@ -139,11 +139,11 @@ class Player {
 		this.attributes = []
 	}
 
-	init(id: string, alphabet: keyof typeof alpha_table, role: string): this {
+	init(id: string, alphabet: keyof typeof alpha_table, role_identifier: string): this {
 		this.id = id
 		this.alphabet = alphabet
-		this.role_identifier = role
-		this.initial_role_identifier = [role]
+		this.role_identifier = role_identifier
+		this.initial_role_identifier = [role_identifier]
 
 		this.identifier = crypto.randomBytes(8).toString("hex") + "-" + this.id
 
@@ -326,7 +326,7 @@ class Player {
 			throw new Error(`No private channel defined for ${this.getDisplayName()}`)
 		}
 		const guild = this.getGame().getGuild()
-		const channel = guild.channels.get(this.channel.id)
+		const channel = guild.channels.cache.get(this.channel.id)
 		if (!channel) {
 			throw new Error(
 				`No discord channel found with id ${this.channel.id} (private channel for ${this.getDisplayName()})`
@@ -400,7 +400,7 @@ class Player {
 
 	getGuildMember(): GuildMember | undefined {
 		const guild = this.getGame().getGuild()
-		return guild.members.get(this.id)
+		return guild.members.cache.get(this.id)
 	}
 
 	getDisplayName(): string {
@@ -843,7 +843,7 @@ class Player {
 	}
 
 	getDiscordUser(): User | null {
-		return this.getGame().client.users.get(this.id) || null
+		return this.getGame().client.users.cache.get(this.id) || null
 	}
 
 	setBaseFlavourIdentifier(identifier: string): void {

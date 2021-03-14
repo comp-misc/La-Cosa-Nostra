@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn")
+var lcn = require("../../../../../lcn")
 
 module.exports = function (actionable, game, params) {
 	// Seen as a visit

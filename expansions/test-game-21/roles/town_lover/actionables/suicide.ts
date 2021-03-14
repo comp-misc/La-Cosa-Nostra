@@ -1,4 +1,4 @@
-import { RoleActionable } from "../../../../../source/systems/actionables"
+import { RoleActionable } from "../../../../../systems/actionables"
 
 const suicide: RoleActionable = (actionable, game) => {
 	// Suicide

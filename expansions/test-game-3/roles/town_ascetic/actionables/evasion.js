@@ -1,4 +1,4 @@
-var mafia = require("../../../../../source/lcn")
+var mafia = require("../../../../../lcn")
 
 var rs = mafia.rolesystem
 var auxils = mafia.auxils

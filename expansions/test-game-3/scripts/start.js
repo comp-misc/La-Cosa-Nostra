@@ -1,5 +1,5 @@
 var fs = require("fs")
-var mafia = require("../../../source/lcn")
+var mafia = require("../../../lcn")
 
 module.exports = function (config) {
 	// Override configuration liberally

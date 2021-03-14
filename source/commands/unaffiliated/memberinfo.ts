@@ -2,6 +2,7 @@ import Discord from "discord.js"
 import getGuild from "../../getGuild"
 import auxils from "../../systems/auxils"
 import { UnaffiliatedCommand } from "../CommandType"
+import makeCommand from "../makeCommand"
 
 const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 	if (params.length < 1) {
@@ -19,7 +20,7 @@ const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 
 	const guild = getGuild(message.client)
 
-	let members = guild.members.array().map(function (x) {
+	let members = guild.members.cache.array().map((x) => {
 		if (x.user.id === name) {
 			const score = 2
 			return { member: x, score: score }
@@ -35,7 +36,7 @@ const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 		return b.score - a.score
 	})
 
-	members.filter(function (x) {
+	members = members.filter(function (x) {
 		return x.score >= 0.7
 	})
 
@@ -49,7 +50,7 @@ const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 	members = members.filter((x) => x.score >= members[0].score - 0.02)
 
 	for (let i = 0; i < members.length; i++) {
-		const embed = new Discord.RichEmbed()
+		const embed = new Discord.MessageEmbed()
 
 		const member = members[i].member
 
@@ -61,22 +62,30 @@ const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 		}
 
 		const presences = {
-			offline: "Offline/Invisible",
+			offline: "Offline",
 			online: "Online",
 			idle: "Idle",
 			dnd: "Do Not Disturb",
+			invisible: "Invisible",
 		}
 
-		embed.addField("Joined server at", member.joinedAt.toISOString(), true)
+		if (member.joinedAt) embed.addField("Joined server at", member.joinedAt.toISOString(), true)
 		embed.addField("Joined Discord at", member.user.createdAt.toISOString(), true)
-		embed.addField("Highest role", member.highestRole.name, true)
+		embed.addField("Highest role", member.roles.highest.name, true)
 		embed.addField("Status", presences[member.user.presence.status], true)
 		embed.setFooter("Discord ID " + member.user.id)
 
-		embed.setThumbnail(member.user.avatarURL)
+		const avatar = member.user.avatarURL()
+		if (avatar) {
+			embed.setThumbnail(avatar)
+		}
 
 		message.channel.send(embed)
 	}
 }
 
-export = memberinfo
+export = makeCommand(memberinfo, {
+	name: "memberinfo",
+	description: "Shows information about a member",
+	usage: "memberinfo <user>",
+})

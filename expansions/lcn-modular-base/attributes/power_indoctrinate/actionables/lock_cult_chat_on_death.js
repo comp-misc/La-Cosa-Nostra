@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn")
+var lcn = require("../../../../../lcn")
 
 var rs = lcn.rolesystem
 
@@ -15,5 +15,5 @@ module.exports = function (actionable, game, params) {
 		return null
 	}
 
-	channel.overwritePermissions(user, config["base-perms"]["read"])
+	channel.createOverwrite(user, config["base-perms"]["read"])
 }

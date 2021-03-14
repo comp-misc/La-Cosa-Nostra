@@ -1,7 +1,5 @@
-import lcn from "../../lcn"
+import auxils from "../../systems/auxils"
 import { GameCommand } from "../CommandType"
-
-const auxils = lcn.auxils
 
 const alive: GameCommand = (game, message) => {
 	const roles = game.players

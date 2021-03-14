@@ -1,8 +1,6 @@
-import lcn from "../../../../../source/lcn"
-import { RoleActionable } from "../../../../../source/systems/actionables"
-import { Actionable } from "../../../../../source/systems/game_templates/Actions"
-
-const rs = lcn.rolesystem
+import { RoleActionable } from "../../../../../systems/actionables"
+import { Actionable } from "../../../../../systems/game_templates/Actions"
+import rs from "../../../../../rolesystem/rolesystem"
 
 const attacked: RoleActionable = (actionable, game, params) => {
 	const attacker = game.getPlayerByIdentifierOrThrow(params?.attacker)

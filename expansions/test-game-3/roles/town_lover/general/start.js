@@ -1,6 +1,6 @@
 // Executes BEFORE introduction
 
-var mafia = require("../../../../../source/lcn")
+var mafia = require("../../../../../lcn")
 
 var auxils = mafia.auxils
 

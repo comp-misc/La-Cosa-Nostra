@@ -1,4 +1,4 @@
-import { WinCondition } from "../../../source/systems/win_conditions"
+import { WinCondition } from "../../../systems/win_conditions"
 
 const stalemate: WinCondition = (game) => {
 	const alive = game.findAll((x) => x.isAlive())

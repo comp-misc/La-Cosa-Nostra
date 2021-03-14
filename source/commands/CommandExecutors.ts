@@ -2,18 +2,19 @@ import { Message } from "discord.js"
 import getLogger from "../getLogger"
 import { getTimer, hasTimer } from "../getTimer"
 import { LcnConfig } from "../LcnConfig"
+import MemberMessage from "../MemberMessage"
 import { AdminCommand, CommandProperties, GameCommand, RoleCommand } from "./CommandType"
 
 export const executeAdminCommand = async (
 	command: CommandProperties<AdminCommand>,
-	message: Message,
+	message: MemberMessage,
 	params: string[],
 	config: LcnConfig
 ): Promise<void> => {
 	const member = message.member
 	const logger = getLogger()
 
-	if (!member.roles.some((x) => x.name === config.permissions.admin)) {
+	if (!member.roles.cache.some((x) => x.name === config.permissions.admin)) {
 		logger.log(
 			1,
 			`User ${member.id} [${member.user.username}#${member.user.discriminator}] failed to run admin-type command (due to lack of permissions) "${command.name}".`
@@ -30,7 +31,7 @@ export const executeAdminCommand = async (
 
 export const executeGameCommand = async (
 	command: CommandProperties<GameCommand>,
-	message: Message,
+	message: MemberMessage,
 	params: string[]
 ): Promise<void> => {
 	if (!hasTimer()) {
@@ -55,7 +56,7 @@ export const executeGameCommand = async (
 
 export const executeRoleCommand = async (
 	command: CommandProperties<RoleCommand>,
-	message: Message,
+	message: MemberMessage,
 	params: string[]
 ): Promise<void> => {
 	if (!hasTimer()) {

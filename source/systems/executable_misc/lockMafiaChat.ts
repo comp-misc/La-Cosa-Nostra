@@ -20,6 +20,6 @@ export = async (game: Game): Promise<void> => {
 		mafia
 			.map((mafia) => mafia.getGuildMember())
 			.filter((m) => !!m)
-			.map((member) => textChannel.overwritePermissions(member as GuildMember, read_perms))
+			.map((member) => textChannel.createOverwrite(member as GuildMember, read_perms))
 	)
 }

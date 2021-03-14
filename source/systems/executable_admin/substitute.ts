@@ -1,3 +1,4 @@
+import filterDefined from "../../auxils/filterDefined"
 import removeRole from "../../auxils/removeRole"
 import getLogger from "../../getLogger"
 import Game from "../game_templates/Game"
@@ -23,28 +24,28 @@ export = async (game: Game, id1: string, id2: string, detailed_substitution = tr
 
 	const guild = game.getGuild()
 
-	const alive_role = guild.roles.find((x) => x.name === config.permissions.alive)
-	const pre_role = guild.roles.find((x) => x.name === config.permissions.pre)
-	const dead_role = guild.roles.find((x) => x.name === config.permissions.dead)
-	const spectator_role = guild.roles.find((x) => x.name === config.permissions.spectator)
-	const aftermath_role = guild.roles.find((x) => x.name === config.permissions.aftermath)
+	const alive_role = await game.getDiscordRoleOrThrow("alive")
+	const dead_role = await game.getDiscordRoleOrThrow("dead")
+	const pre_role = guild.roles.cache.find((x) => x.name === config.permissions.pre)
+	const spectator_role = guild.roles.cache.find((x) => x.name === config.permissions.spectator)
+	const aftermath_role = guild.roles.cache.find((x) => x.name === config.permissions.aftermath)
 
 	if (aft_member) {
-		await removeRole(aft_member, [alive_role, pre_role, dead_role, spectator_role, aftermath_role])
+		await removeRole(aft_member, filterDefined([alive_role, pre_role, dead_role, spectator_role, aftermath_role]))
 
 		const name = aft_member.displayName.replace(new RegExp("^([[A-z|0-9]{1,2}] )*", "g"), "")
 
 		if (player.isAlive()) {
-			await aft_member.addRole(alive_role)
+			await aft_member.roles.add(alive_role)
 		} else {
-			await aft_member.addRole(dead_role)
+			await aft_member.roles.add(dead_role)
 		}
 
 		await aft_member.setNickname("[" + player.alphabet + "] " + name)
 	}
 
 	if (bef_member) {
-		await removeRole(bef_member, [alive_role, pre_role, dead_role, spectator_role, aftermath_role])
+		await removeRole(bef_member, filterDefined([alive_role, pre_role, dead_role, spectator_role, aftermath_role]))
 
 		const name = bef_member.displayName.replace(new RegExp("^([[A-z|0-9]{1,2}] )*", "g"), "")
 
@@ -59,20 +60,22 @@ export = async (game: Game, id1: string, id2: string, detailed_substitution = tr
 	}
 
 	// Complete permission transfer
-	const channels = player.getSpecialChannels().map((x) => guild.channels.find((y) => y.id === x.id))
+	const channels = filterDefined(
+		player.getSpecialChannels().map((x) => guild.channels.cache.find((y) => y.id === x.id))
+	)
 
 	const cache: Promise<unknown>[] = []
 
 	for (let i = 0; i < channels.length; i++) {
 		const channel = channels[i]
 
-		const permissions = channel.memberPermissions(bef_member)
+		const permissions = channel.permissionsFor(bef_member)
 
 		if (!permissions) {
 			continue
 		}
 
-		cache.push(channel.overwritePermissions(aft_member, permissions.serialize()))
+		cache.push(channel.createOverwrite(aft_member, permissions.serialize()))
 
 		const override = channel.permissionOverwrites.find((x) => x.id === bef_member.id)
 		if (override) {

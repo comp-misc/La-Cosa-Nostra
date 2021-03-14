@@ -7,7 +7,7 @@ interface BotDirectories {
 const directories: BotDirectories = {
 	log: __dirname + "/../",
 	data: __dirname + "/../data/",
-	expansions: [`${__dirname}/../expansions/`],
+	expansions: [`${__dirname}/expansions/`],
 }
 
 export = directories

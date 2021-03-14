@@ -5,16 +5,16 @@ import { AdminCommand } from "../CommandType"
 const _fsudo: AdminCommand = async (message, params) => {
 	const client = message.client
 	if (params.length === 0) {
-		await message.channel.sendMessage(":exclamation: Must specify a player")
+		await message.reply(":exclamation: Must specify a player")
 		return
 	}
 
-	const user = client.users.get(params[0]) || {
+	const user = client.users.cache.get(params[0]) || {
 		id: params[0],
 		username: "undef'd player",
 		bot: false,
 	}
-	const member = message.guild.members.get(params[0]) || {
+	const member = message.guild.members.cache.get(params[0]) || {
 		id: params[0],
 		user: user,
 	}

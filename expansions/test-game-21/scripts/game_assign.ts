@@ -1,7 +1,10 @@
-import { GameAssignScript } from "../../../source/systems/Expansion"
-import objectOverride from "../../../source/auxils/objectOverride"
+import { GameAssignScript } from "../../../systems/Expansion"
+import objectOverride from "../../../auxils/objectOverride"
 import roles_override from "./setup.json"
 
-const gameAssign: GameAssignScript = (playing) => objectOverride(playing, roles_override)
+const gameAssign: GameAssignScript = (playing) => {
+	const result = objectOverride(playing, roles_override)
+	return result
+}
 
 export = gameAssign

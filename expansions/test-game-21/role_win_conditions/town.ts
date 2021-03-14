@@ -1,8 +1,5 @@
-import { WinCondition } from "../../../source/systems/win_conditions"
-
-const lcn = require("../../../source/lcn")
-
-const auxils = lcn.auxils
+import auxils from "../../../systems/auxils"
+import { WinCondition } from "../../../systems/win_conditions"
 
 const town: WinCondition = (game) => {
 	const winners = game.findAll((x) => x.expandedRole().alignment === "town" && x.canWin())

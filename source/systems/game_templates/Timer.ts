@@ -246,7 +246,10 @@ class Timer {
 
 		await this.game.setPresence({
 			status: "online",
-			game: { name: display, type: "PLAYING" },
+			activity: {
+				type: "PLAYING",
+				name: display,
+			},
 		})
 	}
 

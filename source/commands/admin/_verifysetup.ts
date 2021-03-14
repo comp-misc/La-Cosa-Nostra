@@ -5,6 +5,7 @@ import auxils from "../../systems/auxils"
 import configModifier from "../../systems/game_setters/configModifier"
 import { AdminCommand } from "../CommandType"
 import { LcnConfig } from "../../LcnConfig"
+import getGuild from "../../getGuild"
 
 const computeHash = (config: LcnConfig): string => {
 	const flavour = config.playing.flavour || ""
@@ -34,7 +35,7 @@ const _verifysetup: AdminCommand = async (message, params, config) => {
 	config = configModifier(config)
 
 	const players = config.playing.players
-	const guild = message.client.guilds.find((x) => x.id === process.env["server-id"])
+	const guild = getGuild(message.client)
 
 	if (!guild) {
 		await message.channel.send(
@@ -46,7 +47,7 @@ const _verifysetup: AdminCommand = async (message, params, config) => {
 	let names: string[] = []
 	if (players !== "auto") {
 		for (let i = 0; i < players.length; i++) {
-			const member = guild.members.find((x) => x.id === players[i])
+			const member = guild.members.cache.find((x) => x.id === players[i])
 
 			if (!member) {
 				names.push("undef'd player (" + players[i] + ")")
@@ -57,7 +58,9 @@ const _verifysetup: AdminCommand = async (message, params, config) => {
 			names.push(member.displayName + " (" + players[i] + ")")
 		}
 	} else {
-		const members = guild.members.filter((x) => x.roles.some((y) => y.name === config.permissions.pre)).array()
+		const members = guild.members.cache
+			.filter((x) => x.roles.cache.some((y) => y.name === config.permissions.pre))
+			.array()
 
 		members.sort(function (a, b) {
 			if (a.displayName.toLowerCase() < b.displayName.toLowerCase()) {

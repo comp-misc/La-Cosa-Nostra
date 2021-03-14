@@ -22,9 +22,9 @@ export = async (game: Game): Promise<void> => {
 		}
 
 		if (mafia[i].isAlive()) {
-			await textChannel.overwritePermissions(member, post_perms)
+			await textChannel.createOverwrite(member, post_perms)
 		} else {
-			await textChannel.overwritePermissions(member, read_perms)
+			await textChannel.createOverwrite(member, read_perms)
 		}
 	}
 }

@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn")
+var lcn = require("../../../../../lcn")
 
 var rs = lcn.rolesystem
 
@@ -66,7 +66,7 @@ module.exports = function (actionable, game, params, player) {
 
 		if (game.isDay()) {
 			var channel = game.getChannel("interrogation-" + target.alphabet)
-			channel.overwritePermissions(member, game.config["base-perms"]["read"])
+			channel.createOverwrite(member, game.config["base-perms"]["read"])
 		}
 	}
 }

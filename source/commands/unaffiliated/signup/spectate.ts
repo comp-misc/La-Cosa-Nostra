@@ -2,7 +2,7 @@ import { CommandProperties, UnaffiliatedCommand } from "../../CommandType"
 import createSignupCommand, { addRole, removeBackup, removePlayer } from "../../createSignupCommand"
 
 const command = createSignupCommand(async (msg, params, config) => {
-	if (msg.member.roles.some((r) => r.name === config.permissions.spectator)) {
+	if (msg.member.roles.cache.some((r) => r.name === config.permissions.spectator)) {
 		await msg.reply(`:x:  You are already spectating the game!`)
 		return
 	}

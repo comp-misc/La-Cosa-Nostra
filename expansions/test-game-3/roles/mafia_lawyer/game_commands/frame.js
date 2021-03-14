@@ -1,6 +1,6 @@
 // Register heal
 
-var mafia = require("../../../../../source/lcn")
+var mafia = require("../../../../../lcn")
 
 module.exports = function (game, message, params) {
 	var actions = game.actions

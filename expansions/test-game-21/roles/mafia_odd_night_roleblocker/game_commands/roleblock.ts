@@ -1,4 +1,4 @@
-import { RoleCommand } from "../../../../../source/commands/CommandType"
+import { RoleCommand } from "../../../../../commands/CommandType"
 
 // Register heal
 

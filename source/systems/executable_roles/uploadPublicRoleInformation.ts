@@ -30,7 +30,7 @@ const uploadPublicRoleInformation = async (game: Game, roles: Player[]): Promise
 			getLogger().log(1, `No flavour found with role ${role.flavour_role}`)
 		}
 
-		const attachment = new Discord.Attachment(flavour.assets[flavour_role.banner], "role_card.png")
+		const attachment = new Discord.MessageAttachment(flavour.assets[flavour_role.banner], "role_card.png")
 
 		await roles_channel.send(undefined, attachment)
 

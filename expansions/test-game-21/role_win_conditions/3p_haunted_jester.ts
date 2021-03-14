@@ -1,4 +1,4 @@
-import { WinCondition } from "../../../source/systems/win_conditions"
+import { WinCondition } from "../../../systems/win_conditions"
 
 const hauntedJester: WinCondition = (game) => {
 	const haunted_jesters = game.findAll(

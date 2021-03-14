@@ -1,6 +1,6 @@
 var fs = require("fs")
 
-var lcn = require("../../../source/lcn")
+var lcn = require("../../../lcn")
 var auxils = lcn.auxils
 
 var role_table = JSON.parse(fs.readFileSync(__dirname + "/role_table.json"))

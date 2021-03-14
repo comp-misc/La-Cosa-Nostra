@@ -1,8 +1,5 @@
-import { WinCondition } from "../../../source/systems/win_conditions"
-
-const lcn = require("../../../source/lcn")
-
-const auxils = lcn.auxils
+import auxils from "../../../systems/auxils"
+import { WinCondition } from "../../../systems/win_conditions"
 
 const serialKiller: WinCondition = (game) => {
 	const alive = game.findAll((x) => x.isAlive())

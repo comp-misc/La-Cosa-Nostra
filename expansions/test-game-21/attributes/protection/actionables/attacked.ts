@@ -1,4 +1,4 @@
-import { RoleActionable } from "../../../../../source/systems/actionables"
+import { RoleActionable } from "../../../../../systems/actionables"
 
 const attacked: RoleActionable = (actionable, game) => {
 	const player = game.getPlayerByIdentifierOrThrow(actionable.from)

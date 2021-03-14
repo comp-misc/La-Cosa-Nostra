@@ -1,6 +1,10 @@
-import { PresenceData } from "discord.js"
-import Game from "../game_templates/Game"
+import { Client, PresenceData } from "discord.js"
 
-export = async (game: Game, presence: PresenceData): Promise<void> => {
-	await game.client.user.setPresence(presence)
+const updatePresence = async (client: Client, presence: PresenceData): Promise<void> => {
+	const user = client.user
+	if (!user) {
+		throw new Error("No user found on client - not logged in yet?")
+	}
+	await user.setPresence(presence)
 }
+export = updatePresence

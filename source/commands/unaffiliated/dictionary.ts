@@ -9,7 +9,7 @@ const capFirstLetter = (string: string) => string.charAt(0).toUpperCase() + stri
 const keys = Object.keys(terms).sort()
 const dictionary: UnaffiliatedCommand = async (message, params, config) => {
 	if (params.length < 1) {
-		const embed = new Discord.RichEmbed()
+		const embed = new Discord.MessageEmbed()
 
 		embed.setColor("RED")
 		embed.setTitle("Available lookup terms")
@@ -40,7 +40,7 @@ const dictionary: UnaffiliatedCommand = async (message, params, config) => {
 	}
 
 	// Create embed
-	const embed = new Discord.RichEmbed()
+	const embed = new Discord.MessageEmbed()
 	embed.setColor("RED")
 	embed.setTitle("Lookup for term: **" + key + "**")
 
@@ -48,7 +48,7 @@ const dictionary: UnaffiliatedCommand = async (message, params, config) => {
 
 	for (let i = 0; i < definitions.length; i++) {
 		if (i > 0) {
-			embed.addBlankField(false)
+			embed.addField("", "")
 		}
 
 		embed.addField(capFirstLetter(definitions[i]), ret[definitions[i]], false)

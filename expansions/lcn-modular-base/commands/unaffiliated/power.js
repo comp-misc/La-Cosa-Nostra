@@ -1,4 +1,4 @@
-var attributes = require("../../../../source/systems/attributes")
+var attributes = require("../../../../systems/attributes")
 
 var powers = new Array()
 

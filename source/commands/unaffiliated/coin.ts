@@ -10,7 +10,7 @@ const coin: UnaffiliatedCommand = async (message) => {
 	} else if (output === 49) {
 		await message.channel.send(":star: The coin landed vertically!")
 	} else {
-		const dudes = message.guild.members.array()
+		const dudes = message.guild.members.cache.array()
 
 		const random_dude = dudes[Math.floor(Math.random() * dudes.length)]
 

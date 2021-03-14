@@ -2,7 +2,7 @@ import { CommandProperties, UnaffiliatedCommand } from "../../CommandType"
 import createSignupCommand, { addRole, removeBackup, removeSpectator } from "../../createSignupCommand"
 
 const command = createSignupCommand(async (msg, params, config) => {
-	if (msg.member.roles.some((r) => r.name === config.permissions.pre)) {
+	if (msg.member.roles.cache.some((r) => r.name === config.permissions.pre)) {
 		await msg.reply(`:x:  You are already in the game!`)
 		return
 	}
@@ -11,8 +11,8 @@ const command = createSignupCommand(async (msg, params, config) => {
 	await removeBackup(msg.member, config)
 	await addRole("pre", msg.member, config)
 
-	const signedUpPlayers = msg.guild.members.filter((m) =>
-		m.roles.some((roleName) => roleName.name === config.permissions.pre)
+	const signedUpPlayers = msg.member.guild.members.cache.filter((m) =>
+		m.roles.cache.some((roleName) => roleName.name === config.permissions.pre)
 	).size
 
 	await msg.channel.send(

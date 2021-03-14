@@ -1,4 +1,4 @@
-import { RoleActionable } from "../../../../../source/systems/actionables"
+import { RoleActionable } from "../../../../../systems/actionables"
 
 const roleblock: RoleActionable = (actionable, game) => {
 	const target = game.getPlayerByIdentifierOrThrow(actionable.to)

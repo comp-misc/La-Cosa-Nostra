@@ -1,4 +1,4 @@
-import { RoleRoutine } from "../../../../../source/systems/Role"
+import { RoleRoutine } from "../../../../../systems/Role"
 
 // Routines
 // Runs every cycle
@@ -30,10 +30,10 @@ const routines: RoleRoutine = async (player) => {
 
 	if (game.isDay()) {
 		// Day time
-		channel.overwritePermissions(member, config["base-perms"]["read"])
+		channel.createOverwrite(member, config["base-perms"].read)
 	} else {
 		// Night time
-		channel.overwritePermissions(member, config["base-perms"]["post"])
+		channel.createOverwrite(member, config["base-perms"].post)
 	}
 }
 

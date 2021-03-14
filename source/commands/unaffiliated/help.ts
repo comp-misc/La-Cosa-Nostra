@@ -25,7 +25,7 @@ const command: UnaffiliatedCommand = async (message, params, config) => {
 		if (cmd.type === "console" || cmd.type === "role") {
 			return false
 		}
-		if (!message.member.roles.some((r) => r.name === config.permissions.admin) && cmd.type === "admin") {
+		if (!message.member.roles.cache.some((r) => r.name === config.permissions.admin) && cmd.type === "admin") {
 			return false
 		}
 		return true
@@ -37,7 +37,7 @@ const command: UnaffiliatedCommand = async (message, params, config) => {
 			await message.reply(`:x: Unknown command. Type '${config["command-prefix"]}help' for a list`)
 			return
 		}
-		const embed = new Discord.RichEmbed()
+		const embed = new Discord.MessageEmbed()
 		embed.setTitle("Help for " + config["command-prefix"] + command.name)
 		embed.setDescription(command.description)
 		if (command.usage) {

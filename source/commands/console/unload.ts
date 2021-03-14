@@ -1,12 +1,16 @@
+import updatePresence from "../../systems/executable_misc/updatePresence"
 import deleteTimer from "../../systems/game_reset/deleteTimer"
 import { ConsoleCommand } from "../CommandType"
 
-const unload: ConsoleCommand = (client) => {
+const unload: ConsoleCommand = async (client) => {
 	deleteTimer()
 
-	client.user.setPresence({
+	await updatePresence(client, {
 		status: "online",
-		game: { name: "Game unloaded", type: "PLAYING" },
+		activity: {
+			name: "Game unloaded",
+			type: "PLAYING",
+		},
 	})
 }
 

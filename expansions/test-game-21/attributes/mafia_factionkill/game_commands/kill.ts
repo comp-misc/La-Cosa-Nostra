@@ -1,11 +1,8 @@
-import { RoleCommand } from "../../../../../source/commands/CommandType"
-import makeCommand from "../../../../../source/commands/makeCommand"
-
-const lcn = require("../../../../../source/lcn")
+import { RoleCommand } from "../../../../../commands/CommandType"
+import makeCommand from "../../../../../commands/makeCommand"
+import rs from "../../../../../rolesystem/rolesystem"
 
 // Register heal
-
-const rs = lcn.rolesystem
 
 const kill: RoleCommand = async (game, message, params, from) => {
 	const actions = game.actions

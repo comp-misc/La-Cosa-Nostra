@@ -12,6 +12,7 @@ import cryptographicShuffle from "../auxils/cryptographicShuffle"
 import delay from "../auxils/delay"
 import eventhandler from "../auxils/eventhandler"
 import factorial from "../auxils/factorial"
+import filterDefined from "../auxils/filterDefined"
 import flipObject from "../auxils/flipObject"
 import formatDate from "../auxils/formatDate"
 import formatDateVerbose from "../auxils/formatDateVerbose"
@@ -57,6 +58,7 @@ export = {
 	delay,
 	eventhandler,
 	factorial,
+	filterDefined,
 	flipObject,
 	formatDate,
 	formatDateVerbose,

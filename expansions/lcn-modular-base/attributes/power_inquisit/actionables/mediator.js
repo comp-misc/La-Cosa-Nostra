@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn")
+var lcn = require("../../../../../lcn")
 
 var rs = lcn.rolesystem
 
@@ -49,7 +49,7 @@ module.exports = function (actionable, game, params) {
 		}
 
 		for (var i = 0; i < alive.length; i++) {
-			channel.overwritePermissions(alive[i], config["base-perms"]["post"])
+			channel.createOverwrite(alive[i], config["base-perms"]["post"])
 		}
 	} else {
 		for (var i = 0; i < neighbours.length; i++) {
@@ -57,7 +57,7 @@ module.exports = function (actionable, game, params) {
 			var user = neighbour.getDiscordUser()
 
 			if (user) {
-				channel.overwritePermissions(user, config["base-perms"]["read"])
+				channel.createOverwrite(user, config["base-perms"]["read"])
 			}
 		}
 	}

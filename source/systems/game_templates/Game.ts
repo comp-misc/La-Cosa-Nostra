@@ -12,6 +12,7 @@ import {
 	MessageReaction,
 	PresenceData,
 	ReactionCollector,
+	Role,
 	Snowflake,
 	TextChannel,
 	User,
@@ -19,7 +20,7 @@ import {
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
 import lcn from "../../lcn"
-import { LcnConfig, GameConfig } from "../../LcnConfig"
+import { LcnConfig, GameConfig, PermissionsConfig } from "../../LcnConfig"
 import alphabets from "../alpha_table"
 import auxils from "../auxils"
 import executable from "../executable"
@@ -131,7 +132,7 @@ class Game {
 	steps: number
 	state: GameState
 	game_config_override: Record<string, unknown> | undefined
-	flavour_identifier: string
+	flavour_identifier: string | null
 	timer: Timer | undefined
 	timer_identifier: string | undefined
 	fast_forward_votes: string[]
@@ -170,9 +171,6 @@ class Game {
 		this.steps = 0
 		this.state = GameState.PRE_GAME
 
-		if (!this.config.playing.flavour) {
-			throw new Error("No flavour defined in config")
-		}
 		this.flavour_identifier = this.config.playing.flavour
 
 		this.voting_halted = false
@@ -242,7 +240,8 @@ class Game {
 
 	findTextChannel(name: string | Snowflake): TextChannel {
 		const channels = this.getGuild().channels
-		const channel = channels.find((channel) => channel.id === name) || channels.find((channel) => channel.name === name)
+		const channel =
+			channels.cache.find((channel) => channel.id === name) || channels.cache.find((channel) => channel.name === name)
 		if (!channel) {
 			throw new Error(`Unknown channel ${name}`)
 		}
@@ -253,7 +252,7 @@ class Game {
 	}
 
 	getChannelById(id: Snowflake): TextChannel | null {
-		const channel = this.getGuild().channels.get(id)
+		const channel = this.getGuild().channels.cache.get(id)
 		if (!channel) {
 			return null
 		}
@@ -368,13 +367,13 @@ class Game {
 		this.trial_collectors = []
 
 		const messages: Message[] = await Promise.all(
-			period_log.trial_vote.messages.map((messageId: string) => channel.fetchMessage(messageId))
+			period_log.trial_vote.messages.map((messageId: string) => channel.messages.fetch(messageId))
 		)
 		messages.forEach((message) => {
 			const collector = message.createReactionCollector(() => true)
 			this.trial_collectors.push(collector)
 			collector.on("collect", (reaction) => {
-				reaction.users.forEach((user) => this.receivedTrialVote(reaction, user))
+				reaction.users.cache.forEach((user) => this.receivedTrialVote(reaction, user))
 			})
 		})
 	}
@@ -412,7 +411,7 @@ class Game {
 			return
 		}
 
-		reaction.remove(user)
+		await reaction.users.remove(user)
 
 		if (!this.isAlive(user.id)) {
 			this.logger.log(3, user.id + " tried to vote on the trial although they are either dead or not in the game!")
@@ -1325,7 +1324,7 @@ class Game {
 
 	getGuildMember(id: Snowflake): GuildMember | null {
 		const guild = this.getGuild()
-		return guild.members.get(id) || null
+		return guild.members.cache.get(id) || null
 	}
 
 	private async start() {
@@ -1453,11 +1452,11 @@ class Game {
 			return null
 		}
 
-		return this.client.users.get(player.id) || null
+		return this.client.users.cache.get(player.id) || null
 	}
 
 	setPresence(presence: PresenceData): void {
-		executable.misc.updatePresence(this, presence)
+		executable.misc.updatePresence(this.client, presence)
 	}
 
 	getFormattedDay(offset = 0): string {
@@ -1578,7 +1577,7 @@ class Game {
 			const distances = []
 
 			for (let i = 0; i < this.players.length; i++) {
-				const member = guild.members.get(this.players[i].id)
+				const member = guild.members.cache.get(this.players[i].id)
 
 				if (member === undefined) {
 					distances.push(-1)
@@ -1838,6 +1837,20 @@ class Game {
 			)
 			this.fastforward()
 		}
+	}
+
+	async getDiscordRoleOrThrow(roleType: keyof PermissionsConfig): Promise<Role> {
+		const name = this.config.permissions[roleType]
+		const cachedRole = this.getGuild().roles.cache.find((r) => r.name === name)
+		if (cachedRole) {
+			return cachedRole
+		}
+		//Update from discord to make sure nothing has changed
+		const fetchedRole = (await this.getGuild().roles.fetch(undefined, true)).cache.find((r) => r.name === name)
+		if (fetchedRole) {
+			return fetchedRole
+		}
+		throw new Error(`No role found with name '${name}'`)
 	}
 
 	checkRole(condition: string | PlayerPredicate): boolean {

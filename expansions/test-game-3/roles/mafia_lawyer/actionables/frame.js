@@ -1,4 +1,4 @@
-var mafia = require("../../../../../source/lcn")
+var mafia = require("../../../../../lcn")
 
 module.exports = function (actionable, game, params) {
 	// Seen as a visit

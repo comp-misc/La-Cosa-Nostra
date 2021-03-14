@@ -6,6 +6,7 @@ import { Client, Snowflake, TextChannel } from "discord.js"
 import { getTimer, hasTimer } from "../getTimer"
 import { ChannelsConfig, LcnConfig, PermissionsConfig } from "../LcnConfig"
 import getGuild from "../getGuild"
+import { onWithError } from "../MafiaBot"
 
 interface PingRestriction {
 	author: Snowflake
@@ -16,7 +17,7 @@ const ping_restrictions: PingRestriction[] = []
 
 export = (client: Client, config: LcnConfig): void => {
 	const getChannel = (channel: keyof ChannelsConfig): TextChannel => {
-		const ch = getGuild(client).channels.find((x) => x.name === config.channels[channel])
+		const ch = getGuild(client).channels.cache.find((x) => x.name === config.channels[channel])
 		if (!ch) {
 			throw new Error(`Unknown channel '${channel}'`)
 		}
@@ -25,49 +26,51 @@ export = (client: Client, config: LcnConfig): void => {
 		}
 		return ch
 	}
-	client.on("message", function (message) {
+	onWithError("message", function (message) {
 		if (hasTimer()) {
 			getTimer().game.execute("chat", { message: message })
 		}
 	})
 
-	client.on("message", (message) => {
-		if (!hasTimer() || getTimer().game.state !== "playing") {
-			return null
+	onWithError("message", async (message) => {
+		if (!hasTimer() || getTimer().game.state !== "playing" || !message.member) {
+			return
 		}
 
-		if (message.id === client.user.id) {
-			return null
+		if (message.id === client.user?.id) {
+			return
 		}
 
 		// Ping restrictions
 		const ping_config = config["message-checks"]["alive-pings"]
 
 		if (!ping_config["restrict"]) {
-			return null
+			return
 		}
 
 		const guild = getGuild(client)
 		const main_channel = getChannel("main")
 		const whisper_channel = getChannel("whisper-log")
 
-		const alive_role = guild.roles.find((x) => x.name === config.permissions["alive"])
+		const alive_role = await getTimer().game.getDiscordRoleOrThrow("alive")
 
 		if (message.channel.id !== main_channel.id && message.channel.id !== whisper_channel.id) {
-			return null
+			return
 		}
 
-		if (!message.isMentioned(alive_role)) {
-			return null
+		if (!message.mentions.has(alive_role)) {
+			return
 		}
 
 		for (let i = 0; i < ping_config["exempt"].length; i++) {
 			const role_key: string = ping_config["exempt"][i]
 
-			const exempt_role = guild.roles.find((x) => x.name === config.permissions[role_key as keyof PermissionsConfig])
+			const exempt_role = guild.roles.cache.find(
+				(x) => x.name === config.permissions[role_key as keyof PermissionsConfig]
+			)
 
-			if (exempt_role && message.member.roles.some((x) => x.id === exempt_role.id)) {
-				return null
+			if (exempt_role && message.member.roles.cache.some((x) => x.id === exempt_role.id)) {
+				return
 			}
 		}
 
@@ -105,19 +108,19 @@ export = (client: Client, config: LcnConfig): void => {
 		}
 	})
 
-	client.on("messageUpdate", (old_message, new_message) => {
-		if (!hasTimer() || getTimer().game.state !== "playing") {
-			return null
+	onWithError("messageUpdate", (old_message, new_message) => {
+		if (!hasTimer() || getTimer().game.state !== "playing" || !new_message.member) {
+			return
 		}
 
-		if (new_message.id === client.user.id) {
-			return null
+		if (new_message.id === client.user?.id) {
+			return
 		}
 
 		const edit_config = config["message-checks"]["edits"]
 
 		if (!edit_config["restrict"]) {
-			return null
+			return
 		}
 
 		const guild = getGuild(client)
@@ -131,14 +134,21 @@ export = (client: Client, config: LcnConfig): void => {
 		for (let i = 0; i < edit_config["exempt"].length; i++) {
 			const role_key: string = edit_config["exempt"][i]
 
-			const exempt_role = guild.roles.find((x) => x.name === config.permissions[role_key as keyof PermissionsConfig])
+			const exempt_role = guild.roles.cache.find(
+				(x) => x.name === config.permissions[role_key as keyof PermissionsConfig]
+			)
 
-			if (exempt_role && new_message.member.roles.some((x) => x.id === exempt_role.id)) {
+			if (exempt_role && new_message.member.roles.cache.some((x) => x.id === exempt_role.id)) {
 				return null
 			}
 		}
 
-		if (old_message.content.length < edit_config["minimum-character-count"]) {
+		if (
+			!old_message.content ||
+			!new_message.content ||
+			!new_message.author ||
+			old_message.content.length < edit_config["minimum-character-count"]
+		) {
 			return
 		}
 
@@ -171,36 +181,42 @@ export = (client: Client, config: LcnConfig): void => {
 	})
 
 	client.on("messageDelete", (message) => {
-		if (!hasTimer() || getTimer().game.state !== "playing") {
-			return null
+		if (!hasTimer() || getTimer().game.state !== "playing" || !message.member) {
+			return
 		}
 
-		if (message.id === client.user.id) {
-			return null
+		if (message.id === client.user?.id) {
+			return
 		}
 
 		// Ping restrictions
 		const deletion_config = config["message-checks"]["deletion"]
 
 		if (!deletion_config["restrict"]) {
-			return null
+			return
 		}
 
 		const guild = getGuild(client)
 		const main_channel = getChannel("main")
 		const whisper_channel = getChannel("whisper-log")
 
-		if (message.channel.id !== main_channel.id && message.channel.id !== whisper_channel.id) {
-			return null
+		if (
+			!message.content ||
+			!message.author ||
+			(message.channel.id !== main_channel.id && message.channel.id !== whisper_channel.id)
+		) {
+			return
 		}
 
 		for (let i = 0; i < deletion_config["exempt"].length; i++) {
 			const role_key: string = deletion_config["exempt"][i]
 
-			const exempt_role = guild.roles.find((x) => x.name === config.permissions[role_key as keyof PermissionsConfig])
+			const exempt_role = guild.roles.cache.find(
+				(x) => x.name === config.permissions[role_key as keyof PermissionsConfig]
+			)
 
-			if (exempt_role && message.member.roles.some((x) => x.id === exempt_role.id)) {
-				return null
+			if (exempt_role && message.member.roles.cache.some((x) => x.id === exempt_role.id)) {
+				return
 			}
 		}
 

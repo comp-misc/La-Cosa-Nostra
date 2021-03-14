@@ -28,9 +28,8 @@ const resurrect: AdminCommand = async (message, params) => {
 		return
 	}
 
-	const guild = game.getGuild()
-	const alive_role = guild.roles.find((x) => x.name === config["permissions"]["alive"])
-	const dead_role = guild.roles.find((x) => x.name === config["permissions"]["dead"])
+	const alive_role = await game.getDiscordRoleOrThrow("alive")
+	const dead_role = await game.getDiscordRoleOrThrow("dead")
 
 	const member = player.getGuildMember()
 	if (!member) {
@@ -38,8 +37,8 @@ const resurrect: AdminCommand = async (message, params) => {
 		return
 	}
 
-	await member.addRole(alive_role)
-	await member.removeRole(dead_role)
+	await member.roles.add(alive_role)
+	await member.roles.remove(dead_role)
 
 	player.status.alive = true
 

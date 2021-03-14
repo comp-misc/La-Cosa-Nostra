@@ -2,6 +2,7 @@
 Set the nickname and the roles here
 */
 import { Client } from "discord.js"
+import filterDefined from "../../auxils/filterDefined"
 import removeRole from "../../auxils/removeRole"
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
@@ -12,13 +13,13 @@ const nicknameAndRole = async (client: Client, config: LcnConfig, roles: Player[
 	const logger = getLogger()
 	const guild = getGuild(client)
 
-	const alive_role = guild.roles.find((x) => x.name === config.permissions.alive)
-	const pre_role = guild.roles.find((x) => x.name === config.permissions.pre)
-	const dead_role = guild.roles.find((x) => x.name === config.permissions.dead)
-	const aftermath_role = guild.roles.find((x) => x.name === config.permissions.aftermath)
+	const alive_role = guild.roles.cache.find((x) => x.name === config.permissions.alive)
+	const pre_role = guild.roles.cache.find((x) => x.name === config.permissions.pre)
+	const dead_role = guild.roles.cache.find((x) => x.name === config.permissions.dead)
+	const aftermath_role = guild.roles.cache.find((x) => x.name === config.permissions.aftermath)
 
 	for (let i = 0; i < roles.length; i++) {
-		const member = guild.members.get(roles[i].id)
+		const member = guild.members.cache.get(roles[i].id)
 
 		if (!member) {
 			continue
@@ -31,9 +32,11 @@ const nicknameAndRole = async (client: Client, config: LcnConfig, roles: Player[
 		name = name.replace(new RegExp("^([[A-z|0-9]{1,2}] )*", "g"), "")
 
 		try {
-			await removeRole(member, [pre_role, dead_role, aftermath_role])
+			await removeRole(member, filterDefined([pre_role, dead_role, aftermath_role]))
 
-			await member.addRole(alive_role)
+			if (alive_role) {
+				await member.roles.add(alive_role)
+			}
 			await member.setNickname("[" + roles[i].alphabet + "] " + name)
 		} catch (err) {
 			logger.log(

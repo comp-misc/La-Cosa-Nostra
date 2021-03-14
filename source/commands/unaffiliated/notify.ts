@@ -8,8 +8,12 @@ const notify: UnaffiliatedCommand = async (message, params, config) => {
 		return
 	}
 
-	const role = message.guild.roles.find((x) => x.name === config["permissions"]["notify"])
-	const has_role = member.roles.some((x) => x.id === role.id)
+	const role = message.member.guild.roles.cache.find((x) => x.name === config.permissions.notify)
+	if (!role) {
+		throw new Error("No role found with name 'config.permissions.notify'")
+	}
+
+	const has_role = member.roles.cache.some((x) => x.id === role.id)
 
 	switch (params[0].toLowerCase()) {
 		case "on":
@@ -18,7 +22,7 @@ const notify: UnaffiliatedCommand = async (message, params, config) => {
 				return
 			}
 
-			await member.addRole(role)
+			await member.roles.add(role)
 			await message.channel.send(
 				":exclamation: Successfully added the notification role. Use `" +
 					config["command-prefix"] +
@@ -32,7 +36,7 @@ const notify: UnaffiliatedCommand = async (message, params, config) => {
 				return
 			}
 
-			await member.removeRole(role)
+			await member.roles.remove(role)
 			await message.channel.send(
 				":exclamation: Successfully removed the notification role. Use `" +
 					config["command-prefix"] +

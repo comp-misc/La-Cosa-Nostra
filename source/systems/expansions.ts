@@ -51,6 +51,7 @@ const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expans
 		}
 
 		const directory = viable_directories[0]
+		const scriptsDirectory = directory + "/scripts"
 
 		// Read information JSON
 		const expansion = require(`${directory}/expansion.json`) as ExpansionInfo
@@ -81,14 +82,14 @@ const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expans
 				attributes: attemptReaddir(directory + "/attributes"),
 			},
 			scripts: {
-				start: attemptRequiringScript(directory, "start"),
-				game_prime: attemptRequiringScript(directory, "game_primed"),
-				game_start: attemptRequiringScript(directory, "game_start"),
-				game_secondary_start: attemptRequiringScript(directory, "game_secondary_start"),
-				game_assign: attemptRequiringScript(directory, "game_assign"),
-				game_init: attemptRequiringScript(directory, "game_init"),
-				cycle: attemptRequiringScript(directory, "cycle"),
-				init: attemptRequiringScript(directory, "init"),
+				start: attemptRequiringScript(scriptsDirectory, "start"),
+				game_prime: attemptRequiringScript(scriptsDirectory, "game_primed"),
+				game_start: attemptRequiringScript(scriptsDirectory, "game_start"),
+				game_secondary_start: attemptRequiringScript(scriptsDirectory, "game_secondary_start"),
+				game_assign: attemptRequiringScript(scriptsDirectory, "game_assign"),
+				game_init: attemptRequiringScript(scriptsDirectory, "game_init"),
+				cycle: attemptRequiringScript(scriptsDirectory, "cycle"),
+				init: attemptRequiringScript(scriptsDirectory, "init"),
 			},
 		})
 	}

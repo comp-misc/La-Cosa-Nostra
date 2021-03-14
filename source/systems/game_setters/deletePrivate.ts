@@ -5,7 +5,7 @@ export = async (client: Client, config: LcnConfig): Promise<void> => {
 	const category = config.categories.private
 
 	// Bug with discord.js
-	const cat_channel = client.channels.find(
+	const cat_channel = client.channels.cache.find(
 		(x) => x.type === "category" && (x as CategoryChannel).name === category
 	) as CategoryChannel
 

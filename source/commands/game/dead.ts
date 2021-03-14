@@ -1,8 +1,6 @@
-import lcn from "../../lcn"
+import auxils from "../../systems/auxils"
 import Player from "../../systems/game_templates/Player"
 import { GameCommand } from "../CommandType"
-
-const auxils = lcn.auxils
 
 const returnDayNight = (number: number): string => {
 	if (

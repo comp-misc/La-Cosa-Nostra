@@ -1,4 +1,4 @@
-var lcn = require("../../../../../source/lcn")
+var lcn = require("../../../../../lcn")
 var attributes = lcn.attributes
 
 var Discord = require("discord.js")

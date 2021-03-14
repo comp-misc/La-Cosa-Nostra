@@ -1,6 +1,6 @@
-import { GuildChannelType } from "discord.js"
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
+import { GuildChannelType } from "../../GuildChannelType"
 import { CategoriesConfig } from "../../LcnConfig"
 import { ConsoleCommand } from "../CommandType"
 
@@ -15,24 +15,24 @@ const autosetup: ConsoleCommand = async (client, config) => {
 	logger.log(2, "Creating roles as per config.")
 
 	const createRole = async (name: string, position?: number) => {
-		if (guild.roles.some((x) => x.name === name)) {
+		if (guild.roles.cache.some((x) => x.name === name)) {
 			logger.log(2, "Role %s already exists, not creating.", name)
 			return null
 		}
 
-		const role = await guild.createRole({ name, position })
+		const role = await guild.roles.create({ data: { name, position } })
 		logger.log(2, `Created role ${name} (position ${position}).`)
 
 		return role
 	}
 
 	const createChannel = async (name: string, type: GuildChannelType = "text") => {
-		if (guild.channels.some((x) => x.name === name && x.type === type)) {
+		if (guild.channels.cache.some((x) => x.name === name && x.type === type)) {
 			logger.log(2, "Channel %s (%s) already exists, not creating.", name, type)
 			return null
 		}
 
-		const channel = await guild.createChannel(name, type)
+		const channel = await guild.channels.create(name, { type })
 		logger.log(2, "Created channel %s (%s)", name, type)
 
 		return channel
@@ -43,7 +43,7 @@ const autosetup: ConsoleCommand = async (client, config) => {
 	const permissions = config.permissions
 
 	const member = guild.me
-	const member_position = member.highestRole.calculatedPosition + 1
+	const member_position = (member?.roles.highest.position || 0) + 1
 
 	await Promise.all(
 		Object.entries(permissions).map(([key, permission]) => {

@@ -1,4 +1,4 @@
-import { RoleStart } from "../../../../../source/systems/Role"
+import { RoleStart } from "../../../../../systems/Role"
 
 // Executes BEFORE introduction
 const start: RoleStart = (player) => {

@@ -49,7 +49,7 @@ const isolate: UnaffiliatedCommand = async (message, params, config) => {
 	let messages: Message[]
 	try {
 		messages = (
-			await channel.fetchMessages({
+			await channel.messages.fetch({
 				limit: getLimit(mode),
 				around: message_id,
 			})
@@ -95,7 +95,7 @@ const isolate: UnaffiliatedCommand = async (message, params, config) => {
 
 		const addendum = x.id === message_id ? "(@) " : ""
 
-		if (x.author.id === message.client.user.id && content.includes("ISO for message")) {
+		if (x.author.id === message.client.user?.id && content.includes("ISO for message")) {
 			return "[" + auxils.formatUTCDate(time) + "] " + addendum + name + ": [bot ISO]"
 		}
 

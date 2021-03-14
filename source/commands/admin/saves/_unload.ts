@@ -1,3 +1,4 @@
+import updatePresence from "../../../systems/executable_misc/updatePresence"
 import deleteTimer from "../../../systems/game_reset/deleteTimer"
 import { AdminCommand } from "../../CommandType"
 
@@ -6,9 +7,9 @@ const _unload: AdminCommand = async (message, params, config) => {
 
 	deleteTimer()
 
-	await client.user.setPresence({
+	await updatePresence(client, {
 		status: "online",
-		game: { name: "Game unloaded", type: "PLAYING" },
+		activity: { name: "Game unloaded", type: "PLAYING" },
 	})
 
 	await message.channel.send(

@@ -50,9 +50,7 @@ class Logger {
 	logError(error: Error | string | unknown): void {
 		console.error(error)
 		if (error instanceof Error) {
-			const message = "[Error handled by catcher]\n1. Message: %s\n2. Stack: %s\n[End of error log]"
-
-			this.log(4, message, error.message, error.stack?.toString() || "")
+			this.stream.write(`[${new Date().toUTCString()}; Error] ${error.name}: ${error.message}\n${error.stack}`)
 		} else {
 			this.log(4, `[Error handled by catcher]: ${error}`)
 		}

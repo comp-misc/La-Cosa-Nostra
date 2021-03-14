@@ -1,7 +1,5 @@
-import lcn from "../../../source/lcn"
-import { WinCondition } from "../../../source/systems/win_conditions"
-
-const auxils = lcn.auxils
+import auxils from "../../../systems/auxils"
+import { WinCondition } from "../../../systems/win_conditions"
 
 const mafia: WinCondition = (game) => {
 	// Reach parity with surviving players

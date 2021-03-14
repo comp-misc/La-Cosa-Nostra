@@ -1,7 +1,7 @@
 // Routines
 // Runs every cycle
 
-import { RoleRoutine } from "../../../../../source/systems/Role"
+import { RoleRoutine } from "../../../../../systems/Role"
 
 // Function should be synchronous
 

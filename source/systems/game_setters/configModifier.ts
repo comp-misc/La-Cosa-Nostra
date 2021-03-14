@@ -1,10 +1,10 @@
-import { LcnConfig } from "../../LcnConfig"
+import { LcnConfig, PlayingConfig } from "../../LcnConfig"
 import expansions from "../expansions"
 
 const configModifier = (config: LcnConfig): LcnConfig => {
 	// Per MDN documentation
 	const new_config = JSON.parse(JSON.stringify(config)) as LcnConfig
-	let playing = new_config.playing
+	let newPlaying = JSON.parse(JSON.stringify(config.playing)) as PlayingConfig
 
 	// Expansions
 	for (let i = expansions.length - 1; i >= 0; i--) {
@@ -12,33 +12,32 @@ const configModifier = (config: LcnConfig): LcnConfig => {
 		if (!game_assign) {
 			continue
 		}
-
-		playing = game_assign(playing) || playing
-		break
+		newPlaying = game_assign(newPlaying) || newPlaying
 	}
 
 	// Enforce defaults on parameters if undefined
-	const enforce_default = [
+	const enforce_default: { key: keyof PlayingConfig; liberal: boolean }[] = [
 		{ key: "players", liberal: false },
 		{ key: "roles", liberal: true },
 		{ key: "expansions", liberal: false },
 		{ key: "shuffle", liberal: false },
 		{ key: "flavour", liberal: true },
 	]
-	const unsafePlaying = playing as Record<string, any>
-	const unsafeNewPlaying = new_config.playing as Record<string, any>
 
-	for (let i = 0; i < enforce_default.length; i++) {
-		const enforce = enforce_default[i]
-		if (enforce.liberal) {
-			unsafePlaying[enforce.key] = unsafeNewPlaying[enforce.key] || unsafePlaying[enforce.key]
+	const updateValue = <K extends keyof PlayingConfig>(key: K, liberal: boolean): void => {
+		const oldValue: PlayingConfig[K] = new_config.playing[key]
+		if (liberal) {
+			const newValue: PlayingConfig[K] = newPlaying[key]
+			newPlaying[key] = newValue === undefined ? oldValue : newValue
 		} else {
-			unsafePlaying[enforce.key] = unsafeNewPlaying[enforce.key]
+			newPlaying[key] = oldValue
 		}
 	}
 
-	new_config["playing"] = playing
-
+	for (const { key, liberal } of enforce_default) {
+		updateValue<typeof key>(key, liberal)
+	}
+	new_config.playing = newPlaying
 	return new_config
 }
 

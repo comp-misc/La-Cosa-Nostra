@@ -1,4 +1,4 @@
-var mafia = require("../../../../../source/lcn")
+var mafia = require("../../../../../lcn")
 
 var rs = mafia.rolesystem
 
@@ -29,9 +29,9 @@ module.exports = function (actionable, game, params) {
 
 	if (game.isDay()) {
 		// Day time
-		channel.overwritePermissions(member, config["base-perms"]["read"])
+		channel.createOverwrite(member, config["base-perms"]["read"])
 	} else {
 		// Night time
-		channel.overwritePermissions(member, config["base-perms"]["post"])
+		channel.createOverwrite(member, config["base-perms"]["post"])
 	}
 }
