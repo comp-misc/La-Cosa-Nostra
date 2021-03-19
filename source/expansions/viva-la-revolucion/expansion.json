@@ -2,18 +2,5 @@
 	"name": "Viva La Revolución!",
 	"type": "Setup",
 	"description": "An open setup involving fire, killing and explosions.",
-
-	"authors": ["The Metaphorical Boat"],
-
-	"overrides": {
-		"flavours": [],
-
-		"role_win_conditions": [],
-
-		"roles": ["-lcn/*"],
-
-		"attributes": []
-	},
-
-	"dependencies": []
+	"authors": ["The Metaphorical Boat"]
 }

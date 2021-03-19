@@ -9,15 +9,5 @@
 
 	"authors": ["MiniDeathStar", "Something_Smart"],
 
-	"overrides": {
-		"flavours": [],
-
-		"role_win_conditions": [],
-
-		"roles": [],
-
-		"attributes": []
-	},
-
 	"dependencies": ["forum-auxiliaries"]
 }

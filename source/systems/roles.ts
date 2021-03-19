@@ -22,10 +22,8 @@ const ret: Record<string, Role> = {}
 // Read files [role]/[actions]/<name>
 // Enumerate as [role]-<name>
 
-const root = __dirname + "/../roles"
-
-let roles = fs.readdirSync(root).map((x) => "lcn/" + x)
 let rules: string[] = []
+let roles: string[] = []
 
 // Add expansions
 expansions.forEach((expansion) => {
@@ -39,18 +37,13 @@ for (let i = 0; i < roles.length; i++) {
 	const role_info = roles[i].split("/")
 
 	const expansion_identifier = role_info[0]
-	let directory: string
 	const role = role_info[1]
 
-	if (expansion_identifier === "lcn") {
-		directory = root + "/" + role
-	} else {
-		const expansion = expansions.find((x) => x.identifier === expansion_identifier)
-		if (!expansion) {
-			throw new Error(`Unable to find expansion with identifier ${expansion_identifier}`)
-		}
-		directory = expansion.expansion_directory + "/roles/" + role
+	const expansion = expansions.find((x) => x.identifier === expansion_identifier)
+	if (!expansion) {
+		throw new Error(`Unable to find expansion with identifier ${expansion_identifier}`)
 	}
+	const directory = expansion.expansion_directory + "/roles/" + role
 
 	if (fs.lstatSync(directory).isDirectory()) {
 		// Read information file

@@ -8,14 +8,9 @@
 	"authors": ["Alduskkel"],
 
 	"overrides": {
-		"flavours": [],
-
-		"role_win_conditions": [],
-
 		"roles": ["-lcn/*"],
-
 		"attributes": ["-lcn/*", "lcn/arbitrary"]
 	},
 
-	"dependencies": ["forum-auxiliaries"]
+	"dependencies": ["lcn", "forum-auxiliaries"]
 }

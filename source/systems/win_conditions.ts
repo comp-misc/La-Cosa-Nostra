@@ -1,5 +1,3 @@
-import fs from "fs"
-
 import expansions from "./expansions"
 import auxils from "./auxils"
 import Game from "./game_templates/Game"
@@ -19,11 +17,8 @@ export interface WinCondition {
 }
 
 const ret: Record<string, WinCondition> = {}
-const scripts_dir = __dirname + "/../role_win_conditions/"
-
-let scripts = fs.readdirSync(scripts_dir).map((x) => "lcn/" + x)
-
 let rules: string[] = []
+let scripts: string[] = []
 
 // Add expansions
 for (let i = 0; i < expansions.length; i++) {
@@ -39,16 +34,11 @@ for (let i = 0; i < scripts.length; i++) {
 	const expansion_identifier = script_info[0]
 	const script = script_info[1]
 
-	let directory
-	if (expansion_identifier === "lcn") {
-		directory = scripts_dir + "/" + script
-	} else {
-		const expansion = expansions.find((x) => x.identifier === expansion_identifier)
-		if (!expansion) {
-			throw new Error(`Unable to find expansion with identifier ${expansion_identifier}`)
-		}
-		directory = expansion.expansion_directory + "/role_win_conditions/" + script
+	const expansion = expansions.find((x) => x.identifier === expansion_identifier)
+	if (!expansion) {
+		throw new Error(`Unable to find expansion with identifier ${expansion_identifier}`)
 	}
+	const directory = expansion.expansion_directory + "/role_win_conditions/" + script
 
 	if (!scripts[i].endsWith(".js") && !scripts[i].endsWith(".ts")) {
 		continue

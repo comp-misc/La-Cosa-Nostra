@@ -27,5 +27,5 @@
 		"attributes": []
 	},
 
-	"dependencies": []
+	"dependencies": ["lcn"]
 }

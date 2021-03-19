@@ -12,12 +12,12 @@
 	"overrides": {
 		"flavours": [],
 
-		"role_win_conditions": [],
+		"role_win_conditions": ["+lcn/*"],
 
-		"roles": [],
+		"roles": ["+lcn/*"],
 
-		"attributes": []
+		"attributes": ["+lcn/*"]
 	},
 
-	"dependencies": []
+	"dependencies": ["lcn"]
 }

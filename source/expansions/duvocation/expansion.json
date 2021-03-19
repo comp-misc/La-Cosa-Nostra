@@ -9,13 +9,8 @@
 
 	"overrides": {
 		"flavours": ["+duvocation/*"],
-
-		"role_win_conditions": [],
-
-		"roles": ["-lcn/*"],
-
-		"attributes": []
+		"attributes": ["+lcn/*"]
 	},
 
-	"dependencies": ["forum-auxiliaries"]
+	"dependencies": ["lcn", "forum-auxiliaries"]
 }
