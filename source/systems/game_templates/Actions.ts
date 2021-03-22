@@ -110,7 +110,7 @@ export default class Actions {
 			identifier,
 			triggers,
 			tags: options.tags || [],
-			expiry: 0,
+			expiry: options.expiry || 0,
 			priority: options.priority || 0,
 			execution: options.execution || 0,
 			cycles: 0,

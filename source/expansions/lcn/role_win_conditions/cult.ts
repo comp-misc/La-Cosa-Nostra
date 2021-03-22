@@ -8,7 +8,7 @@ const cult: WinCondition = (game) => {
 	// Return true to determine win
 
 	const alive = game.findAll((x) => x.isAlive())
-	const cult = game.findAll((x) => x.expandedRole().alignment === "cult" && x.isAlive())
+	const cult = game.findAll((x) => x.getRoleOrThrow().alignment === "cult" && x.isAlive())
 
 	if (cult.length >= alive.length / 2) {
 		// Parity reached

@@ -2,12 +2,12 @@
 Set the nickname and the roles here
 */
 import { Client } from "discord.js"
-import filterDefined from "../../auxils/filterDefined"
-import removeRole from "../../auxils/removeRole"
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
 import { LcnConfig } from "../../LcnConfig"
 import Player from "../game_templates/Player"
+import removeRole from "../../auxils/removeRole"
+import filterDefined from "../../auxils/filterDefined"
 
 const nicknameAndRole = async (client: Client, config: LcnConfig, roles: Player[]): Promise<void> => {
 	const logger = getLogger()

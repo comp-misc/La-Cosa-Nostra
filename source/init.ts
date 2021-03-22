@@ -1,7 +1,7 @@
 import Logger from "./systems/game_templates/Logger"
 import directories from "./BotDirectories"
 import lcn from "./lcn"
-import { InitScript } from "./systems/Expansion"
+import { InitScript } from "./Expansion"
 import version from "./Version"
 
 export = (): [Logger, typeof lcn] => {

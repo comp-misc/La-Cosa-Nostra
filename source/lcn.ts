@@ -3,18 +3,18 @@
 import config_handler from "./systems/config_handler"
 
 import auxils from "./systems/auxils"
-import expansions from "./systems/expansions"
+import expansions from "./expansions"
 import rolesystem from "./rolesystem/rolesystem"
 import attributes from "./systems/attributes"
 import executable from "./systems/executable"
-import commands from "./systems/commands"
+import commands from "./commands"
 import flavours from "./systems/flavours"
 import win_conditions from "./systems/win_conditions"
 import actionables from "./systems/actionables"
 import roles from "./systems/roles"
 import assets from "./systems/assets"
 import { LcnConfig } from "./LcnConfig"
-import { Expansion } from "./systems/Expansion"
+import { Expansion } from "./Expansion"
 
 interface Lcn {
 	auxils: typeof auxils

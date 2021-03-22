@@ -1,13 +1,13 @@
 import auxils from "../../systems/auxils"
-import texts from "../../systems/executable_misc/text/texts"
-import format from "../../systems/executable_misc/__formatter"
+import texts from "../../systems/executable/misc/text/texts"
+import format from "../../systems/executable/misc/__formatter"
 import { GameCommand } from "../CommandType"
 
 const votecount: GameCommand = async (game, message) => {
 	const roles = game.players
 	const period = game.getPeriod()
 
-	if (!game.isDay() || !period) {
+	if (!game.isDay()) {
 		await message.channel.send(":x:  There is no trial during the night!")
 		return null
 	}

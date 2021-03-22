@@ -1,13 +1,10 @@
-import fs from "fs"
 import attemptRequiring from "../auxils/attemptRequiring"
 import attemptRequiringScript from "../auxils/attemptRequringScript"
+import expansions from "../expansions"
 import { Attribute, AttributeInfo } from "./Attribute"
 import auxils from "./auxils"
-import expansions from "./expansions"
 
-const attributes_dir = __dirname + "/../attributes"
-let attributes = fs.readdirSync(attributes_dir).map((x) => "lcn/" + x)
-
+let attributes: string[] = []
 let rules: string[] = []
 
 // Add expansions
@@ -26,16 +23,11 @@ for (let i = 0; i < attributes.length; i++) {
 	const expansion_identifier = attribute_info[0]
 	const attribute = attribute_info[1]
 
-	let directory: string
-	if (expansion_identifier === "lcn") {
-		directory = attributes_dir + "/" + attribute
-	} else {
-		const expansion = expansions.find((x) => x.identifier === expansion_identifier)
-		if (!expansion) {
-			throw new Error(`No expansion found with identifier ${expansion_identifier}`)
-		}
-		directory = expansion.expansion_directory + "/attributes/" + attribute
+	const expansion = expansions.find((x) => x.identifier === expansion_identifier)
+	if (!expansion) {
+		throw new Error(`No expansion found with identifier ${expansion_identifier}`)
 	}
+	const directory = expansion.expansion_directory + "/attributes/" + attribute
 
 	const info = attemptRequiring<AttributeInfo>(directory + "/attribute.json")
 	if (!info) {
@@ -50,4 +42,4 @@ for (let i = 0; i < attributes.length; i++) {
 	}
 }
 
-export = ret
+export default ret

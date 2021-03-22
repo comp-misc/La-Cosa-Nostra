@@ -12,8 +12,8 @@
 			"program": "${workspaceFolder}/source/MafiaBot.ts",
 			// "console": "integratedTerminal",
 			"runtimeExecutable": "${workspaceFolder}/node_modules/.bin/babel-node",
-			"runtimeArgs": ["--nolazy", "--extensions", ".ts"],
-			"console": "integratedTerminal",
+			"runtimeArgs": ["--nolazy", "--extensions", ".ts,.js"],
+			// "console": "integratedTerminal",
 			"resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
 		}
 	]

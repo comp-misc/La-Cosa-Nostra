@@ -1,4 +1,4 @@
-import { GameAssignScript } from "../../../systems/Expansion"
+import { GameAssignScript } from "../../../Expansion"
 import objectOverride from "../../../auxils/objectOverride"
 import roles_override from "./setup.json"
 

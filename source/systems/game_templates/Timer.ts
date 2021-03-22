@@ -51,17 +51,6 @@ const formatDate = (epoch: number): string => {
 	}
 }
 
-const decode = (string: string): Record<string, any> => {
-	const enc_test = /^encoded_base64\n/gm
-
-	if (enc_test.test(string)) {
-		// Encoded in base64
-		string = string.replace(enc_test, "")
-		string = auxils.btoa(string)
-	}
-	return JSON.parse(string, jsonReviver)
-}
-
 class Timer {
 	ticks: number
 	game: Game
@@ -263,7 +252,7 @@ class Timer {
 		}
 
 		this.tick_time = time
-		this.tick_interval = setInterval(this.tick, time)
+		this.tick_interval = setInterval(() => this.tick, time)
 	}
 
 	destroy(): void {
@@ -302,12 +291,6 @@ class Timer {
 	}
 
 	save(silent = false): void {
-		const encode = (string: string): string => {
-			if (config["encode-cache"]) {
-				string = "encoded_base64\n" + auxils.atob(string)
-			}
-			return string
-		}
 		// Save all components
 
 		// Clone Game instance to savable
@@ -320,12 +303,13 @@ class Timer {
 		savable.actions = Object.assign({}, this.game.actions)
 
 		const players = savable.players
-		const config = savable.config
 
 		// Remove non-serialisable components
 		delete savable.client
 		delete savable.config
 		delete savable.timer
+		delete savable.logger
+		delete savable.trial_collectors
 
 		delete savable.actions.game
 
@@ -333,17 +317,8 @@ class Timer {
 
 		savable.last_save_date = new Date()
 
-		// Checksum
-		const checksum = hash(
-			hash(JSON.stringify(savable, jsonInfinityCensor), "md5") +
-				hash(savable.last_save_date.getTime().toString(), "md5"),
-			"md5"
-		)
-
-		savable.checksum = checksum
-
 		// Save object
-		fs.writeFileSync(data_directory + "/game_cache/game.save", encode(JSON.stringify(savable, jsonInfinityCensor)))
+		fs.writeFileSync(data_directory + "/game_cache/game.json", JSON.stringify(savable, jsonInfinityCensor, 2))
 
 		// All of players class should be serialisable without deletions
 		for (let i = 0; i < players.length; i++) {
@@ -356,22 +331,15 @@ class Timer {
 			// Guess what, I needed it after all
 			delete player.game
 			delete player.role
+			delete player.logger
+			delete player.client
 
 			player.last_save_date = new Date()
 
-			// Checksum
-			const checksum = hash(
-				hash(JSON.stringify(player, jsonInfinityCensor), "md5") +
-					hash(player.last_save_date.getTime().toString(), "md5"),
-				"md5"
-			)
-
-			player.checksum = checksum
-
-			const string = JSON.stringify(player, jsonInfinityCensor)
+			const string = JSON.stringify(player, jsonInfinityCensor, 2)
 
 			// Saved by Discord ID
-			fs.writeFileSync(data_directory + "/game_cache/players/" + id + ".save", encode(string))
+			fs.writeFileSync(data_directory + "/game_cache/players/" + id + ".json", string)
 		}
 
 		if (!silent) {
@@ -386,26 +354,7 @@ class Timer {
 
 const loadGame = (client: Client, config: LcnConfig): Timer => {
 	// Loads
-	const save = decode(fs.readFileSync(data_directory + "/game_cache/game.save", "utf8"))
-	const checksum = save.checksum
-
-	delete save.checksum
-
-	if (
-		checksum !==
-		hash(
-			hash(JSON.stringify(save, jsonInfinityCensor), "md5") +
-				hash(new Date(save.last_save_date).getTime().toString(), "md5")
-		)
-	) {
-		getLogger().log(4, "Main save has been tampered with. Caching incident.")
-
-		if (!save.tampered_load_times) {
-			save.tampered_load_times = []
-		}
-
-		save.tampered_load_times.push(new Date())
-	}
+	const save = JSON.parse(fs.readFileSync(data_directory + "/game_cache/game.json", "utf8"), jsonReviver)
 
 	// Save is a game instance
 	let game = new Game(client, config, [])
@@ -417,35 +366,15 @@ const loadGame = (client: Client, config: LcnConfig): Timer => {
 
 	for (let i = 0; i < player_saves.length; i++) {
 		// Check for save
-		if (!player_saves[i].endsWith(".save")) {
+		if (!player_saves[i].endsWith(".json")) {
 			continue
 		}
 
 		// Reload the save
 		const string = fs.readFileSync(data_directory + "/game_cache/players/" + player_saves[i], "utf8")
-		const player_save = decode(string)
+		const player_save = JSON.parse(string, jsonReviver)
 
-		const checksum = player_save.checksum
-		delete player_save.checksum
-
-		if (
-			checksum !==
-			hash(
-				hash(JSON.stringify(player_save, jsonInfinityCensor), "md5") +
-					hash(new Date(player_save.last_save_date).getTime().toString(), "md5")
-			)
-		) {
-			game.logger.log(4, "Save for %s has been tampered with. Caching incident.", player_saves[i])
-
-			if (!player_save.tampered_load_times) {
-				player_save.tampered_load_times = []
-			}
-
-			player_save.tampered_load_times.push(new Date())
-		}
-
-		let player = new Player()
-
+		let player = new Player(client)
 		player = Object.assign(player, player_save)
 
 		// Reinstantiation of players in Game instance

@@ -20,17 +20,17 @@ import {
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
 import lcn from "../../lcn"
-import { LcnConfig, GameConfig, PermissionsConfig } from "../../LcnConfig"
+import { GameConfig, LcnConfig, PermissionsConfig } from "../../LcnConfig"
 import alphabets from "../alpha_table"
 import auxils from "../auxils"
 import executable from "../executable"
-import { RolePermission } from "../executable_misc/createPrivateChannel"
-import expansions from "../expansions"
+import expansions from "../../expansions"
 import flavours, { FlavourData } from "../flavours"
 import Actions, { Actionable, ActionOptions, ExecutionParams, Trigger } from "./Actions"
 import Logger from "./Logger"
 import Player, { PlayerProperty } from "./Player"
 import Timer from "./Timer"
+import { RolePermission } from "../executable/misc/createPrivateChannel"
 
 interface ChannelMeta {
 	id: Snowflake
@@ -116,7 +116,7 @@ class Game {
 	logger: Logger
 	client: Client
 	init_time: Date
-	config: LcnConfig
+	readonly config: LcnConfig
 	players: Player[]
 	players_tracked: number
 	voting_halted: boolean
@@ -381,6 +381,7 @@ class Game {
 	clearTrialVoteCollectors(): void {
 		// Remove promises to free up memory
 		this.trial_collectors.forEach((collector) => collector.stop("Autocleared"))
+		this.trial_collectors = []
 	}
 
 	clearTrialVoteReactions(remove_extra = true): void {
@@ -1346,9 +1347,7 @@ class Game {
 
 		executable.misc.postGameStart(this)
 
-		setTimeout(() => {
-			this.createTrialVote()
-		}, 1600)
+		setTimeout(() => this.createTrialVote(), 1600)
 
 		await Promise.all(cache)
 
@@ -1370,7 +1369,7 @@ class Game {
 	}
 
 	private routines() {
-		// Check day night cycles, also used on referesh
+		// Check day night cycles, also used on refresh
 		// Should not put post functions in here,
 		// only administrative junk
 
@@ -1862,15 +1861,15 @@ class Game {
 
 			// Check separately
 			const cond1 = this.exists((x) => x.isAlive() && x.role_identifier === condition)
-			const cond2 = this.exists((x) => x.isAlive() && x.expandedRole().alignment === condition)
-			const cond3 = this.exists((x) => x.isAlive() && x.expandedRole().class === condition)
+			const cond2 = this.exists((x) => x.isAlive() && x.getRoleOrThrow().alignment === condition)
+			const cond3 = this.exists((x) => x.isAlive() && x.getRoleOrThrow().class === condition)
 
 			let cond4 = false
 
 			if (condition.includes("-")) {
 				const parts = condition.split("-")
 				cond4 = this.exists(
-					(x) => x.isAlive() && x.expandedRole().alignment === parts[0] && x.expandedRole().class === parts[1]
+					(x) => x.isAlive() && x.getRoleOrThrow().alignment === parts[0] && x.getRoleOrThrow().class === parts[1]
 				)
 			}
 

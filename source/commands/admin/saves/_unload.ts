@@ -1,4 +1,4 @@
-import updatePresence from "../../../systems/executable_misc/updatePresence"
+import updatePresence from "../../../systems/executable/misc/updatePresence"
 import deleteTimer from "../../../systems/game_reset/deleteTimer"
 import { AdminCommand } from "../../CommandType"
 

@@ -1,14 +1,16 @@
-import attemptRequiring from "./attemptRequiring"
+import fs from "fs"
+import requireScript from "./requireScript"
 
 const attemptRequiringScript = <T>(
 	directory: string,
 	scriptName: string,
-	fileExtensions = ["js", "ts"]
+	fileExtensions = ["js", "ts"],
+	allowDefaultImport = true
 ): T | undefined => {
 	for (const extension of fileExtensions) {
-		const result = attemptRequiring<T>(`${directory}/${scriptName}.${extension}`)
-		if (result !== undefined) {
-			return result
+		const fileName = `${directory}/${scriptName}.${extension}`
+		if (fs.existsSync(fileName)) {
+			return requireScript(fileName, allowDefaultImport)
 		}
 	}
 	return undefined

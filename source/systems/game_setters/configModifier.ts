@@ -1,5 +1,5 @@
 import { LcnConfig, PlayingConfig } from "../../LcnConfig"
-import expansions from "../expansions"
+import expansions from "../../expansions"
 
 const configModifier = (config: LcnConfig): LcnConfig => {
 	// Per MDN documentation

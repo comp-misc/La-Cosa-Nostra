@@ -1,10 +1,9 @@
 import { LcnConfig } from "../LcnConfig"
 
-const config_handlers = (file_dir = "configuration.json", allow_parent_override = true): LcnConfig => {
-	/*Read the base config file as specified;
+/*Read the base config file as specified;
   merge other configurations and return
   one JSON object*/
-
+const config_handlers = (file_dir = "configuration.json", allow_parent_override = true): LcnConfig => {
 	const base_config = require(`${__dirname}/../../configs/${file_dir}`)
 	const config_pieces = base_config["merge-configs"]
 

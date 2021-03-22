@@ -19,7 +19,7 @@ const getColor = (type: string): ColorResolvable => {
 }
 
 const command: UnaffiliatedCommand = async (message, params, config) => {
-	const allCommands = require("../../systems/commands") as Command[]
+	const allCommands = require("../index") as Command[]
 	const filteredCommands = allCommands.filter((cmd) => {
 		//TODO Display role commands in private channel?
 		if (cmd.type === "console" || cmd.type === "role") {

@@ -20,9 +20,10 @@ import { getTimer, hasTimer } from "./getTimer"
 import init from "./init"
 import { ChannelsConfig } from "./LcnConfig"
 import MemberMessage from "./MemberMessage"
-import updatePresence from "./systems/executable_misc/updatePresence"
+import updatePresence from "./systems/executable/misc/updatePresence"
 import Timer from "./systems/game_templates/Timer"
 import version from "./Version"
+import { CommandUsageError } from "./commands/CommandType"
 
 dotenv.config()
 
@@ -178,10 +179,15 @@ onWithError("message", async (message) => {
 				throw new Error(`Unknown command type '${foundCommand.type}'`)
 		}
 	} catch (e) {
-		message.channel.send(
-			":x: A code-level bot error occured. Please contact the bot administrator to check the console immediately."
-		)
-		throw e
+		if (e instanceof CommandUsageError) {
+			const usage = foundCommand.usage || config["command-prefix"] + foundCommand.name
+			await message.reply(`:x: ${e.message}. Usage: ${usage}`)
+		} else {
+			await message.reply(
+				":x: A code-level bot error occurred. Please contact the bot administrator to check the console immediately."
+			)
+			throw e
+		}
 	}
 })
 
@@ -248,7 +254,7 @@ function ready() {
 // Autoload
 function autoload() {
 	// Check for game save
-	const saved = fs.existsSync(botDirectories.data + "/game_cache/game.save")
+	const saved = fs.existsSync(botDirectories.data + "/game_cache/game.json")
 
 	if (!saved) {
 		logger.log(2, "\x1b[1m%s\x1b[0m", "No game save found.")

@@ -1,7 +1,7 @@
 // Enumerate roles
 import fs from "fs"
 
-import expansions from "./expansions"
+import expansions from "../expansions"
 import auxils from "./auxils"
 import attemptRequiringScript from "../auxils/attemptRequringScript"
 import attemptRequiring from "../auxils/attemptRequiring"
@@ -50,8 +50,8 @@ for (let i = 0; i < roles.length; i++) {
 		const info = attemptRequiring<RoleInfo>(directory + "/info.json")
 		const description = attemptRead(directory + "/description.txt")
 		const role_json = attemptRequiring<RoleProperties>(directory + "/role.json")
-		const routine = attemptRequiringScript<RoleRoutine>(directory, "routines")
-		const start = attemptRequiringScript<RoleStart>(directory, "start")
+		const routine = attemptRequiringScript<RoleRoutine>(directory + "/general/", "routines")
+		const start = attemptRequiringScript<RoleStart>(directory + "/general/", "start")
 
 		if (!role_json) {
 			throw new Error(`${role}'s role.json does not exist!`)

@@ -8,12 +8,12 @@ const mafia: WinCondition = (game) => {
 	// Return true to determine win
 
 	const alive = game.findAll((x) => x.isAlive())
-	const mafia = game.findAll((x) => x.expandedRole().alignment === "mafia" && x.isAlive())
+	const mafia = game.findAll((x) => x.getRoleOrThrow().alignment === "mafia" && x.isAlive())
 
 	if (mafia.length >= alive.length / 2) {
 		// Parity reached
 
-		const winners = game.findAll((x) => x.expandedRole().alignment === "mafia" && x.canWin())
+		const winners = game.findAll((x) => x.getRoleOrThrow().alignment === "mafia" && x.canWin())
 
 		game.setWins(winners)
 		game.getMainChannel().send(auxils.getAssetAttachment("mafia-wins.png"))

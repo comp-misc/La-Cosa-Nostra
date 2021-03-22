@@ -10,5 +10,6 @@
 		"target": "ESNext",
 		"lib": ["ESNext"],
 		"outDir": "lib"
-	}
+	},
+	"include": ["source/"]
 }

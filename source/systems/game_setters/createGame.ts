@@ -1,6 +1,6 @@
 import { Client, TextChannel } from "discord.js"
 import { LcnConfig } from "../../LcnConfig"
-import expansions from "../expansions"
+import expansions from "../../expansions"
 import Game from "../game_templates/Game"
 import Player from "../game_templates/Player"
 import Timer from "../game_templates/Timer"
@@ -20,16 +20,13 @@ const createGame = async (
 
 	for (let i = expansions.length - 1; i >= 0; i--) {
 		const game_prime = expansions[i].scripts.game_prime
-
-		if (!game_prime) {
-			continue
+		if (game_prime) {
+			await game_prime(game)
 		}
-
-		await game_prime(game)
 	}
 
 	const timer = new Timer(game).init()
 	return [game, timer]
 }
 
-export = createGame
+export default createGame

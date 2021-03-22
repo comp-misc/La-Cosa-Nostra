@@ -1,14 +1,15 @@
 import crypto from "crypto"
-import { GuildMember, Snowflake, TextChannel, User } from "discord.js"
+import { Client, Guild, GuildMember, Snowflake, TextChannel, User } from "discord.js"
 import getLogger from "../../getLogger"
 import alpha_table from "../alpha_table"
 import attributes from "../attributes"
 import auxils from "../auxils"
 import executable from "../executable"
-import { ExpandedRole } from "../executable_roles/getRole"
 import { RoleRoutine } from "../Role"
 import Game, { VoteMeta } from "./Game"
 import Logger from "./Logger"
+import { ExpandedRole } from "../executable/roles/getRole"
+import getGuild from "../../getGuild"
 
 type StatModifier = ((a: number, b: number) => number) | "set" | undefined
 
@@ -55,6 +56,7 @@ export interface PlayerStats {
 }
 
 class Player {
+	private readonly client: Client
 	readonly status: PlayerStatus
 	id: string
 	alphabet: keyof typeof alpha_table
@@ -82,13 +84,11 @@ class Player {
 	role: ExpandedRole | undefined
 	tampered_load_times?: Date[]
 
-	last_save_date?: Date
-	checksum?: string
-
 	modular_log?: string[]
 	modular_success_log?: string[]
 
-	constructor() {
+	constructor(client: Client) {
+		this.client = client
 		this.logger = getLogger()
 		this.status = {
 			alive: true,
@@ -149,7 +149,7 @@ class Player {
 
 		this.instantiateRole()
 
-		this.see_mafia_chat = this.expandedRole()["see-mafia-chat"]
+		this.see_mafia_chat = this.getRoleOrThrow()["see-mafia-chat"]
 
 		this.permanent_stats = {
 			"basic-defense": 0,
@@ -160,7 +160,7 @@ class Player {
 			"kidnap-immunity": 0,
 			priority: 0,
 			"vote-offset": 0,
-			"vote-magnitude": this.expandedRole().stats["vote-magnitude"],
+			"vote-magnitude": this.getRoleOrThrow().stats["vote-magnitude"],
 		}
 
 		// Initialise stats
@@ -325,7 +325,7 @@ class Player {
 		if (!this.channel) {
 			throw new Error(`No private channel defined for ${this.getDisplayName()}`)
 		}
-		const guild = this.getGame().getGuild()
+		const guild = this.getGuild()
 		const channel = guild.channels.cache.get(this.channel.id)
 		if (!channel) {
 			throw new Error(
@@ -339,7 +339,7 @@ class Player {
 	}
 
 	getRoleStats(): PlayerStats {
-		return this.expandedRole().stats
+		return this.getRoleOrThrow().stats
 	}
 
 	getPermanentStats(): PlayerStats {
@@ -362,7 +362,7 @@ class Player {
 
 		const a = this.game_stats[key]
 		const b = this.permanent_stats[key]
-		const c = this.expandedRole().stats[key]
+		const c = this.getRoleOrThrow().stats[key]
 
 		return modifier(modifier(a, b), c)
 	}
@@ -399,7 +399,7 @@ class Player {
 	}
 
 	getGuildMember(): GuildMember | undefined {
-		const guild = this.getGame().getGuild()
+		const guild = this.getGuild()
 		return guild.members.cache.get(this.id)
 	}
 
@@ -426,7 +426,7 @@ class Player {
 	}
 
 	async start(): Promise<void> {
-		const role = this.expandedRole()
+		const role = this.getRoleOrThrow()
 		if (role.start) {
 			try {
 				await role.start(this)
@@ -488,7 +488,7 @@ class Player {
 		let flavour_role = this.flavour_role
 
 		const flavour = this.getGame().getGameFlavour()
-		const role = this.expandedRole()
+		const role = this.getRoleOrThrow()
 
 		if (flavour && flavour_role) {
 			const display_extra = flavour.info["display-role-equivalent-on-death"]
@@ -511,7 +511,7 @@ class Player {
 
 	getRole(): string {
 		// Give true role
-		return this.display_secondary || this.expandedRole()["role-name"]
+		return this.display_secondary || this.getRoleOrThrow()["role-name"]
 	}
 
 	getInitialRole(append_true_role = true): string {
@@ -532,7 +532,7 @@ class Player {
 			}
 		}
 
-		return flavour_role || initial || this.expandedRole()["role-name"]
+		return flavour_role || initial || this.getRoleOrThrow()["role-name"]
 	}
 
 	assignChannel(channel: TextChannel): void {
@@ -603,14 +603,14 @@ class Player {
 
 		this.instantiateRole()
 
-		this.see_mafia_chat = this.see_mafia_chat || this.expandedRole()["see-mafia-chat"]
+		this.see_mafia_chat = this.see_mafia_chat || this.getRoleOrThrow()["see-mafia-chat"]
 
 		if (change_vote_magnitude_stat) {
 			const current_magnitude = this.getRoleStats()["vote-magnitude"]
 			this.setPermanentStat("vote-magnitude", current_magnitude, "set")
 		}
 
-		const role = this.expandedRole()
+		const role = this.getRoleOrThrow()
 		if (rerun_start && role.start) {
 			role.start(this)
 		}
@@ -668,9 +668,9 @@ class Player {
 
 		this.checkAttributeExpiries()
 
-		const role = this.expandedRole()
+		const role = this.getRoleOrThrow()
 		if (role.routine) {
-			role.routine(this)
+			await role.routine(this)
 		}
 
 		for (let i = 0; i < this.attributes.length; i++) {
@@ -843,7 +843,7 @@ class Player {
 	}
 
 	getDiscordUser(): User | null {
-		return this.getGame().client.users.cache.get(this.id) || null
+		return this.client.users.cache.get(this.id) || null
 	}
 
 	setBaseFlavourIdentifier(identifier: string): void {
@@ -862,12 +862,16 @@ class Player {
 		return game
 	}
 
-	expandedRole(): ExpandedRole {
+	getRoleOrThrow(): ExpandedRole {
 		const role = this.role
 		if (!role) {
 			throw new Error("No role defined")
 		}
 		return role
+	}
+
+	getGuild(): Guild {
+		return getGuild(this.client)
 	}
 }
 

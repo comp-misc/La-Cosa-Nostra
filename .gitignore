@@ -6,3 +6,6 @@ build/
 .env
 log.txt
 npm-debug.log
+
+.idea/
+*.iml

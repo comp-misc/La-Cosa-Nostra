@@ -2,7 +2,7 @@ import { findCommand } from "../commandFinder"
 import { Command, CommandProperties, ConsoleCommand } from "../CommandType"
 
 const command: ConsoleCommand = (_client, _config, params) => {
-	const allCommands = require("../../systems/commands") as Command[]
+	const allCommands = require("../index") as Command[]
 
 	if (params.length > 0) {
 		const command = findCommand(allCommands, params[0], (cmd) => cmd.type === "console")

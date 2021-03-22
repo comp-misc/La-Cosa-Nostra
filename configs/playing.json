@@ -4,7 +4,7 @@
 
 		"roles": [],
 
-		"expansions": ["compmeme", "test-game-21"],
+		"expansions": ["compmeme", "minimal"],
 		"shuffle": true,
 		"flavour": null
 	}

@@ -1,13 +1,15 @@
-import { GuildChannel, PermissionObject, Snowflake } from "discord.js"
+import { GuildChannel, PermissionObject } from "discord.js"
 import getLogger from "../../getLogger"
 import { LcnConfig } from "../../LcnConfig"
 import Player from "../game_templates/Player"
 
-const setRoleOf = async (channel: GuildChannel, id: Snowflake, perms: PermissionObject): Promise<void> => {
-	const member = channel.guild.members.cache.get(id)
+const setRoleOf = async (channel: GuildChannel, player: Player, perms: PermissionObject): Promise<void> => {
+	const member = player.getGuildMember()
 
 	if (member) {
 		await channel.createOverwrite(member, perms)
+	} else {
+		console.error(`No member found for player ${player.getDisplayName()}`)
 	}
 }
 
@@ -16,22 +18,11 @@ const setPermissions = async (config: LcnConfig, roles: Player[]): Promise<void>
 	const logger = getLogger()
 	logger.log(2, "Setting permissions.")
 
-	const read_perms = config["base-perms"]["read"]
 	const post_perms = config["base-perms"]["post"]
 
-	for (let i = 0; i < roles.length; i++) {
-		const channel = roles[i].getPrivateChannel()
-
-		await setRoleOf(channel, roles[i].id, post_perms)
-
-		// If Mafia chat is enabled
-		if (config.game.mafia["has-chat"] && (roles[i]["see_mafia_chat"] || roles[i].role?.["see-mafia-chat"] === true)) {
-			// Allow role to see channel
-			await setRoleOf(channel, roles[i].id, read_perms)
-
-			// Important addon
-			roles[i].addSpecialChannel(channel)
-		}
+	for (const player of roles) {
+		const channel = player.getPrivateChannel()
+		await setRoleOf(channel, player, post_perms)
 	}
 }
 

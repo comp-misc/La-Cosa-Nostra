@@ -5,4 +5,4 @@ const makeCommand = <T>(command: T, properties: Omit<CommandProperties<T>, "comm
 	command,
 })
 
-export = makeCommand
+export default makeCommand

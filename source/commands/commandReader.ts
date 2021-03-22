@@ -9,16 +9,14 @@ import {
 	ConsoleCommand,
 	GameCommand,
 	UnaffiliatedCommand,
-} from "../commands/CommandType"
+} from "./CommandType"
+import requireScript from "../auxils/requireScript"
 
 export const readCommand = <T>(fileName: string): CommandProperties<T> => {
-	let script = require(fileName)
-	if ((script as any).default !== undefined) {
-		script = (script as any).default
-	}
+	const script = requireScript<T>(fileName)
 
 	if (typeof script === "object") {
-		const props = script as CommandProperties<T>
+		const props = (script as unknown) as CommandProperties<T>
 		if (!props.name) {
 			throw new Error(`No name specified for command in file ${fileName}`)
 		}

@@ -14,11 +14,14 @@ const createPrivate = async (client: Client, config: LcnConfig, roles: Player[])
 	let cat_channel = guild.channels.cache.find((x) => x instanceof CategoryChannel && x.name === category)
 	if (!cat_channel) {
 		cat_channel = await guild.channels.create(category, { type: "category" })
-		await delay(5000)
+		await delay(500)
 	}
 
 	const createPrivateChannel = async (name: string, assign_permissions_async = false): Promise<TextChannel> => {
-		const overwriteData: OverwriteData = { id: guild.id, deny: [Permissions.FLAGS.READ_MESSAGE_HISTORY] }
+		const overwriteData: OverwriteData = {
+			id: guild.id,
+			deny: [Permissions.FLAGS.READ_MESSAGE_HISTORY, Permissions.FLAGS.VIEW_CHANNEL],
+		}
 		const channel = await guild.channels.create(name, {
 			type: "text",
 			permissionOverwrites: [overwriteData],
@@ -26,8 +29,8 @@ const createPrivate = async (client: Client, config: LcnConfig, roles: Player[])
 		})
 
 		const assignPermissionsAsync = async () => {
-			const read_perms = config["base-perms"]["read"]
-			const manage_perms = config["base-perms"]["manage"]
+			const read_perms = config["base-perms"].read
+			const manage_perms = config["base-perms"].manage
 
 			if (spectator) await channel.createOverwrite(spectator, read_perms)
 			if (admin) await channel.createOverwrite(admin, manage_perms)
@@ -35,7 +38,7 @@ const createPrivate = async (client: Client, config: LcnConfig, roles: Player[])
 		}
 
 		if (assign_permissions_async) {
-			assignPermissionsAsync()
+			assignPermissionsAsync().catch(console.error)
 		} else {
 			await assignPermissionsAsync()
 		}

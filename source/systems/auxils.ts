@@ -1,8 +1,6 @@
-import atob from "../auxils/atob"
 import attemptRequiring from "../auxils/attemptRequiring"
 import attemptRequiringScript from "../auxils/attemptRequringScript"
 import binomialCoefficient from "../auxils/binomialCoefficient"
-import btoa from "../auxils/btoa"
 import capitaliseFirstLetter from "../auxils/capitaliseFirstLetter"
 import choice from "../auxils/choice"
 import compareVersion from "../auxils/compareVersion"
@@ -36,6 +34,7 @@ import pettyFormat from "../auxils/pettyFormat"
 import pettyOrFormat from "../auxils/pettyOrFormat"
 import readline from "../auxils/readline"
 import recursiveFileFind from "../auxils/recursiveFileFind"
+import requireScript from "../auxils/requireScript"
 import removeRole from "../auxils/removeRole"
 import round from "../auxils/round"
 import ruleFilter from "../auxils/ruleFilter"
@@ -44,11 +43,9 @@ import splitJaroWinklerDistance from "../auxils/splitJaroWinklerDistance"
 import vocab from "../auxils/vocab"
 
 export = {
-	atob,
 	attemptRequiring,
 	attemptRequiringScript,
 	binomialCoefficient,
-	btoa,
 	capitaliseFirstLetter,
 	choice,
 	compareVersion,
@@ -83,6 +80,7 @@ export = {
 	readline,
 	recursiveFileFind,
 	removeRole,
+	requireScript,
 	round,
 	ruleFilter,
 	shuffle,

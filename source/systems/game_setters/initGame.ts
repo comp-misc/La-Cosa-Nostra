@@ -65,9 +65,6 @@ const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 	// create test vote
 	//game.createVotes("development-chambers");
 
-	// Save serialised code in base64
-	// with reference tags
-
 	timer.save()
 
 	game.postPrimeLog()

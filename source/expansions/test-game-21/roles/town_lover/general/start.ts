@@ -1,8 +1,8 @@
 import lcn from "../../../../../lcn"
-import { RolePermission } from "../../../../../systems/executable_misc/createPrivateChannel"
 import Game from "../../../../../systems/game_templates/Game"
 import Player from "../../../../../systems/game_templates/Player"
 import { RoleStart } from "../../../../../systems/Role"
+import { RolePermission } from "../../../../../systems/executable/misc/createPrivateChannel"
 
 // Executes BEFORE introduction
 

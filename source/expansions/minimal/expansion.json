@@ -1,0 +1,8 @@
+{
+	"name": "Minimal test game",
+	"type": "Setup",
+	"description": "A minimal test game",
+	"link": "None",
+	"authors": ["Comp"],
+	"dependencies": []
+}

@@ -1,4 +1,4 @@
-import expansions from "./expansions"
+import expansions from "../expansions"
 import auxils from "./auxils"
 import Game from "./game_templates/Game"
 import Player from "./game_templates/Player"

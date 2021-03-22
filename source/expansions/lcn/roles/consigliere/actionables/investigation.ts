@@ -21,11 +21,11 @@ const investigation: RoleActionable = (actionable, game) => {
 	const target = game.getPlayerByIdentifierOrThrow(actionable.to)
 
 	// Goes through immunity
-	if (target.expandedRole()["reveal-role-on-interrogation"] === true) {
+	if (target.getRoleOrThrow()["reveal-role-on-interrogation"] === true) {
 		const response = responses["role"].replace(new RegExp("{;role}", "g"), target.getDisplayRole(true))
 		game.addMessage(from, response)
 	} else {
-		let response = responses[target.expandedRole().alignment] || responses["town"]
+		let response = responses[target.getRoleOrThrow().alignment] || responses["town"]
 
 		response = (response ? response : responses["town"]).replace(
 			new RegExp("{;role}", "g"),

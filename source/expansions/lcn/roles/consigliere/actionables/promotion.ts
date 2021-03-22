@@ -2,7 +2,7 @@ import { RoleActionable } from "../../../../../systems/actionables"
 
 const promotion: RoleActionable = (actionable, game) => {
 	// Check if XK roles left
-	const primary_left = game.exists((x) => x.expandedRole().tags.includes("primary_mafia_killer") && x.isAlive())
+	const primary_left = game.exists((x) => x.getRoleOrThrow().tags.includes("primary_mafia_killer") && x.isAlive())
 
 	if (primary_left) {
 		return

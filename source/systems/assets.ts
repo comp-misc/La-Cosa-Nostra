@@ -1,5 +1,5 @@
 import fs from "fs"
-import expansions from "./expansions"
+import expansions from "../expansions"
 
 const ret: Record<string, Buffer> = {}
 const assets_dir = __dirname + "/../assets/"

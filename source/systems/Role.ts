@@ -20,7 +20,7 @@ export interface RoleProperties {
 }
 
 export interface RoleInfo {
-	thumbnail: string
+	thumbnail?: string
 	abilities: string[]
 	attributes: string[]
 	credits?: string[]

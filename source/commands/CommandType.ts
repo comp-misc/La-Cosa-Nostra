@@ -10,8 +10,8 @@ export interface GameCommand {
 	ALLOW_GAME: boolean
 	ALLOW_POSTGAME: boolean
 }
-export interface RoleCommand {
-	(game: Game, message: MemberMessage, params: string[], player: Player): void
+
+export interface RoleCommandAttributes {
 	ALLOW_NONSPECIFIC: boolean
 	PRIVATE_ONLY: boolean
 	DEAD_CANNOT_USE: boolean
@@ -19,6 +19,10 @@ export interface RoleCommand {
 	DISALLOW_DAY: boolean
 	DISALLOW_NIGHT: boolean
 	role?: string
+	attribute?: string
+}
+export interface RoleCommand extends RoleCommandAttributes {
+	(game: Game, message: MemberMessage, params: string[], player: Player): void
 }
 export type AdminCommand = (message: MemberMessage, params: string[], config: LcnConfig) => void
 export type UnaffiliatedCommand = (message: MemberMessage, params: string[], config: LcnConfig) => void
@@ -41,4 +45,10 @@ export interface CommandProperties<T> {
 	command: T
 	aliases?: string[]
 	usage?: string
+}
+
+export class CommandUsageError extends Error {
+	constructor(message?: string) {
+		super(message || "Wrong syntax")
+	}
 }

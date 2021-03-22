@@ -1,6 +1,6 @@
 import { Client, Guild } from "discord.js"
 
-export = (client: Client): Guild => {
+const getGuild = (client: Client): Guild => {
 	const serverId = process.env["server-id"]
 	if (!serverId) {
 		throw new Error("No value specified for 'server-id'")
@@ -11,3 +11,5 @@ export = (client: Client): Guild => {
 	}
 	return guild
 }
+
+export default getGuild

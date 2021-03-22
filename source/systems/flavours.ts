@@ -1,6 +1,6 @@
 // Accounts for the flavours API
 import fs from "fs"
-import expansions from "./expansions"
+import expansions from "../expansions"
 import auxils from "./auxils"
 
 export interface FlavourRoleData {

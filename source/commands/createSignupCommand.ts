@@ -1,7 +1,8 @@
-import { GuildMember } from "discord.js"
+import { Guild, GuildMember } from "discord.js"
 import { LcnConfig, PermissionsConfig } from "../LcnConfig"
 import { getTextChannel } from "../MafiaBot"
 import { UnaffiliatedCommand } from "./CommandType"
+import configModifier from "../systems/game_setters/configModifier"
 
 const createSignupCommand = (command: UnaffiliatedCommand): UnaffiliatedCommand => async (message, params, config) => {
 	const channel = getTextChannel("signup-channel")
@@ -23,7 +24,7 @@ const removeRole = (
 	const channel = getTextChannel("signup-channel")
 	const role = member.roles.cache.find((role) => role.name === config.permissions[roleKey])
 	if (role) {
-		await member.roles.add(role)
+		await member.roles.remove(role)
 		const msg = typeof message === "function" ? message(member, config) : message
 		await channel.send("**" + member.user.tag + "** " + msg)
 	}
@@ -44,11 +45,17 @@ export const addRole = async (
 export const removeSpectator = removeRole("spectator", "is no longer spectating the game!")
 export const removeBackup = removeRole("backup", "is no longer a backup player!")
 
-export const removePlayer = removeRole("pre", (member, config) => {
-	const signedUpPlayers = member.guild.members.cache.filter((m) =>
+export const removePlayer = removeRole(
+	"pre",
+	(member, config) => `is no longer playing the game! ${formatSignedUpPlayers(member.guild, config)}`
+)
+
+export const formatSignedUpPlayers = (guild: Guild, config: LcnConfig): string => {
+	const signedUpPlayers = guild.members.cache.filter((m) =>
 		m.roles.cache.some((roleName) => roleName.name === config.permissions.pre)
 	).size
-	return `is no longer playing the game! [${signedUpPlayers}/${config.playing.roles?.length}]`
-})
+	const modifiedConfig = configModifier(config)
+	return `[${signedUpPlayers}/${modifiedConfig.playing.roles?.length}]`
+}
 
 export default createSignupCommand

@@ -16,7 +16,7 @@ export const executeAdminCommand = async (
 
 	if (!member.roles.cache.some((x) => x.name === config.permissions.admin)) {
 		logger.log(
-			1,
+			2,
 			`User ${member.id} [${member.user.username}#${member.user.discriminator}] failed to run admin-type command (due to lack of permissions) "${command.name}".`
 		)
 		await message.reply(":x: You do not have sufficient permissions to use this command!")
@@ -80,8 +80,9 @@ export const executeRoleCommand = async (
 			message: "You cannot use this command",
 			condition: (value) =>
 				!value &&
-				command.command.role !== undefined &&
-				player.role_identifier.toLowerCase() !== command.command.role.toLowerCase(),
+				((command.command.role !== undefined &&
+					player.role_identifier.toLowerCase() !== command.command.role.toLowerCase()) ||
+					(command.command.attribute !== undefined && !player.hasAttribute(command.command.attribute))),
 			default: false,
 		},
 		{

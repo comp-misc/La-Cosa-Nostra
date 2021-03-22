@@ -10,7 +10,8 @@
 			"MENTION_EVERYONE": false,
 			"EMBED_LINKS": false,
 			"ATTACH_FILES": false,
-			"SEND_TTS_MESSAGES": false
+			"SEND_TTS_MESSAGES": false,
+			"VIEW_CHANNEL": true
 		},
 
 		"post": {
@@ -22,7 +23,8 @@
 			"MENTION_EVERYONE": false,
 			"EMBED_LINKS": false,
 			"ATTACH_FILES": false,
-			"SEND_TTS_MESSAGES": false
+			"SEND_TTS_MESSAGES": false,
+			"VIEW_CHANNEL": true
 		},
 
 		"deny": {
@@ -34,7 +36,8 @@
 			"MENTION_EVERYONE": false,
 			"EMBED_LINKS": false,
 			"ATTACH_FILES": false,
-			"SEND_TTS_MESSAGES": false
+			"SEND_TTS_MESSAGES": false,
+			"VIEW_CHANNEL": false
 		},
 
 		"manage": {
@@ -50,7 +53,8 @@
 			"MENTION_EVERYONE": true,
 			"EMBED_LINKS": true,
 			"ATTACH_FILES": true,
-			"SEND_TTS_MESSAGES": true
+			"SEND_TTS_MESSAGES": true,
+			"VIEW_CHANNEL": true
 		}
 	}
 }

@@ -1,19 +1,13 @@
-var lcn = require("../../../../../lcn")
-
 // Routines
 // Runs every cycle
 
-// Function should be synchronous
-
-var auxils = lcn.auxils
-
-module.exports = function (player) {
-	var config = player.game.config
+module.exports = async (player) => {
+	const config = player.game.config
 
 	// Nighttime actions
-	var channel = player.getPrivateChannel()
+	const channel = player.getPrivateChannel()
 
-	player.game.sendPeriodPin(
+	await player.game.sendPeriodPin(
 		channel,
 		":no_entry: You may kill a player tonight using the faction kill.\n\nUse `" +
 			config["command-prefix"] +

@@ -48,7 +48,7 @@ const assignRoles = (client: Client, config: LcnConfig): Player[] => {
 		// {identifier, flavour_identifier, display_secondary, attributes: [{identifier, expiry, tags}]}
 
 		// Assign respective roles
-		return new Player().init(players[i], alphabet as keyof typeof alpha_table, roleName)
+		return new Player(client).init(players[i], alphabet as keyof typeof alpha_table, roleName)
 	})
 }
 

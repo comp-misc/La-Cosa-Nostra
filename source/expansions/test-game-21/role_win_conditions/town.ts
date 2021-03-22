@@ -2,7 +2,7 @@ import auxils from "../../../systems/auxils"
 import { WinCondition } from "../../../systems/win_conditions"
 
 const town: WinCondition = (game) => {
-	const winners = game.findAll((x) => x.expandedRole().alignment === "town" && x.canWin())
+	const winners = game.findAll((x) => x.getRoleOrThrow().alignment === "town" && x.canWin())
 
 	game.setWins(winners)
 

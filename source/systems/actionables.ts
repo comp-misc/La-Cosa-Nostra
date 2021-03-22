@@ -1,6 +1,6 @@
 // Actionables are only from attributes and roles
 import fs from "fs"
-import expansions from "./expansions"
+import expansions from "../expansions"
 import attributes from "./attributes"
 import roles from "./roles"
 import { Actionable, ExecutionParams } from "./game_templates/Actions"
@@ -14,7 +14,7 @@ export interface RoleActionable<T = unknown> {
 
 const cycle = (directory: string) => (fs.existsSync(directory) ? recursiveFileFind(directory, ["js", "ts"]) : [])
 
-const actionables: Record<string, RoleActionable<unknown>> = {}
+const actionables: Record<string, RoleActionable> = {}
 
 const usable_directory = __dirname + "/../global_actionables"
 const global_actionables = cycle(usable_directory)
