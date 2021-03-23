@@ -21,7 +21,7 @@ const addattribute: AdminCommand = async (message, params, config) => {
 		return
 	}
 
-	const player = game.getPlayerById(params[0])
+	const player = game.getPlayer(params[0])
 
 	if (!player) {
 		await message.channel.send(":x: Invalid player.")

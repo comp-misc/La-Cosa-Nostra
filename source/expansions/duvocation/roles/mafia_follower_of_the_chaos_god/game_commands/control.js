@@ -66,9 +66,9 @@ module.exports = function (game, message, params) {
 	game.addAction("mafia_follower_of_the_chaos_god/control", ["cycle"], {
 		name: "M-FOC-Control",
 		expiry: 1,
-		from: message.author.id,
-		to: player1.identifier,
-		target: player2.identifier,
+		from,
+		to: player1,
+		target: player2,
 		tags: ["mafia_factional_side"],
 		priority: 0.01,
 	})

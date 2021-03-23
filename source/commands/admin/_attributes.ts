@@ -15,7 +15,7 @@ const _attributes: AdminCommand = async (message, params, config) => {
 
 	const game = getTimer().game
 
-	const player = game.getPlayerById(params[0])
+	const player = game.getPlayer(params[0])
 
 	if (!player) {
 		await message.channel.send(":x: Invalid player!")

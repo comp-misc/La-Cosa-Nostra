@@ -1,8 +1,7 @@
 import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
-
-const format = require("./__formatter")
-const texts = require("./text/texts")
+import format from "./__formatter"
+import texts from "./text/texts"
 
 const returnDayNight = (number: number): string => {
 	if (

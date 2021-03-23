@@ -46,8 +46,8 @@ module.exports = function (game, message, params) {
 		game.addAction("even_night_sheriff/interrogate", ["cycle"], {
 			name: "ENS-interrogation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

@@ -40,15 +40,34 @@ const assignRoles = (client: Client, config: LcnConfig): Player[] => {
 		throw new GameStartError(`Total players exceeds slots bot can accommodate for! (${players.length}/26)`)
 	}
 
-	return roles.map((roleName, i) => {
+	return roles.map((role, i) => {
 		// Should be only place where the name is assigned
 		const alphabet = String.fromCharCode(65 + i)
 
+		if (typeof role === "string") {
+			return new Player(client).init(players[i], alphabet as keyof typeof alpha_table, role)
+		}
+
 		// Possible alternative:
 		// {identifier, flavour_identifier, display_secondary, attributes: [{identifier, expiry, tags}]}
-
+		const player = new Player(client).init(
+			players[i],
+			alphabet as keyof typeof alpha_table,
+			role.identifier.toLowerCase()
+		)
+		if (role.flavour_identifier) {
+			player.setBaseFlavourIdentifier(role.flavour_identifier)
+		}
+		if (role.display_secondary) {
+			player.setDisplaySecondary(role.display_secondary)
+		}
+		if (role.attributes) {
+			for (const attribute of role.attributes) {
+				player.addAttribute(attribute.identifier, attribute.expiry, attribute.tags)
+			}
+		}
+		return player
 		// Assign respective roles
-		return new Player(client).init(players[i], alphabet as keyof typeof alpha_table, roleName)
 	})
 }
 

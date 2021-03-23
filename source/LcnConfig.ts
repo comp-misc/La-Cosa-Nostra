@@ -125,10 +125,24 @@ export interface CategoriesConfig {
 	private: string
 }
 
+export interface SetupRoleData {
+	identifier: string
+	flavour_identifier?: string
+	display_secondary?: string
+	attributes?: SetupAttributeData[]
+}
+export interface SetupAttributeData {
+	identifier: string
+	expiry?: number
+	tags?: Record<string, unknown>
+}
+
+export type RoleSetup = (string | SetupRoleData)[]
+
 export interface PlayingConfig {
 	players: "auto" | string[]
 	expansions: string[]
-	roles: string[] | null
+	roles: RoleSetup
 	shuffle: boolean
 	flavour: string | null
 }

@@ -50,8 +50,8 @@ module.exports = function (game, message, params) {
 		game.addAction("jack_of_all_trades/vote_stop", ["cycle"], {
 			name: "JOAT-block the vote",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			priority: 5,
 		})
 

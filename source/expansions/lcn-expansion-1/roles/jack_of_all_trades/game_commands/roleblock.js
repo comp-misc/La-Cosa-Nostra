@@ -48,8 +48,8 @@ module.exports = function (game, message, params) {
 		game.addAction("jack_of_all_trades/roleblock", ["cycle"], {
 			name: "JOAT-roleblock",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			priority: 1,
 		})
 

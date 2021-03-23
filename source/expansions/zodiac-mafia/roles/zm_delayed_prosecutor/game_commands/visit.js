@@ -35,8 +35,8 @@ module.exports = function (game, message, params) {
 		game.addAction("zm_delayed_prosecutor/random_visit", ["cycle"], {
 			name: "zm_delayed_prosecutor-random-visit",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			priority: -1,
 		})
 
@@ -59,8 +59,8 @@ module.exports = function (game, message, params) {
 	game.addAction("zm_delayed_prosecutor/visit", ["cycle"], {
 		name: "zm_delayed_prosecutor-visit",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

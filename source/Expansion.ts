@@ -22,6 +22,7 @@ export interface ExpansionInfo {
 	overrides?: ExpansionOverrides
 	dependencies?: string[]
 	compatibility?: string
+	playersNeeded?: number
 }
 
 export type StartScript = (config: LcnConfig) => LcnConfig

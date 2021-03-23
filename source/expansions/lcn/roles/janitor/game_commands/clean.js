@@ -47,8 +47,8 @@ module.exports = function (game, message, params) {
 	game.addAction("janitor/clean", ["cycle"], {
 		name: "Janitor-clean",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":file_cabinet: You have decided to clean **" + mention + "** tonight.")

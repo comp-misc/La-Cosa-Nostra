@@ -34,8 +34,8 @@ module.exports = function (game, message, params) {
 	game.addAction("town_nonconsecutive_veteran/no_action", ["cycle"], {
 		name: "SE-no_action",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 	})
 }
 

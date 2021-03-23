@@ -50,8 +50,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_even_night_jailkeeper/jail", ["cycle"], {
 			name: "Jailkeeper-jail",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

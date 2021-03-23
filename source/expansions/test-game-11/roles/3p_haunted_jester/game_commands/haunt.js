@@ -49,8 +49,8 @@ module.exports = function (game, message, params) {
 		game.addAction("3p_haunted_jester/random_haunt", ["cycle"], {
 			name: "Jester-random-haunt",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			priority: -1,
 		})
 
@@ -84,8 +84,8 @@ module.exports = function (game, message, params) {
 	game.addAction("3p_haunted_jester/haunt", ["cycle"], {
 		name: "Jester-haunt",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

@@ -46,8 +46,8 @@ module.exports = function (game, message, params) {
 		game.addAction("zm_mafioso/shoot", ["cycle"], {
 			name: "Mafioso-shoot",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("revolutionary/plant", ["cycle"], {
 			name: "Rev-plant",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

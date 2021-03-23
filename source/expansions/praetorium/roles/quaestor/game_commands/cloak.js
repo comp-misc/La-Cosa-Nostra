@@ -66,8 +66,8 @@ module.exports = function (game, message, params) {
 		game.addAction("quaestor/cloak", ["cycle"], {
 			name: "Quaestor-Cloak",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			cloak: null,
 		})
 
@@ -78,8 +78,8 @@ module.exports = function (game, message, params) {
 	game.addAction("quaestor/cloak", ["cycle"], {
 		name: "Quaestor-Cloak",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 		cloak: role,
 	})
 

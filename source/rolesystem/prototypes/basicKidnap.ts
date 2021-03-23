@@ -1,7 +1,7 @@
 import { Actionable, ExecutionParams } from "../../systems/game_templates/Actions"
 import Game from "../../systems/game_templates/Game"
 
-const basicKidnap = <T>(actionable: Actionable<T>, game: Game, params: ExecutionParams, notify = true): boolean => {
+const basicKidnap = <T>(actionable: Actionable<T>, game: Game, params?: ExecutionParams, notify = true): boolean => {
 	const target = game.getPlayerByIdentifierOrThrow(actionable.to)
 
 	const stat = target.getStat("kidnap-immunity", Math.max)

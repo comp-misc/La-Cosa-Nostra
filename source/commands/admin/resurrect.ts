@@ -17,7 +17,7 @@ const resurrect: AdminCommand = async (message, params) => {
 
 	const id = params[0]
 
-	const player = game.getPlayerById(id)
+	const player = game.getPlayer(id)
 	if (!player) {
 		await message.channel.send(":x: Unable to find that player")
 		return

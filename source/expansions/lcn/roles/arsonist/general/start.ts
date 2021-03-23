@@ -4,8 +4,8 @@ import { RoleStart } from "../../../../../systems/Role"
 
 const start: RoleStart = (player) => {
 	player.getGame().addAction("arsonist/attacked", ["attacked"], {
-		from: player.id,
-		to: player.id,
+		from: player,
+		to: player,
 		expiry: Infinity,
 		tags: ["permanent"],
 	})

@@ -25,8 +25,8 @@ module.exports = function (game, message, params) {
 	game.addAction("3p_arsonist_im_bp/ignite", ["cycle"], {
 		name: "Arsonist-ignition",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 		priority: 8,
 	})
 }

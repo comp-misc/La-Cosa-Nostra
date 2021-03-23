@@ -40,8 +40,8 @@ module.exports = function (game, message, params) {
 		game.addAction("non_consecutive_doctor/no_action", ["cycle"], {
 			name: "Non-Conseq-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		return null
@@ -58,8 +58,8 @@ module.exports = function (game, message, params) {
 	game.addAction("non_consecutive_doctor/doc_protect", ["cycle"], {
 		name: "Doc-protect",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":syringe: You have decided to heal **" + mention + "**.")

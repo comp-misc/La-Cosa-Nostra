@@ -52,8 +52,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_1_shot_roleblocker/roleblock", ["cycle"], {
 			name: "Mafia-roleblocker-roleblock",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			tags: ["mafia_factional_side"],
 		})
 

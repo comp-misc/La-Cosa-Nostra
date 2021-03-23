@@ -82,14 +82,11 @@ const whisper: GameCommand = async (game, message, params) => {
 	const sender_channel = game.findTextChannel(sender.channel.id)
 	const whisper_log = game.getWhisperLogChannel()
 
-	const d_player = game.getGuildMember(thePlayer.id) || {
+	const d_player = thePlayer.getGuildMember() || {
 		displayName: "undef'd-player",
 		user: { username: "undef'd-player" },
 	}
-	const d_sender = game.getGuildMember(sender.id) || {
-		displayName: "undef'd-player",
-		user: { username: "undef'd-player" },
-	}
+	const d_sender = message.member
 
 	await sender_channel.send(":speech_left:  **You** → **" + d_player.displayName + "**: " + context)
 	await target_channel.send(":speech_balloon:  **" + d_sender.displayName + "** → **You**: " + context)

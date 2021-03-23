@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_kidnapper/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":helicopter:  You have now selected to not kidnap anyone tonight.")
@@ -69,8 +69,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_kidnapper/kidnap", ["cycle"], {
 			name: "Detainer-detain",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

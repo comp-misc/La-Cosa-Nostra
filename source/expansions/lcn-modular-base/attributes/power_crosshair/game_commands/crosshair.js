@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_crosshair/crosshair", ["cycle"], {
 			name: "Modular-crosshair",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			meta: { type: "power" },
 			priority: 4,
 		})

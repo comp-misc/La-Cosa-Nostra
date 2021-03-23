@@ -50,8 +50,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_odd_night_observer/observe", ["cycle"], {
 			name: "God-of-Doors-investigation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

@@ -31,8 +31,8 @@ module.exports = function (game, message, params) {
 	game.addAction("god_of_revenge/prepare", ["cycle"], {
 		name: "GOR-prepare",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 	})
 }
 

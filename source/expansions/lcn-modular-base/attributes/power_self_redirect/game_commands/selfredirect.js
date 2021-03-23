@@ -40,9 +40,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_self_redirect/selfredirect", ["cycle"], {
 			name: "Modular-selfredirect",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			priority: 0.002,
 		})
 

@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_roleblocker/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":no_entry_sign:  You have now selected to not roleblock anyone tonight.")
@@ -71,8 +71,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_roleblocker/roleblock", ["cycle"], {
 			name: "Mafia-roleblocker-roleblock",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			tags: ["mafia_factional_side"],
 		})
 

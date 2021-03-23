@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("a/curse_security/protect", ["cycle"], {
 			name: "Modular-curse-protect",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			meta: { type: "curse" },
 			priority: 3,
 		})

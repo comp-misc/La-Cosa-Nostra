@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_strongman/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":knife:  You have now selected to not strongkill anyone tonight.")
@@ -69,8 +69,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_strongman/strongkill", ["cycle"], {
 			name: "Mafia-two-shot-strongman-strongkill",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			tags: ["mafia_factional_side"],
 		})
 

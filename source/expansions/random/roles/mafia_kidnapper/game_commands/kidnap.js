@@ -45,8 +45,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_kidnapper/kidnap", ["cycle"], {
 			name: "Detainer-detain",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

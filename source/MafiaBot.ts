@@ -7,7 +7,6 @@ import Discord, {
 	MessageOptions,
 	TextChannel,
 } from "discord.js"
-import dotenv from "dotenv"
 import fs from "fs"
 import eventhandler from "./auxils/eventhandler"
 import readline from "./auxils/readline"
@@ -24,6 +23,7 @@ import updatePresence from "./systems/executable/misc/updatePresence"
 import Timer from "./systems/game_templates/Timer"
 import version from "./Version"
 import { CommandUsageError } from "./commands/CommandType"
+import dotenv from "dotenv"
 
 dotenv.config()
 
@@ -150,7 +150,7 @@ onWithError("message", async (message) => {
 		return
 	}
 
-	const foundCommand = findCommand(commands, command, (cmd) => cmd.type !== "console")
+	const foundCommand = findCommand(commands, command, message.member, message.channel, (cmd) => cmd.type !== "console")
 	if (!foundCommand) {
 		await message.reply(":x: Unknown command")
 		return

@@ -74,8 +74,8 @@ const start: RoleStart = async (player) => {
 		}
 
 		game.addAction("town_lover/suicide", ["killed"], {
-			from: player.id,
-			to: available[i].id,
+			from: player,
+			to: available[i],
 			expiry: Infinity,
 			tags: ["permanent"],
 		})

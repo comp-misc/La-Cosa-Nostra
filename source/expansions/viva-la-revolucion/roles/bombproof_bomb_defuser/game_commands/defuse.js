@@ -40,8 +40,8 @@ module.exports = function (game, message, params) {
 	game.addAction("bombproof_bomb_defuser/defuse", ["cycle"], {
 		name: "fireproof_firefighter-extinguish",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 }
 

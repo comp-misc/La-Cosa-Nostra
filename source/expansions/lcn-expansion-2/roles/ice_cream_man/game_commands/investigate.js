@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("ice_cream_man/investigate", ["cycle"], {
 			name: "ice_cream_man-investigation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

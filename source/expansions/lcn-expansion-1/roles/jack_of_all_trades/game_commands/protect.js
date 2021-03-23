@@ -48,8 +48,8 @@ module.exports = function (game, message, params) {
 		game.addAction("jack_of_all_trades/protect", ["cycle"], {
 			name: "JOAT-protect",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			priority: 3,
 		})
 

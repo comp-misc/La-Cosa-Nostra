@@ -49,8 +49,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_1_shot_role_cop/check", ["cycle"], {
 			name: "Rolecop-check",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

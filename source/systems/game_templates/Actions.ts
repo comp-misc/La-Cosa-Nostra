@@ -6,6 +6,7 @@ import auxils from "../auxils"
 import Game from "./Game"
 import { Message, Snowflake } from "discord.js"
 import getLogger from "../../getLogger"
+import Player, { PlayerIdentifier } from "./Player"
 
 const allowedTriggers = [
 	"cycle",
@@ -30,35 +31,44 @@ export type Trigger = typeof allowedTriggers[number]
 
 const uncombinable: Trigger[] = ["retrooutvisit", "retrovisit", "retrocycle"]
 
-export interface ActionOptions<T> {
+interface SharedActionOptions<T> {
 	name?: string
 	expiry: number
-	from: Snowflake
-	to: Snowflake
-	tags?: string[]
 	meta?: T
+}
+
+export interface ActionOptions<T> extends SharedActionOptions<T> {
+	from: Player
+	to: Player
+	tags?: string[]
 	/** Number of "hits" before execution */
 	execution?: number
-	target?: Snowflake
-	attack?: Snowflake
+	target?: Player
+	attack?: Player
 	priority?: number
 }
-export interface Actionable<T> extends ActionOptions<T> {
+export interface Actionable<T> extends SharedActionOptions<T> {
+	from: PlayerIdentifier
+	to: PlayerIdentifier
+	tags: string[]
+	/** Number of "hits" before execution */
+	execution: number
+	target?: PlayerIdentifier
+	attack?: PlayerIdentifier
+	priority: number
+
 	id?: string
 	identifier: string
 	triggers: Trigger[]
-	tags: string[]
-	priority: number
-	execution: number
 	cycles: number
 }
 
 export interface ExecutionParams extends Record<string, any> {
 	priority?: number
 	reason?: string
-	visitor?: Snowflake
-	visited?: Snowflake
-	target?: Snowflake
+	visitor?: PlayerIdentifier
+	visited?: PlayerIdentifier
+	target?: PlayerIdentifier
 	message?: Message
 }
 
@@ -71,14 +81,11 @@ interface StoredActionable<T> extends Actionable<T> {
 export default class Actions {
 	game: Game
 	actions: StoredActionable<unknown>[]
-	private previous: StoredActionable<unknown>[]
 	visit_log: ExecutionParams[]
 	private previous_visit_log: ExecutionParams[]
 
 	constructor(game: Game) {
 		this.actions = []
-		this.previous = []
-
 		this.visit_log = []
 		this.previous_visit_log = []
 
@@ -103,9 +110,22 @@ export default class Actions {
 				}
 			})
 		}
+		const mapIdentifier = (player: Player): string => {
+			if (typeof player === "string") {
+				getLogger().logError("Id passed to action instead of player")
+				return this.game.getPlayerOrThrow(player).identifier
+			}
+			return player.identifier
+		}
 
 		const actionable: StoredActionable<T> = {
-			...options,
+			name: options.name,
+			from: mapIdentifier(options.from),
+			to: mapIdentifier(options.to),
+			meta: options.meta,
+			target: options.target ? mapIdentifier(options.target) : undefined,
+			attack: options.attack ? mapIdentifier(options.attack) : undefined,
+
 			id: crypto.randomBytes(4).toString("hex"),
 			identifier,
 			triggers,
@@ -466,8 +486,6 @@ export default class Actions {
 			}
 
 			if (this.actions[i].expiry < 1 && (trigger === null || this.actions[i].triggers.includes(trigger))) {
-				// Remove
-				this.previous.push(this.actions[i])
 				delete this.actions[i]
 			}
 		}

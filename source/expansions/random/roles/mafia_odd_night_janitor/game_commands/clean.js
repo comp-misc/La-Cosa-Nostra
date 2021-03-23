@@ -53,8 +53,8 @@ module.exports = function (game, message, params) {
 	game.addAction("mafia_odd_night_janitor/clean", ["cycle"], {
 		name: "Janitor-clean",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":drop_of_blood:  You have now selected to clean **" + mention + "** tonight.")

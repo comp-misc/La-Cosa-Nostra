@@ -26,8 +26,8 @@ module.exports = function (game, message) {
 	game.addAction("marshal/marshal", ["cycle"], {
 		name: "Marshal-marshal",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 	})
 }
 

@@ -67,10 +67,10 @@ module.exports = function (game, message, params) {
 	game.addAction("a/power_transport/transport", ["cycle"], {
 		name: "Modular-transport",
 		expiry: 1,
-		from: message.author.id,
+		from,
 		meta: { type: "power" },
-		to: player1.identifier,
-		target: player2.identifier,
+		to: player1,
+		target: player2,
 		priority: 0.01,
 	})
 

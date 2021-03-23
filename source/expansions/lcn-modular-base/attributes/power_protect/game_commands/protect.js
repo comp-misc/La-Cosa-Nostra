@@ -42,9 +42,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_protect/protect", ["cycle"], {
 			name: "Modular-protect",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			priority: 3,
 		})
 

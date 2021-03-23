@@ -42,9 +42,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_investigate/investigate", ["cycle"], {
 			name: "Modular-investigate",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			priority: 4,
 		})
 

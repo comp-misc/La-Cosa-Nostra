@@ -40,8 +40,8 @@ module.exports = function (game, message, params) {
 		game.addAction("godfather/kill_vote", ["cycle"], {
 			name: "Godfather-killvote",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

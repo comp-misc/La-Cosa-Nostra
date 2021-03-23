@@ -15,9 +15,9 @@ const pick_target: RoleActionable = (actionable, game) => {
 	game.addAction("assassin/assassination", ["killed"], {
 		name: "Assassin-pick-target",
 		expiry: Infinity,
-		from: actionable.from,
-		to: actionable.to,
-		target: actionable.from,
+		from: game.getPlayerOrThrow(actionable.from),
+		to: game.getPlayerOrThrow(actionable.to),
+		target: game.getPlayerOrThrow(actionable.from),
 		tags: ["permanent"],
 	})
 
@@ -25,9 +25,9 @@ const pick_target: RoleActionable = (actionable, game) => {
 	game.addAction("assassin/target_killed", ["killed"], {
 		name: "Assassin-target-killed",
 		expiry: Infinity,
-		from: actionable.to,
-		to: actionable.from,
-		target: actionable.to,
+		from: game.getPlayerOrThrow(actionable.to),
+		to: game.getPlayerOrThrow(actionable.from),
+		target: game.getPlayerOrThrow(actionable.to),
 		tags: ["permanent"],
 	})
 

@@ -30,8 +30,8 @@ module.exports = function (game, message, params) {
 		game.addAction("a/investigation_contract/standard_noresult", ["cycle"], {
 			name: "Standard-noresult",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 	}
 
@@ -59,8 +59,8 @@ module.exports = function (game, message, params) {
 		game.addAction("a/investigation_contract/check", ["cycle"], {
 			name: "Contract-investigation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

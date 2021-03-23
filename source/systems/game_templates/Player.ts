@@ -55,12 +55,14 @@ export interface PlayerStats {
 	"vote-magnitude": number
 }
 
+export type PlayerIdentifier = string
+
 class Player {
 	private readonly client: Client
 	readonly status: PlayerStatus
 	id: string
 	alphabet: keyof typeof alpha_table
-	identifier: string
+	identifier: PlayerIdentifier
 	role_identifier: string
 	game: Game | undefined
 	votes: VoteMeta[]
@@ -145,7 +147,7 @@ class Player {
 		this.role_identifier = role_identifier
 		this.initial_role_identifier = [role_identifier]
 
-		this.identifier = crypto.randomBytes(8).toString("hex") + "-" + this.id
+		this.identifier = crypto.randomBytes(8).toString("hex")
 
 		this.instantiateRole()
 
@@ -407,7 +409,7 @@ class Player {
 		const member = this.getGuildMember()
 
 		if (!member) {
-			return "[" + this.alphabet + "] undef'd player"
+			return "[" + this.alphabet + "/" + this.id + "] undef'd player"
 		} else {
 			return member.displayName
 		}

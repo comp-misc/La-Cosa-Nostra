@@ -59,7 +59,7 @@ module.exports = function (game, message, params) {
 			game.addAction("god_of_lies/retract", ["instant"], {
 				name: "GOL-retract",
 				expiry: 1,
-				from: message.author.id,
+				from,
 				to: forged[i].identifier,
 			})
 		}
@@ -130,9 +130,9 @@ module.exports = function (game, message, params) {
 	game.addAction("god_of_lies/forge", ["instant"], {
 		name: "GOL-forge",
 		expiry: 1,
-		from: message.author.id,
-		to: player1.identifier,
-		target: player2.identifier,
+		from,
+		to: player1,
+		target: player2,
 	})
 }
 

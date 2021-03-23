@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("god_of_doors/see", ["cycle"], {
 			name: "God-of-Doors-investigation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

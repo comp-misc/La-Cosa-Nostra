@@ -56,8 +56,8 @@ const kill: RoleCommand = async (game, message, params, from) => {
 			name: "Factionkill-kill",
 			expiry: 1,
 			priority: 6,
-			from: message.author.id,
-			to: to.player.id,
+			from,
+			to: to.player,
 			tags: ["mafia_factional_main"],
 		})
 	}

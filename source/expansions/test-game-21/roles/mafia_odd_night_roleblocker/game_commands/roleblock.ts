@@ -2,7 +2,7 @@ import { RoleCommand } from "../../../../../commands/CommandType"
 
 // Register heal
 
-const roleblock: RoleCommand = (game, message, params) => {
+const roleblock: RoleCommand = (game, message, params, from) => {
 	const actions = game.actions
 	const config = game.config
 
@@ -22,7 +22,6 @@ const roleblock: RoleCommand = (game, message, params) => {
 	}
 
 	const to = game.getPlayerMatch(params[0])
-	const from = game.getPlayerByIdOrThrow(message.author.id)
 
 	if (to.score < 0.7 || params[0].toLowerCase() === "nobody") {
 		actions.delete((x) => x.from === from.identifier && x.identifier === "mafia_odd_night_roleblocker/roleblock")
@@ -48,8 +47,8 @@ const roleblock: RoleCommand = (game, message, params) => {
 	game.addAction("mafia_odd_night_roleblocker/roleblock", ["cycle"], {
 		name: "Mafia-roleblocker-roleblock",
 		expiry: 1,
-		from: message.author.id,
-		to: to.player.id,
+		from,
+		to: to.player,
 		tags: ["mafia_factional_side"],
 	})
 

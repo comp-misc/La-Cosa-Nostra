@@ -18,8 +18,8 @@ module.exports = function (game, message) {
 	game.addAction("pyromaniac/ignite", ["cycle"], {
 		name: "Pyromaniac-ignition",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 		priority: 8,
 	})
 }

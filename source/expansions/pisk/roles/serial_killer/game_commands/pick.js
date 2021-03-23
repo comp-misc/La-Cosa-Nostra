@@ -25,8 +25,8 @@ module.exports = function (game, message, params) {
 	game.addAction("serial_killer/pick", ["instant"], {
 		name: "SK-pick",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 		choice: choice,
 	})
 }

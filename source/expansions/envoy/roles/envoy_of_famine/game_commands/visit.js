@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 	game.addAction("envoy_of_famine/visit", ["cycle"], {
 		name: "EOF-visit",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

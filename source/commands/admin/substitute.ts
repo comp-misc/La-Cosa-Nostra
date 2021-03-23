@@ -10,7 +10,7 @@ const substitute: AdminCommand = async (message, params) => {
 	const timer = getTimer()
 	const game = timer.game
 
-	if (!game.getPlayerById(params[0])) {
+	if (!game.getPlayer(params[0])) {
 		await message.channel.send(":x: Cannot find player to substitute!")
 		return
 	}

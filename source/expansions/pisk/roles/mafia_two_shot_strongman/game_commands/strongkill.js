@@ -48,8 +48,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_two_shot_strongman/strongkill", ["cycle"], {
 			name: "Mafia-two-shot-strongman-strongkill",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			tags: ["mafia_factional_side"],
 		})
 

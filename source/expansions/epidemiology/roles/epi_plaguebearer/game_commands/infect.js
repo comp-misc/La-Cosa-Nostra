@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("epi_plaguebearer/infect", ["cycle"], {
 			name: "epi_plaguebearer-infect",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

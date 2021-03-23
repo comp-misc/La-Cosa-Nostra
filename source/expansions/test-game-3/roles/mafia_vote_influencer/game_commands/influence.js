@@ -41,8 +41,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_vote_influencer/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		return null
@@ -79,8 +79,8 @@ module.exports = function (game, message, params) {
 	game.addAction("mafia_vote_influencer/influence", ["cycle"], {
 		name: "SE-influence",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":ballot_box: You have decided to influence the vote of **" + mention + "** tonight.")

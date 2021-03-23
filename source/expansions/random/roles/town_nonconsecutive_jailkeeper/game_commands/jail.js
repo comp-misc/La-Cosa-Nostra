@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_jailkeeper/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":european_castle:  You have now selected to not jail anyone tonight.")
@@ -68,8 +68,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_jailkeeper/jail", ["cycle"], {
 			name: "Jailkeeper-jail",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

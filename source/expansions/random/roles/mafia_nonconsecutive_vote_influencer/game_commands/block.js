@@ -39,8 +39,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_vote_influencer/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":bookmark:  You have now selected to not to block nor influence the vote of anyone tonight.")
@@ -83,8 +83,8 @@ module.exports = function (game, message, params) {
 	game.addAction("mafia_nonconsecutive_vote_influencer/block", ["cycle"], {
 		name: "SE-block",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":bookmark:  You have now selected to block the vote of **" + mention + "** tonight.")

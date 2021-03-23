@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("a/curse_vigour/influence", ["cycle"], {
 			name: "Modular-curse-influence",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			meta: { type: "curse" },
 			priority: 2,
 		})

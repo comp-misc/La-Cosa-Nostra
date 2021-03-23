@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("a/blessing_vigour/bless", ["cycle"], {
 			name: "Modular-bless_vigour",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			meta: { type: "blessing" },
 			priority: 2,
 		})

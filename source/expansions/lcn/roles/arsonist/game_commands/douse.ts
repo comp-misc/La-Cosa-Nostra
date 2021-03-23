@@ -39,8 +39,8 @@ const douse: RoleCommand = (game, message, params, from) => {
 	game.addAction("arsonist/douse", ["cycle"], {
 		name: "Arsonist-douse",
 		expiry: 1,
-		from: message.author.id,
-		to: to.player.id,
+		from: from,
+		to: to.player,
 	})
 
 	message.channel.send(":oil: You have decided to douse **" + to.player.getDisplayName() + "** tonight.")

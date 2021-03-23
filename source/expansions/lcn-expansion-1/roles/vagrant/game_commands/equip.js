@@ -31,8 +31,8 @@ module.exports = function (game, message, params) {
 	game.addAction("vagrant/vest", ["cycle"], {
 		name: "Vagrant-vest",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 	})
 }
 

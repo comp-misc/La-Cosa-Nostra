@@ -2,8 +2,7 @@
 
 import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
-
-const texts = require("./text/texts")
+import texts from "./text/texts"
 
 export = async (game: Game, role: Player): Promise<void> => {
 	const main_channel = game.getMainChannel()
@@ -11,7 +10,7 @@ export = async (game: Game, role: Player): Promise<void> => {
 	let message = texts.lynch_off
 
 	message = message.replace(new RegExp("{;player}", "g"), role.getDisplayName())
-	message = message.replace(new RegExp("{;votes}", "g"), game.getVotesRequired() + role.getVoteOffset())
+	message = message.replace(new RegExp("{;votes}", "g"), (game.getVotesRequired() + role.getVoteOffset()).toString())
 
 	await main_channel.send(message)
 }

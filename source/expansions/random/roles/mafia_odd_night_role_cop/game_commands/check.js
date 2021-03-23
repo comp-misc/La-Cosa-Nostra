@@ -51,8 +51,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_odd_night_role_cop/check", ["cycle"], {
 			name: "Mafia-Rolecop-check",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

@@ -39,8 +39,8 @@ const investigate: RoleCommand = (game, message, params, from) => {
 	game.addAction("consigliere/investigation", ["cycle"], {
 		name: "Consigliere-investigation",
 		expiry: 1,
-		from: message.author.id,
-		to: to.player.id,
+		from,
+		to: to.player,
 	})
 
 	message.channel.send(":mag: You have decided to investigate **" + to.player.getDisplayName() + "** tonight.")

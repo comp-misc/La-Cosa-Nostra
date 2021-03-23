@@ -40,8 +40,8 @@ module.exports = function (game, message, params) {
 		game.addAction("serial_killer/attack", ["cycle"], {
 			name: "SK-attack",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

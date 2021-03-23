@@ -44,8 +44,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_sheriff_cop/interrogate", ["cycle"], {
 			name: "Sheriff-interrogation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

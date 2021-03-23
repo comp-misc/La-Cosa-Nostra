@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_doctor/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":shield:  You have now selected to not protect anyone tonight.")
@@ -67,8 +67,8 @@ module.exports = function (game, message, params) {
 	game.addAction("town_nonconsecutive_doctor/protect", ["cycle"], {
 		name: "Doc-protect",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

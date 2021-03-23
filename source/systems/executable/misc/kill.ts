@@ -20,8 +20,7 @@ export = async (game: Game, role: Player): Promise<void> => {
 		throw new Error("No dead role found")
 	}
 
-	const member = guild.members.cache.get(role.id)
-
+	const member = role.getGuildMember()
 	if (!member) {
 		logger.log(3, "Trying to kill undefined user. Debugging?")
 		return

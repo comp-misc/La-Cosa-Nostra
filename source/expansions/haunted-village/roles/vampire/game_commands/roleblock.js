@@ -45,8 +45,8 @@ module.exports = function (game, message, params) {
 		game.addAction("ghoul/roleblock", ["cycle"], {
 			name: "Ghoul-roleblock",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			tags: ["mafia_factional_side"],
 		})
 

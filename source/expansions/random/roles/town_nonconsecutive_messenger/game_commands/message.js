@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_messenger/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":envelope:  You have now selected to not message anyone tonight.")
@@ -87,8 +87,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_messenger/message", ["cycle"], {
 			name: "Mailman-mail",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			message: send,
 		})
 

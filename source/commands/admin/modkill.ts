@@ -16,13 +16,13 @@ const modkill: AdminCommand = async (message, params) => {
 
 	const id = params[0]
 
-	const player = game.getPlayerById(id)
+	const player = game.getPlayer(id)
 	if (!player) {
 		await message.channel.send(":x: Unable to find player")
 		return
 	}
 
-	const response = game.modkill(id)
+	const response = await game.modkill(player)
 
 	if (response) {
 		await message.channel.send(":ok:  Modkilled **" + player.getDisplayName() + "**!")

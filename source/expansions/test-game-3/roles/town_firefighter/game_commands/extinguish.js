@@ -39,8 +39,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_firefighter/extinguish", ["cycle"], {
 			name: "Firefighter-extinguish",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 	} else {
 		message.channel.send(":fire_engine: You have decided to extinguish **" + to.getDisplayName() + "** tonight.")
@@ -51,8 +51,8 @@ module.exports = function (game, message, params) {
 	game.addAction("town_firefighter/extinguish", ["cycle"], {
 		name: "Firefighter-extinguish",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 }
 

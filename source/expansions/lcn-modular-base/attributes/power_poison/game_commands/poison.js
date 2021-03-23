@@ -42,9 +42,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_poison/poison", ["cycle"], {
 			name: "Modular-poison",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			priority: 3,
 		})
 

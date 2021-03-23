@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("follower_of_the_skeptic_god/investigation", ["cycle"], {
 			name: "follower_of_the_skeptic_god-investigation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

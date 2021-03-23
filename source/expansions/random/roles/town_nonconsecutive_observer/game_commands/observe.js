@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_observer/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":telescope:  You have now selected to not observe anyone tonight.")
@@ -68,8 +68,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_observer/observe", ["cycle"], {
 			name: "God-of-Doors-investigation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

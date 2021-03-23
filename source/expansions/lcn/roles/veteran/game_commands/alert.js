@@ -27,8 +27,8 @@ module.exports = function (game, message) {
 	game.addAction("veteran/alert", ["cycle"], {
 		name: "Veteran-alert",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 	})
 }
 

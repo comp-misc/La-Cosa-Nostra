@@ -46,8 +46,8 @@ module.exports = function (game, message, params) {
 		game.addAction("odd_night_tracker/track", ["cycle"], {
 			name: "ONT-track",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

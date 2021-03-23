@@ -46,8 +46,8 @@ const pick: RoleCommand = (game, message, params, from) => {
 	game.addAction("assassin/pick_target", ["cycle"], {
 		name: "Assassin-pick-target",
 		expiry: 1,
-		from: message.author.id,
-		to: to.player.id,
+		from,
+		to: to.player,
 	})
 
 	message.channel.send(":dagger: You have decided to pick **" + to.player.getDisplayName() + "** as your victim.")

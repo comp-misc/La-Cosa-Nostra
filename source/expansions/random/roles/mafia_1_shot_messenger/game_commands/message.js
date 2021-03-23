@@ -69,8 +69,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_1_shot_messenger/message", ["cycle"], {
 			name: "Mailman-mail",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			message: send,
 		})
 

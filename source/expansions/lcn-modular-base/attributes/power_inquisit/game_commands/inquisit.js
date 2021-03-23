@@ -49,9 +49,9 @@ module.exports = function (game, message, params) {
 		name: "Modular-inquisit",
 		expiry: 1,
 		priority: 4,
-		from: message.author.id,
+		from,
 		meta: { type: "power" },
-		to: to.id,
+		to,
 	})
 
 	var mention = to.getDisplayName()

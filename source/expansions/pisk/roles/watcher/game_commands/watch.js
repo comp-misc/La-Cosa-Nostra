@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("watcher/watch", ["cycle"], {
 			name: "Watcher-watch",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

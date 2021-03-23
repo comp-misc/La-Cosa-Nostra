@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_role_cop/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":mag_right:  You have now selected to not check anyone tonight.")
@@ -69,8 +69,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_role_cop/check", ["cycle"], {
 			name: "Mafia-Rolecop-check",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

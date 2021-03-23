@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_tracker/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":mag: You have decided not to track anyone tonight.")
@@ -71,8 +71,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_tracker/track", ["cycle"], {
 			name: "Tracker-track",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

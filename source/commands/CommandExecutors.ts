@@ -1,4 +1,3 @@
-import { Message } from "discord.js"
 import getLogger from "../getLogger"
 import { getTimer, hasTimer } from "../getTimer"
 import { LcnConfig } from "../LcnConfig"

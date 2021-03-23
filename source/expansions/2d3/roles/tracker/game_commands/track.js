@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("tracker/track", ["cycle"], {
 			name: "Tracker-track",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

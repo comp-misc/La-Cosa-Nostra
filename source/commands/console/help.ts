@@ -5,7 +5,7 @@ const command: ConsoleCommand = (_client, _config, params) => {
 	const allCommands = require("../index") as Command[]
 
 	if (params.length > 0) {
-		const command = findCommand(allCommands, params[0], (cmd) => cmd.type === "console")
+		const command = findCommand(allCommands, params[0], null, null, (cmd) => cmd.type === "console")
 		if (!command) {
 			console.log("Unknown command. Type 'help' for a list")
 			return

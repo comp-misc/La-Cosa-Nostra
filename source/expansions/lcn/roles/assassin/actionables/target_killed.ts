@@ -6,7 +6,7 @@ const target_killed: RoleActionable = (actionable, game) => {
 	// Remove assassination
 	game.actions.delete((x) => x.to === actionable.to && x.identifier === "assassin/assassination")
 
-	const player = game.getPlayerByIdOrThrow(actionable.from)
+	const player = game.getPlayerOrThrow(actionable.from)
 	player.misc.assassin_picked_target = false
 	player.misc.assassin_target = null
 

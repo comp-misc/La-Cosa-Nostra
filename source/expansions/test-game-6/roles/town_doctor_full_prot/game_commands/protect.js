@@ -44,8 +44,8 @@ module.exports = function (game, message, params) {
 	game.addAction("town_doctor_full_prot/protect", ["cycle"], {
 		name: "Doc-protect",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

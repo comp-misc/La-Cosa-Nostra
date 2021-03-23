@@ -36,8 +36,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_vigilante/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":dagger:  You have now selected to not kill anyone tonight.")
@@ -66,8 +66,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_vigilante/kill", ["cycle"], {
 			name: "Vigilante-kill",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

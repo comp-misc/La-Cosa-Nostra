@@ -40,8 +40,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_nonconsecutive_deflector/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":magnet:  You have now selected to not deflect actions from anyone tonight.")
@@ -95,9 +95,9 @@ module.exports = function (game, message, params) {
 	game.addAction("mafia_nonconsecutive_deflector/deflect", ["cycle"], {
 		name: "Driver-drive",
 		expiry: 1,
-		from: message.author.id,
-		to: player1.identifier,
-		target: player2.identifier,
+		from,
+		to: player1,
+		target: player2,
 	})
 
 	var p1_name = player1.identifier === from.identifier ? "yourself" : player1.getDisplayName()

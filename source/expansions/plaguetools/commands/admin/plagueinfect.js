@@ -11,7 +11,7 @@ module.exports = async function (message, params, config) {
 		return null
 	}
 
-	var target = game.getPlayerById(params[0])
+	var target = game.getPlayer(params[0])
 
 	if (!target) {
 		await message.channel.send(":x: Invalid player!")

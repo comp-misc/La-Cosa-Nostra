@@ -7,8 +7,8 @@ const start: RoleStart = (player) => {
 		// Add attacked primer
 		player.getGame().addAction("a/protection/attacked", ["attacked"], {
 			name: "Protection-primer",
-			from: player.id,
-			to: player.id,
+			from: player,
+			to: player,
 			expiry: Infinity,
 			priority: 1,
 			tags: ["permanent"],

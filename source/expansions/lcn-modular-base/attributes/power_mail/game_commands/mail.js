@@ -61,9 +61,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_mail/mail", ["cycle"], {
 			name: "Modular-mail",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			message: send,
 			priority: 4,
 		})

@@ -49,8 +49,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_1_shot_bodyguard/guard", ["cycle"], {
 			name: "Bodyguard-guard",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

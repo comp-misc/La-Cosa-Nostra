@@ -36,8 +36,8 @@ module.exports = function (game, message, params) {
 		game.addAction("odd_night_fence/random_delivery", ["cycle"], {
 			name: "Odd-night-Fence-random-delivery",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			priority: -1,
 		})
 
@@ -54,8 +54,8 @@ module.exports = function (game, message, params) {
 		game.addAction("odd_night_fence/random_delivery", ["cycle"], {
 			name: "Odd-night-Fence-random-delivery",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			priority: -1,
 		})
 
@@ -76,8 +76,8 @@ module.exports = function (game, message, params) {
 	game.addAction("odd_night_fence/delivery", ["cycle"], {
 		name: "Odd-night-Fence-delivery",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

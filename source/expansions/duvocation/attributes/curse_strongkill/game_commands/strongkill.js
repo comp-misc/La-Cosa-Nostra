@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("a/curse_strongkill/strongkill", ["cycle"], {
 			name: "Modular-curse_strongkill",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			meta: { type: "curse" },
 			priority: 0.00001,
 		})

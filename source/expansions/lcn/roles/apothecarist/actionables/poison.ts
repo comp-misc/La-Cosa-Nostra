@@ -16,9 +16,9 @@ const poison: RoleActionable = (actionable, game) => {
 		name: "Poison-kill",
 		expiry: 3,
 		execution: 3,
-		from: actionable.from,
-		to: actionable.to,
-		attack: actionable.target as Snowflake,
+		from: game.getPlayerOrThrow(actionable.from),
+		to: game.getPlayerOrThrow(actionable.to),
+		attack: actionable.target ? game.getPlayerOrThrow(actionable.target) : undefined,
 		priority: 4,
 		tags: ["poison"],
 	})

@@ -1,6 +1,5 @@
-import attributes from "../../../../systems/attributes"
 import { UnaffiliatedCommand } from "../../../../commands/CommandType"
-import { AttributeInfo, DisplayField, ModularDetails } from "../../../../systems/Attribute"
+import { Attribute, AttributeInfo, DisplayField, ModularDetails } from "../../../../systems/Attribute"
 import makeCommand from "../../../../commands/makeCommand"
 
 interface FieldedModularDetails extends ModularDetails {
@@ -11,17 +10,19 @@ interface ModularAttribute extends AttributeInfo {
 	"modular-details": FieldedModularDetails
 }
 
-const powers = Object.values(attributes)
-	.map((attribute) => attribute.attribute)
-	.filter(
-		(attribute) =>
-			attribute.modular &&
-			attribute["modular-details"] &&
-			attribute["modular-details"].cluster === "ability" &&
-			attribute["modular-details"]["display-field"]
-	) as ModularAttribute[]
-
 const ability: UnaffiliatedCommand = async (message, params, config) => {
+	//Delay import to avoid circular references
+	const attributes: Record<string, Attribute> = require("../../../../systems/attributes")
+	const powers = Object.values(attributes)
+		.map((attribute) => attribute.attribute)
+		.filter(
+			(attribute) =>
+				attribute.modular &&
+				attribute["modular-details"] &&
+				attribute["modular-details"].cluster === "ability" &&
+				attribute["modular-details"]["display-field"]
+		) as ModularAttribute[]
+
 	if (params.length < 1) {
 		await message.channel.send(
 			"**List of available abilities:**\n```fix\n" + powers.map((x) => x.name).join(", ") + "```"

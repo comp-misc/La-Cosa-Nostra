@@ -272,14 +272,6 @@ class Game {
 		return null
 	}
 
-	getPlayerByIdOrThrow(id: string): Player {
-		const player = this.getPlayerById(id)
-		if (!player) {
-			throw new Error(`Failed to find player with id '${id}'`)
-		}
-		return player
-	}
-
 	getPlayerByIdentifier(identifier: string): Player | null {
 		for (let i = 0; i < this.players.length; i++) {
 			if (this.players[i].identifier === identifier) {
@@ -309,6 +301,14 @@ class Game {
 		const identifier = this.getPlayerByIdentifier(argument)
 
 		return id || identifier
+	}
+
+	getPlayerOrThrow(argument: string): Player {
+		const player = this.getPlayer(argument)
+		if (!player) {
+			throw new Error(`Failed to find player '${argument}'`)
+		}
+		return player
 	}
 
 	getPlayerByAlphabet(alphabet: string): Player | null {
@@ -722,7 +722,7 @@ class Game {
 	}
 
 	isAlive(id: string): boolean {
-		return this.getAlivePlayers().some((player) => player.id === id)
+		return this.getAlivePlayers().some((player) => player.id === id || player.identifier === id)
 	}
 
 	async step(adjust_to_current_time = false): Promise<Date | null> {
@@ -1081,17 +1081,12 @@ class Game {
 		this.primeDeathMessages(role, reason, secondary_reason, broadcast_position_offset)
 	}
 
-	modkill(id: string): boolean {
-		const role = this.getPlayerById(id)
-
-		if (!role) {
-			return false
-		}
-		if (role.hasPrivateChannel()) {
-			role.getPrivateChannel().send(":exclamation: You have been removed from the game by a moderator.")
+	async modkill(player: Player): Promise<boolean> {
+		if (player.hasPrivateChannel()) {
+			await player.getPrivateChannel().send(":exclamation: You have been removed from the game by a moderator.")
 		}
 
-		executable.admin.modkill(this, role)
+		await executable.admin.modkill(this, player)
 		return true
 	}
 
@@ -1572,11 +1567,10 @@ class Game {
 		let score: number
 
 		if (player === null) {
-			const guild = this.getGuild()
 			const distances = []
 
 			for (let i = 0; i < this.players.length; i++) {
-				const member = guild.members.cache.get(this.players[i].id)
+				const member = this.players[i].getGuildMember()
 
 				if (member === undefined) {
 					distances.push(-1)

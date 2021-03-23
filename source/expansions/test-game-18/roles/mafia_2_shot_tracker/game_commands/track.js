@@ -52,8 +52,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mafia_2_shot_tracker/track", ["cycle"], {
 			name: "Tracker-track",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

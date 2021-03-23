@@ -48,8 +48,8 @@ module.exports = function (game, message, params) {
 		game.addAction("jack_of_all_trades/interrogate", ["cycle"], {
 			name: "JOAT-interrogate",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			priority: 5,
 		})
 

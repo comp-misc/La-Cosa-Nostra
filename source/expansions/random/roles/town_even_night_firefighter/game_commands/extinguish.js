@@ -50,8 +50,8 @@ module.exports = function (game, message, params) {
 	game.addAction("town_even_night_firefighter/extinguish", ["cycle"], {
 		name: "Firefighter-extinguish",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 }
 

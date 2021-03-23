@@ -15,7 +15,7 @@ const rdline = (client: Client, config: LcnConfig, commands: Command[]): void =>
 		const details = msg.split(" ")
 		const given = details[0]
 
-		const command = findCommand(commands, given, (cmd) => cmd.type === "console")
+		const command = findCommand(commands, given, null, null, (cmd) => cmd.type === "console")
 		if (!command) {
 			console.log('Unknown command. Type "help" for help.')
 			return

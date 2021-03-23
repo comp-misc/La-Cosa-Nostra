@@ -43,9 +43,9 @@ module.exports = function (game, message, params) {
 			name: "Modular-guard",
 			expiry: 1,
 			priority: 3,
-			from: message.author.id,
+			from,
+			to,
 			meta: { type: "power" },
-			to: to.id,
 		})
 
 		var mention = to.getDisplayName()

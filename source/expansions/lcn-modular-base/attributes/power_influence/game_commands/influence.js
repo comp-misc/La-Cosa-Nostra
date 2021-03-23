@@ -38,9 +38,9 @@ module.exports = function (game, message, params) {
 		name: "Modular-influence",
 		expiry: 1,
 		priority: 5,
-		from: message.author.id,
+		from,
 		meta: { type: "power" },
-		to: to.id,
+		to,
 	})
 
 	var mention = to.getDisplayName()

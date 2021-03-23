@@ -68,9 +68,9 @@ module.exports = function (game, message, params) {
 	game.addAction("cupid/match", ["cycle"], {
 		name: "Cupid-match",
 		expiry: 1,
-		from: message.author.id,
-		to: one.identifier,
-		target: two.identifier,
+		from,
+		to: one,
+		target: two,
 	})
 
 	message.channel.send(

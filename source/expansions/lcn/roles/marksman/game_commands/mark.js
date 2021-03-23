@@ -67,9 +67,9 @@ module.exports = function (game, message, params) {
 	game.addAction("marksman/mark", ["cycle"], {
 		name: "Marksman-mark",
 		expiry: 1,
-		from: message.author.id,
-		to: prot.identifier,
-		target: target.identifier,
+		from,
+		to: prot,
+		target: target,
 	})
 
 	message.channel.send(

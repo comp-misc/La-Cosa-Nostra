@@ -46,8 +46,8 @@ module.exports = function (game, message, params) {
 		game.addAction("follower_of_the_truth_god/contact", ["cycle"], {
 			name: "Truth-God-investigation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

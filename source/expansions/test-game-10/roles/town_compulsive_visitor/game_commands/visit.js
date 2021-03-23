@@ -35,8 +35,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_compulsive_visitor/random_visit", ["cycle"], {
 			name: "Compulsive-Visitor-random-visit",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			priority: -1,
 		})
 
@@ -65,8 +65,8 @@ module.exports = function (game, message, params) {
 	game.addAction("town_compulsive_visitor/visit", ["cycle"], {
 		name: "Compulsive-Visitor-visit",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

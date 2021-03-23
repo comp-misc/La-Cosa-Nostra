@@ -50,15 +50,15 @@ module.exports = function (game, message, params) {
 		game.addAction("quack/doc_protect_self", ["cycle"], {
 			name: "Doc-protect",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 	} else {
 		game.addAction("quack/doc_protect", ["cycle"], {
 			name: "Doc-protect",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

@@ -42,9 +42,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_oracle/oracle", ["cycle"], {
 			name: "Modular-oracle",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			priority: 4,
 		})
 

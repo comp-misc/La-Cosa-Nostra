@@ -12,12 +12,19 @@ interface TargetCommandData extends Omit<CommandProperties<RoleCommand>, "comman
 	canPerformOnSelf?: boolean
 	canPerformOnDeadPlayers?: boolean
 	threshold?: boolean
+	preValidation?: (game: Game, message: Message, params: string[], player: Player) => boolean | Promise<boolean>
 }
 
-const createTargetCommand = (command: TargetRoleCommand, data: TargetCommandData): CommandProperties<RoleCommand> => {
-	const { canPerformOnSelf = false, canPerformOnDeadPlayers = false, threshold = 0.7 } = data
+export const createTargetCommand = (
+	command: TargetRoleCommand,
+	data: TargetCommandData
+): CommandProperties<RoleCommand> => {
+	const { canPerformOnSelf = false, canPerformOnDeadPlayers = false, threshold = 0.7, preValidation } = data
 
 	const rc: RoleCommand = async (game, message, params, player) => {
+		if (preValidation && !(await preValidation(game, message, params, player))) {
+			return
+		}
 		if (params.length === 0) {
 			throw new CommandUsageError()
 		}

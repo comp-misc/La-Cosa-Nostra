@@ -42,9 +42,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_power_inspect/powerinspect", ["cycle"], {
 			name: "Modular-power-inspect",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			priority: 10,
 		})
 

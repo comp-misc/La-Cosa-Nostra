@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_interrogator/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":chair:  You have now selected to not interrogate anyone tonight.")
@@ -68,9 +68,9 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_interrogator/interrogate", ["cycle"], {
 			name: "Sheriff-interrogation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
-			target: to.id,
+			from,
+			to,
+			target: to,
 		})
 
 		var mention = to.getDisplayName()

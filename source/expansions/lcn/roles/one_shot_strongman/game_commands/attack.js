@@ -45,8 +45,8 @@ module.exports = function (game, message, params) {
 		game.addAction("one_shot_strongman/attack", ["cycle"], {
 			name: "OSS-attack",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

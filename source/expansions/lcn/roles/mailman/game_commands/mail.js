@@ -59,8 +59,8 @@ module.exports = function (game, message, params) {
 		game.addAction("mailman/mail", ["cycle"], {
 			name: "Mailman-mail",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			message: send,
 		})
 

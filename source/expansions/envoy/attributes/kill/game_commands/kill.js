@@ -43,8 +43,8 @@ module.exports = function (game, message, params) {
 			name: "Kill-kill",
 			expiry: 1,
 			priority: 5,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			meta: { type: "envoy" },
 		})
 

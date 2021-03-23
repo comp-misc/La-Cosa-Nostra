@@ -107,7 +107,7 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 
 		const player = game.getPlayerByIdentifier(special_vote_types[i].identifier)
 		if (player) {
-			players_voting.push(player.id)
+			players_voting.push(player.identifier)
 		}
 
 		names = auxils.pettyFormat(voters.map((x) => game.getPlayerByIdentifier(x.identifier)?.getDisplayName() || "???"))
@@ -117,7 +117,7 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 	}
 
 	const voters = roles
-		.filter((role) => role.status.alive && !players_voting.includes(role.id))
+		.filter((role) => role.status.alive && !players_voting.includes(role.identifier))
 		.map((role) => role.identifier)
 
 	displays.push("\nNot voting (" + voters.length + "/" + players_alive + ")")

@@ -34,8 +34,8 @@ module.exports = function (game, message, params) {
 		game.addAction("epi_escort/random_roleblock", ["cycle"], {
 			name: "Escort-random-roleblock",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			priority: -1,
 		})
 
@@ -52,8 +52,8 @@ module.exports = function (game, message, params) {
 		game.addAction("epi_escort/random_roleblock", ["cycle"], {
 			name: "Escort-random-roleblock",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			priority: -1,
 		})
 
@@ -73,8 +73,8 @@ module.exports = function (game, message, params) {
 		game.addAction("epi_escort/roleblock", ["cycle"], {
 			name: "Escort-roleblock",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

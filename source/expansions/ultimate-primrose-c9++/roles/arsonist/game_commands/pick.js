@@ -25,8 +25,8 @@ module.exports = function (game, message, params) {
 	game.addAction("arsonist/pick", ["instant"], {
 		name: "Arsonist-pick",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 		choice: choice,
 	})
 }

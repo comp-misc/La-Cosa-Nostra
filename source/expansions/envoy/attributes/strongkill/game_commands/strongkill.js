@@ -43,8 +43,8 @@ module.exports = function (game, message, params) {
 			name: "Strongkill",
 			expiry: 1,
 			priority: 6,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			meta: { type: "envoy" },
 		})
 

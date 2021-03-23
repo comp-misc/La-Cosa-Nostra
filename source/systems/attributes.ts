@@ -8,6 +8,7 @@ let attributes: string[] = []
 let rules: string[] = []
 
 // Add expansions
+
 for (let i = 0; i < expansions.length; i++) {
 	attributes = attributes.concat(expansions[i].additions.attributes.map((x) => expansions[i].identifier + "/" + x))
 	rules = rules.concat(expansions[i].expansion.overrides?.attributes || [])

@@ -39,8 +39,8 @@ module.exports = function (game, message, params) {
 		game.addAction("zm_firefighter_2/random_visit", ["cycle"], {
 			name: "zm_firefighter_2-random-visit",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 			priority: -1,
 		})
 
@@ -63,8 +63,8 @@ module.exports = function (game, message, params) {
 	game.addAction("zm_firefighter_2/visit", ["cycle"], {
 		name: "zm_firefighter_2-visit",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

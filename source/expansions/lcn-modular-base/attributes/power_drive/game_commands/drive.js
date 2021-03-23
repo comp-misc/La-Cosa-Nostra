@@ -67,9 +67,9 @@ module.exports = function (game, message, params) {
 	game.addAction("a/power_drive/drive", ["cycle"], {
 		name: "Modular-drive",
 		expiry: 1,
-		from: message.author.id,
-		to: player1.identifier,
-		target: player2.identifier,
+		from,
+		to: player1,
+		target: player2,
 		meta: { type: "power" },
 		priority: 0.001,
 	})

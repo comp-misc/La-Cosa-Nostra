@@ -43,9 +43,9 @@ module.exports = function (game, message, params) {
 			name: "Modular-superkill",
 			expiry: 1,
 			priority: 6,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			meta: { type: "power" },
 		})
 

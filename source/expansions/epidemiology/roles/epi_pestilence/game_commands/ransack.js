@@ -42,8 +42,8 @@ module.exports = function (game, message, params) {
 		game.addAction("epi_pestilence/self_ransack", ["cycle"], {
 			name: "epi_pestilence-self-ransack",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		message.channel.send(":skull: You have decided to stay at home and attack anyone who visits you tonight.")
@@ -53,8 +53,8 @@ module.exports = function (game, message, params) {
 		game.addAction("epi_pestilence/ransack", ["cycle"], {
 			name: "epi_pestilence-ransack",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

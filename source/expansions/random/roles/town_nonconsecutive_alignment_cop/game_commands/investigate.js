@@ -38,8 +38,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_alignment_cop/no_action", ["cycle"], {
 			name: "SE-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		message.channel.send(":mag_right:  You have now selected to not investigate anyone tonight.")
@@ -68,8 +68,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_alignment_cop/investigate", ["cycle"], {
 			name: "Cop-investigation",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

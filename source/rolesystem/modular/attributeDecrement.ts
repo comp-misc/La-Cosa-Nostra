@@ -1,10 +1,10 @@
-import { Actionable } from "../../systems/game_templates/Actions"
+import { Actionable, ExecutionParams } from "../../systems/game_templates/Actions"
 import Game from "../../systems/game_templates/Game"
 
 const attributeDecrement = <T>(
 	actionable: Actionable<T>,
 	game: Game,
-	params: string[],
+	params?: ExecutionParams,
 	greedy = false,
 	log = true
 ): void => {

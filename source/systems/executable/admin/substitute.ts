@@ -7,7 +7,7 @@ export = async (game: Game, id1: string, id2: string, detailed_substitution = tr
 	const logger = getLogger()
 	const config = game.config
 
-	const player = game.getPlayerById(id1)
+	const player = game.getPlayer(id1)
 	if (!player) {
 		throw new Error(`No player found with id ${id1}`)
 	}

@@ -49,9 +49,9 @@ module.exports = function (game, message, params) {
 		name: "Modular-indoctrinate",
 		expiry: 1,
 		priority: 3,
-		from: message.author.id,
+		from,
 		meta: { type: "power" },
-		to: to.id,
+		to,
 	})
 
 	var mention = to.getDisplayName()

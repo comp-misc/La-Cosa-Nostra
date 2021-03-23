@@ -55,8 +55,8 @@ module.exports = function (game, message, params) {
 	game.addAction("sentinel_doctor/doc_protect", ["cycle"], {
 		name: "Doc-protect",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":syringe: You have decided to heal **" + mention + "**.")

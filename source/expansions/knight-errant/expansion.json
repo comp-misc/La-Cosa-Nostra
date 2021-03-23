@@ -12,5 +12,6 @@
 		"attributes": ["-lcn/*", "lcn/arbitrary"]
 	},
 
-	"dependencies": ["lcn", "forum-auxiliaries"]
+	"dependencies": ["lcn", "forum-auxiliaries"],
+	"playersNeeded": 18
 }

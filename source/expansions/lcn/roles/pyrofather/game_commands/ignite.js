@@ -18,8 +18,8 @@ module.exports = function (game, message) {
 	game.addAction("pyrofather/ignite_vote", ["cycle"], {
 		name: "Pyrofather-ignition-vote",
 		expiry: 1,
-		from: message.author.id,
-		to: message.author.id,
+		from,
+		to: from,
 		priority: 6,
 	})
 }

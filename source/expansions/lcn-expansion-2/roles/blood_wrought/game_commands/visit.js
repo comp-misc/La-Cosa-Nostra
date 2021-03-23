@@ -45,8 +45,8 @@ module.exports = function (game, message, params) {
 	game.addAction("blood_wrought/visit", ["cycle"], {
 		name: "Blood-wrought-visit",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	var mention = to.getDisplayName()

@@ -11,14 +11,12 @@ const config = config_handler()
 const attemptReaddir = (directory: string): string[] => (fs.existsSync(directory) ? fs.readdirSync(directory) : [])
 
 const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expansion[] => {
+	Error.stackTraceLimit = Infinity
+
 	let ret: Expansion[] = []
 
 	for (let i = 0; i < identifiers.length; i++) {
 		const identifier = identifiers[i].toLowerCase()
-
-		if (identifier === "lcn") {
-			throw new Error('Cannot have an expansion named "lcn"!')
-		}
 
 		if (scanned.some((x) => x.identifier === identifier)) {
 			// To prevent scanning twice

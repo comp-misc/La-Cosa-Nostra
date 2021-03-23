@@ -42,9 +42,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_watch/watch", ["cycle"], {
 			name: "Modular-watch",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			priority: 9,
 		})
 

@@ -42,9 +42,9 @@ module.exports = function (game, message, params) {
 		game.addAction("a/power_track/track", ["cycle"], {
 			name: "Modular-track",
 			expiry: 1,
-			from: message.author.id,
+			from,
 			meta: { type: "power" },
-			to: to.id,
+			to,
 			priority: 9,
 		})
 

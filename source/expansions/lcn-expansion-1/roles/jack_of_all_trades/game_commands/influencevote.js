@@ -50,8 +50,8 @@ module.exports = function (game, message, params) {
 		game.addAction("jack_of_all_trades/vote_increment", ["cycle"], {
 			name: "JOAT-influence the vote of",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			priority: 5,
 		})
 

@@ -40,8 +40,8 @@ const kill: RoleCommand = async (game, message, params, from) => {
 		name: "Factionkill-kill",
 		expiry: 1,
 		priority: 6,
-		from: message.author.id,
-		to: to.player.id,
+		from: from,
+		to: to.player,
 	})
 
 	await message.reply(

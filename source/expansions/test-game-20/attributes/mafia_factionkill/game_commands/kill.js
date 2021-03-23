@@ -60,8 +60,8 @@ module.exports = function (game, message, params) {
 			name: "Factionkill-kill",
 			expiry: 1,
 			priority: 6,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 			tags: ["mafia_factional_main"],
 		})
 

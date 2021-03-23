@@ -1,6 +1,6 @@
-import Discord, { ColorResolvable } from "discord.js"
+import Discord, { ColorResolvable, GuildChannel } from "discord.js"
 import capitaliseFirstLetter from "../../auxils/capitaliseFirstLetter"
-import { findCommand } from "../commandFinder"
+import { findCommand, isValidRoleCommandFor } from "../commandFinder"
 import { Command, CommandProperties, UnaffiliatedCommand } from "../CommandType"
 
 const getColor = (type: string): ColorResolvable => {
@@ -21,18 +21,20 @@ const getColor = (type: string): ColorResolvable => {
 const command: UnaffiliatedCommand = async (message, params, config) => {
 	const allCommands = require("../index") as Command[]
 	const filteredCommands = allCommands.filter((cmd) => {
-		//TODO Display role commands in private channel?
-		if (cmd.type === "console" || cmd.type === "role") {
+		if (cmd.type === "console") {
 			return false
 		}
 		if (!message.member.roles.cache.some((r) => r.name === config.permissions.admin) && cmd.type === "admin") {
+			return false
+		}
+		if (cmd.type === "role" && !isValidRoleCommandFor(cmd, message.member, message.channel as GuildChannel)) {
 			return false
 		}
 		return true
 	})
 
 	if (params.length > 0) {
-		const command = findCommand(filteredCommands, params[0])
+		const command = findCommand(filteredCommands, params[0], message.member, message.channel as GuildChannel)
 		if (!command) {
 			await message.reply(`:x: Unknown command. Type '${config["command-prefix"]}help' for a list`)
 			return
@@ -41,7 +43,7 @@ const command: UnaffiliatedCommand = async (message, params, config) => {
 		embed.setTitle("Help for " + config["command-prefix"] + command.name)
 		embed.setDescription(command.description)
 		if (command.usage) {
-			embed.addField("Usage", command.usage || config["command-prefix"] + command.name)
+			embed.addField("Usage", config["command-prefix"] + command.usage || config["command-prefix"] + command.name)
 		}
 		if (command.aliases && command.aliases.length > 0) {
 			embed.addField("Aliases", command.aliases.map((a) => `'${a}'`).join(", "))

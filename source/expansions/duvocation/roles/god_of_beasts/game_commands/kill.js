@@ -48,8 +48,8 @@ module.exports = function (game, message, params) {
 		game.addAction("god_of_beasts/kill", ["cycle"], {
 			name: "god_of_beasts-kill",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

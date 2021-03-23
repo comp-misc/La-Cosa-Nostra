@@ -75,9 +75,9 @@ module.exports = function (game, message, params) {
 	game.addAction("twin_love_god/match", ["postcycle"], {
 		name: "TLG-match",
 		expiry: 2,
-		from: message.author.id,
-		to: one.identifier,
-		target: two.identifier,
+		from,
+		to: one,
+		target: two,
 		tags: ["mafia_factional_side"],
 	})
 

@@ -74,8 +74,8 @@ module.exports = function (game, message, params) {
 	game.addAction("mafia_odd_night_vote_influencer/influence", ["cycle"], {
 		name: "SE-influence",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":bookmark:  You have now selected to influence the vote of **" + mention + "** tonight.")

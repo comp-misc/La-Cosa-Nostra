@@ -68,8 +68,8 @@ module.exports = function (game, message, params) {
 	game.addAction("town_even_night_vote_influencer/block", ["cycle"], {
 		name: "Influencer-block",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":bookmark:  You have now selected to block the vote of **" + mention + "** tonight.")

@@ -41,8 +41,8 @@ module.exports = function (game, message, params) {
 		game.addAction("town_nonconsecutive_vote_influencer/no_action", ["cycle"], {
 			name: "Influencer-no_action",
 			expiry: 1,
-			from: message.author.id,
-			to: message.author.id,
+			from,
+			to: from,
 		})
 
 		return null
@@ -73,8 +73,8 @@ module.exports = function (game, message, params) {
 	game.addAction("town_nonconsecutive_vote_influencer/influence", ["cycle"], {
 		name: "Influencer-influence",
 		expiry: 1,
-		from: message.author.id,
-		to: to.id,
+		from,
+		to,
 	})
 
 	message.channel.send(":bookmark:  You have now selected to influence the vote of **" + mention + "** tonight.")

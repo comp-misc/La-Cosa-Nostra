@@ -45,16 +45,16 @@ module.exports = function (game, message, params) {
 		game.addAction("praetor/convert", ["cycle"], {
 			name: "Praetor-convert",
 			expiry: 1,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		game.addAction("praetor/convert_checker", ["cycle"], {
 			name: "Praetor-convert-checker",
 			expiry: 1,
 			priority: 15,
-			from: message.author.id,
-			to: to.id,
+			from,
+			to,
 		})
 
 		var mention = to.getDisplayName()

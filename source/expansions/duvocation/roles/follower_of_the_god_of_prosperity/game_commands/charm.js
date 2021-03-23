@@ -49,8 +49,8 @@ module.exports = function (game, message, params) {
 				name: "Prosperity-charm",
 				expiry: 1,
 				priority: 0.0000000000000001,
-				from: message.author.id,
-				to: to.id,
+				from,
+				to,
 			})
 
 			var mention = "yourself"
@@ -59,8 +59,8 @@ module.exports = function (game, message, params) {
 				name: "Prosperity-charm",
 				expiry: 1,
 				priority: 0.0000000000000001,
-				from: message.author.id,
-				to: to.id,
+				from,
+				to,
 			})
 
 			var mention = to.getDisplayName()
