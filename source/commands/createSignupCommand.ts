@@ -51,21 +51,24 @@ export const removePlayer = removeRole(
 	(member, config) => `is no longer playing the game! ${formatSignedUpPlayers(member.guild, config)}`
 )
 
-export const formatSignedUpPlayers = (guild: Guild, config: LcnConfig): string => {
-	const signedUpPlayers = guild.members.cache.filter((m) =>
-		m.roles.cache.some((roleName) => roleName.name === config.permissions.pre)
-	).size
-	let requiredPlayers: number
+export const getRequiredPlayers = (guild: Guild, config: LcnConfig): number | undefined => {
 	const expansions: Expansion[] = require("../expansions").default
 	const setup = expansions.find(
 		(expansion) => expansion.expansion.type === "Setup" && expansion.expansion.playersNeeded
 	)
 	if (setup) {
-		requiredPlayers = setup.expansion.playersNeeded as number
+		return setup.expansion.playersNeeded as number
 	} else {
 		const modifiedConfig = configModifier(config)
-		requiredPlayers = modifiedConfig.playing.roles?.length
+		return modifiedConfig.playing.roles?.length
 	}
+}
+
+export const formatSignedUpPlayers = (guild: Guild, config: LcnConfig): string => {
+	const signedUpPlayers = guild.members.cache.filter((m) =>
+		m.roles.cache.some((roleName) => roleName.name === config.permissions.pre)
+	).size
+	const requiredPlayers = getRequiredPlayers(guild, config)
 	if (!requiredPlayers) {
 		return `[${signedUpPlayers}]`
 	}
