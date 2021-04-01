@@ -672,7 +672,11 @@ class Player {
 
 		const role = this.getRoleOrThrow()
 		if (role.routine) {
-			await role.routine(this)
+			try {
+				await role.routine(this)
+			} catch (e) {
+				this.logger.logError(e)
+			}
 		}
 
 		for (let i = 0; i < this.attributes.length; i++) {

@@ -25,6 +25,7 @@ const _fsudo: AdminCommand = async (message, params) => {
 
 	Object.defineProperty(clone, "author", { value: user, writable: true })
 	Object.defineProperty(clone, "member", { value: member, writable: true })
+	Object.defineProperty(clone, "guild", { value: message.guild, writable: true })
 	Object.defineProperty(clone, "content", { value: params.splice(1, Infinity).join(" "), writable: true })
 	Object.defineProperty(clone, "client", { value: client, writable: true })
 	Object.defineProperty(clone, "artificial", { value: "true", writable: false })

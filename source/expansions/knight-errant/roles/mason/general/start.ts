@@ -2,6 +2,8 @@ import cryptographicShuffle from "../../../../../auxils/cryptographicShuffle"
 import { RoleStart } from "../../../../../systems/Role"
 import Player from "../../../../../systems/game_templates/Player"
 import { RolePermission } from "../../../../../systems/executable/misc/createPrivateChannel"
+import getLogger from "../../../../../getLogger"
+import filterDefined from "../../../../../auxils/filterDefined"
 
 const start: RoleStart = async (player) => {
 	const game = player.getGame()
@@ -12,7 +14,7 @@ const start: RoleStart = async (player) => {
 	}
 
 	// Form as many pairs as possible before forming triplets
-	let available = cryptographicShuffle(
+	const available = cryptographicShuffle(
 		game.findAll(
 			(x) => x.role_identifier === "mason" && x.isAlive() && x.identifier !== player.identifier && !x.misc.paired
 		)
@@ -51,13 +53,19 @@ const start: RoleStart = async (player) => {
 
 		const name = "masons-" + players.map((x) => x.alphabet).join("-")
 
-		const perms: RolePermission[] = players.map((x) => {
-			const user = x.getDiscordUser()
-			if (!user) {
-				throw new Error(`No discord user for player ${x.getDisplayName()}`)
-			}
-			return { target: user, permissions: read_perms }
-		})
+		const perms: RolePermission[] = filterDefined(
+			players.map((x) => {
+				const user = x.getDiscordUser()
+				if (!user) {
+					getLogger().log(
+						2,
+						`No discord user for player ${x.getDisplayName()} - can't set permissions for mason channel correctly`
+					)
+					return undefined
+				}
+				return { target: user, permissions: read_perms }
+			})
+		)
 
 		const channel = await game.createPrivateChannel(name, perms)
 

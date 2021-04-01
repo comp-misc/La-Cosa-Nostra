@@ -1,5 +1,6 @@
 {
 	"messages": {
+		"name": "Knight-Errant",
 		"game-start": "**Welcome to Knight-Errant.**\nThis is the general chat channel and the primary platform for gameplay discussion. All players are able to see this channel.",
 		"whisper-log": "**This is the Billboard.**\n\nThis channel is normally used for whispers, but since whispers are disabled in this game, this channel has become a secondary discussion channel. Players are advised to direct the purpose of this channel to suit their needs.",
 		"mafia": "**This is the Mafia Chat.**\n\nThis channel is only open at night for members of the Mafia to communicate.",

@@ -23,7 +23,7 @@ const routines: RoleRoutine = async (player) => {
 	const member = player.getGuildMember()
 
 	if (!member) {
-		throw new Error(`No guild member found for player ${player.getDisplayName()}`)
+		return
 	}
 
 	if (game.isDay()) {

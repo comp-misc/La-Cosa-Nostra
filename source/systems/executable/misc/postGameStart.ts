@@ -59,7 +59,7 @@ export = async (game: Game): Promise<void> => {
 	const whisper_intro = await post.send(format(game, config.messages["whisper-log"]))
 
 	let message = texts.opening
-	message = message.replace("{;opening_quote}", getOpeningQuoteItalic(message))
+	message = message.replace("{;opening_quote}", getOpeningQuoteItalic(config.messages["opening-quote"]))
 	message = message.replace("{;day_or_night}", getDayOrNight(game))
 
 	await log.send(format(game, message))

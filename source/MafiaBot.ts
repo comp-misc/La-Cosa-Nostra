@@ -150,15 +150,18 @@ onWithError("message", async (message) => {
 		return
 	}
 
-	const foundCommand = findCommand(commands, command, message.member, message.channel, (cmd) => cmd.type !== "console")
+	const foundCommand = findCommand(
+		commands,
+		command,
+		message.member,
+		message.channel,
+		(cmd) => cmd.type !== "console"
+	)
 	if (!foundCommand) {
 		await message.reply(":x: Unknown command")
 		return
 	}
 
-	Object.defineProperty(message, "member", {
-		get: () => message.guild?.member(message.author),
-	})
 	const memberMessage = message as MemberMessage
 
 	try {

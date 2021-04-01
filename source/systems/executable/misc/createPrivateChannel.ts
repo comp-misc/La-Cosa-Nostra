@@ -22,8 +22,12 @@ export default async (game: Game, channel_name: string, permissions: RolePermiss
 		permissions.unshift({ target: admin, permissions: config["base-perms"].manage })
 	}
 
-	const category = config["categories"]["private"]
-	const cat_channel = client.channels.cache.find((x) => x instanceof CategoryChannel && x.name === category)
+	const category = config.categories.private
+	const cat_channel = guild.channels.cache.find((x) => x instanceof CategoryChannel && x.name === category)
+
+	if (!cat_channel) {
+		throw new Error(`Unable to find category channel '${category}'`)
+	}
 
 	const channel = (await guild.channels.create(channel_name, {
 		type: "text",

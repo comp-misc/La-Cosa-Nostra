@@ -1,11 +1,13 @@
 import { CategoryChannel, Client } from "discord.js"
 import { LcnConfig } from "../../LcnConfig"
+import getGuild from "../../getGuild"
 
 export = async (client: Client, config: LcnConfig): Promise<void> => {
 	const category = config.categories.private
+	const guild = getGuild(client)
 
 	// Bug with discord.js
-	const cat_channel = client.channels.cache.find(
+	const cat_channel = guild.channels.cache.find(
 		(x) => x.type === "category" && (x as CategoryChannel).name === category
 	) as CategoryChannel
 
