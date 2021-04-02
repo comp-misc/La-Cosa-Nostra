@@ -10,6 +10,8 @@ import Game, { VoteMeta } from "./Game"
 import Logger from "./Logger"
 import { ExpandedRole } from "../executable/roles/getRole"
 import getGuild from "../../getGuild"
+import win_conditions from "../win_conditions"
+import { Attribute } from "../Attribute"
 
 type StatModifier = ((a: number, b: number) => number) | "set" | undefined
 
@@ -36,11 +38,10 @@ interface ChannelMeta {
 	created_at: Date
 }
 
-export interface PlayerAttribute {
+export interface PlayerAttribute extends Attribute {
 	identifier: string
 	expiry: number
 	tags: Record<string, any>
-	attribute: Record<string, any>
 }
 
 export interface PlayerStats {
@@ -159,6 +160,11 @@ class Player {
 		this.identifier = crypto.randomBytes(8).toString("hex")
 
 		const role = this.instantiateRole()
+		if (role["has-actions"] || role["has-actions"] === undefined) {
+			this.ffstatus = FFStatus.OFF
+		} else {
+			this.ffstatus = FFStatus.AUTO
+		}
 
 		this.see_mafia_chat = role["see-mafia-chat"]
 		this.permanent_stats = {
@@ -631,13 +637,15 @@ class Player {
 		if (!role) {
 			throw new Error(`No role found by id ${this.role_identifier}`)
 		}
+		const winCon = win_conditions[role["win-condition"]]
+		if (!winCon) {
+			throw new Error("No win condition found for role " + this.role_identifier)
+		}
+
 		this.role = role
 
 		if (!this.role.tags) {
 			this.role.tags = []
-		}
-		if (role["has-actions"] || role["has-actions"] === undefined) {
-			this.ffstatus = FFStatus.OFF
 		}
 		return role
 	}
@@ -685,7 +693,7 @@ class Player {
 		const role = this.getRoleOrThrow()
 		if (role.routine) {
 			try {
-				await role.routine(this)
+				await this.executeRoutine(role.routine)
 			} catch (e) {
 				this.logger.logError(e)
 			}
@@ -759,10 +767,10 @@ class Player {
 		}
 
 		const addable: PlayerAttribute = {
+			...playerAttribute,
 			identifier: attribute,
 			expiry: expiry,
 			tags: tags,
-			attribute: playerAttribute,
 		}
 
 		if (playerAttribute.start && this.game) {

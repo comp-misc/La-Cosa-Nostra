@@ -12,7 +12,7 @@ const routines: RoleRoutine = async (player) => {
 			channel,
 			":shield: You may choose to protect a player tonight.\n\nUse `" +
 				config["command-prefix"] +
-				"protect <alphabet/name/nobody>` to select your target."
+				"protect <player | nobody>` to select your target."
 		)
 }
 

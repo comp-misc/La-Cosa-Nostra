@@ -14,7 +14,6 @@ const createPrivate = async (client: Client, config: LcnConfig, roles: Player[])
 	let cat_channel = guild.channels.cache.find((x) => x instanceof CategoryChannel && x.name === category)
 	if (!cat_channel) {
 		cat_channel = await guild.channels.create(category, { type: "category" })
-		await delay(500)
 	}
 
 	const createPrivateChannel = async (name: string, assign_permissions_async = false): Promise<TextChannel> => {

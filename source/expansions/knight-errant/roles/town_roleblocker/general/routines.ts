@@ -12,7 +12,7 @@ const routines: RoleRoutine = async (player) => {
 			channel,
 			":no_entry_sign: You may roleblock a player tonight.\n\nUse `" +
 				config["command-prefix"] +
-				"roleblock <alphabet/name/nobody>` to select your target."
+				"roleblock <player | nobody>` to select your target."
 		)
 }
 

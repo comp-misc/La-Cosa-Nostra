@@ -4,21 +4,21 @@ const track: TargetRoleCommand = async (game, message, target, from) => {
 	const actions = game.actions
 
 	// Run checks, etc
-	actions.delete((x) => x.from === from.identifier && x.identifier === "tracker/track")
+	actions.delete((x) => x.from === from.identifier && x.identifier === "town_tracker/track")
 
 	if (target === "nobody") {
-		await message.reply(":mag: You have decided not to track anyone tonight.")
+		await message.reply(":mag_right: You have decided not to track anyone tonight.")
 		return
 	}
 
-	game.addAction("tracker/track", ["cycle"], {
+	game.addAction("town_tracker/track", ["cycle"], {
 		name: "Tracker-track",
 		expiry: 1,
 		from,
 		to: target,
 	})
 
-	await message.reply(":mag: You have decided to track **" + target.getDisplayName() + "** tonight.")
+	await message.reply(":mag_right: You have decided to track **" + target.getDisplayName() + "** tonight.")
 }
 
 track.ALLOW_NONSPECIFIC = false

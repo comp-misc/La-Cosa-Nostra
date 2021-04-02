@@ -32,7 +32,9 @@ const _actions: AdminCommand = async (message, params) => {
 			)
 		} else {
 			actions.forEach((x) =>
-				x.action.tags.includes(key) || x.action.triggers.includes(key as Trigger) || x.action.identifier.includes(key)
+				x.action.tags.includes(key) ||
+				x.action.triggers.includes(key as Trigger) ||
+				x.action.identifier.includes(key)
 					? (x.used = true)
 					: null
 			)
@@ -44,7 +46,13 @@ const _actions: AdminCommand = async (message, params) => {
 	let sendable: string[]
 	if (actions.length > 0) {
 		sendable = actions.map(
-			(x) => "Index **[" + x.index + "]**:\n" + "```fix\n" + JSON.stringify(x.action, auxils.jsonInfinityCensor) + "```"
+			(x) =>
+				"Index **[" +
+				x.index +
+				"]**:\n" +
+				"```json\n" +
+				JSON.stringify(x.action, auxils.jsonInfinityCensor, 2) +
+				"```"
 		)
 	} else {
 		sendable = [":x: No actions found!"]

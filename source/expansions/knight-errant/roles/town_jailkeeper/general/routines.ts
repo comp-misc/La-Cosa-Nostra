@@ -12,9 +12,9 @@ const routines: RoleRoutine = async (player) => {
 		.getGame()
 		.sendPeriodPin(
 			channel,
-			":raised_back_of_hand: You may jail a player tonight using the faction kill.\n\nUse `" +
+			":european_castle: You may jail a player tonight using the faction kill.\n\nUse `" +
 				config["command-prefix"] +
-				"jail <alphabet/name/nobody>` to select your target."
+				"jail <player | nobody>` to select your target."
 		)
 }
 

@@ -1,6 +1,5 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
-import investigationImmunity from "../../../rolesystem/knight_errant/investigationImmunity"
 
 const investigate: RoleActionable = (actionable, game, params) => {
 	game.execute("visit", {
@@ -17,10 +16,10 @@ const investigate: RoleActionable = (actionable, game, params) => {
 	const immunity = target.getStat("detection-immunity", Math.max)
 
 	// Not immune
-	if (immunity >= 1 || investigationImmunity(target)) {
+	if (immunity < 1) {
 		game.addMessage(from, ":mag: You got the result of __False__.")
 	} else if (
-		["cop", "gunsmith", "jailkeeper", "serial_killer"].includes(target.role_identifier) ||
+		["town_alignment_cop", "town_gunsmith", "town_jailkeeper", "serial_killer"].includes(target.role_identifier) ||
 		target.getRoleOrThrow().alignment === "mafia"
 	) {
 		game.addMessage(from, ":mag: You got the result of __True__.")

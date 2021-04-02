@@ -74,6 +74,7 @@ const fastforward: GameCommand = async (game, message, params) => {
 	} else {
 		throw new CommandUsageError("Unknown action '" + params[0] + "'")
 	}
+	await game.checkFastForward()
 }
 
 fastforward.ALLOW_PREGAME = false

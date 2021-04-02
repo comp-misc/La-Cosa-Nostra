@@ -29,7 +29,7 @@ const gameAssign: GameAssignScript = (playing_config) => {
 	}
 
 	// Default setup
-	let setup: RoleSetup = ["mason", "mason", "mafia_goon", "mafia_goon"]
+	let setup: RoleSetup = ["town_neighbour", "town_neighbour", "mafia_goon", "mafia_goon"]
 
 	// Choose from role table using knight move
 	const possibilities = knightMatrix([4, 4], [2, 1])
@@ -59,8 +59,15 @@ const gameAssign: GameAssignScript = (playing_config) => {
 
 	setup.push(serial_killer)
 
-	const townies = new Array(18 - setup.length).fill("vanilla_townie")
+	const townies = new Array(18 - setup.length).fill("town_vanilla_townie")
 	setup = setup.concat(townies)
+
+	for (let c = setup.length - 1; c > 0; c--) {
+		const b = Math.floor(Math.random() * (c + 1))
+		const a = setup[c]
+		setup[c] = setup[b]
+		setup[b] = a
+	}
 
 	logger.log(2, "[Knight-Errant] Running setup: %s [%s]", choice.name, pettyFormat(roles))
 

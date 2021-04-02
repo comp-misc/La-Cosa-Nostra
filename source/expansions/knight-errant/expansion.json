@@ -8,10 +8,11 @@
 	"authors": ["Alduskkel"],
 
 	"overrides": {
-		"roles": ["+knight-errant/*"],
-		"attributes": ["+forum-auxiliaries/*", "+knight-errant/*"]
+		"roles": ["-lcn/*", "knight-errant/*"],
+		"attributes": ["-lcn/*", "forum-auxiliaries/*", "knight-errant/*"],
+		"role_win_conditions": ["-lcn/*", "lcn/mafia", "lcn/serial_killer", "lcn/town"]
 	},
 
-	"dependencies": ["forum-auxiliaries"],
+	"dependencies": ["lcn", "forum-auxiliaries"],
 	"playersNeeded": 18
 }

@@ -16,7 +16,10 @@ const start: RoleStart = (player) => {
 	player.misc.can_pick = true
 
 	const abilities = player.attributes.filter(
-		(x) => x.attribute.modular && x.attribute["modular-details"]["cluster"] === "ability"
+		(x) =>
+			x.attribute.modular &&
+			x.attribute["modular-details"] &&
+			x.attribute["modular-details"]["cluster"] === "ability"
 	)
 
 	abilities.sort((a, b) => a.tags.uses - b.tags.uses)
@@ -29,7 +32,9 @@ const start: RoleStart = (player) => {
 				"\n```\nTo obtain information on a power and how to use it, use `!ability <power name>`."
 		)
 	} else {
-		player.addIntroMessage(":exclamation: You have no limited-use abilities (both **non-passive** and **passive**).")
+		player.addIntroMessage(
+			":exclamation: You have no limited-use abilities (both **non-passive** and **passive**)."
+		)
 	}
 
 	player.misc.strongkills_left = 1

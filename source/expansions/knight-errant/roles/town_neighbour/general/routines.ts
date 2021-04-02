@@ -37,6 +37,6 @@ const routines: RoleRoutine = async (player) => {
 
 routines.ALLOW_DEAD = false
 routines.ALLOW_NIGHT = true
-routines.ALLOW_DAY = false
+routines.ALLOW_DAY = true
 
 export default routines

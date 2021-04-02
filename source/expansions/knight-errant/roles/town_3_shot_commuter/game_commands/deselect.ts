@@ -13,7 +13,7 @@ const deselect: RoleCommand = async (game, message, params, from) => {
 	}
 
 	const already_commuting = actions.exists(
-		(x) => x.from === from.identifier && x.identifier === "three_shot_commuter/commute"
+		(x) => x.from === from.identifier && x.identifier === "town_3_shot_commuter/commute"
 	)
 
 	if (!already_commuting) {
@@ -25,9 +25,10 @@ const deselect: RoleCommand = async (game, message, params, from) => {
 		return
 	}
 
-	actions.delete((x) => x.from === from.identifier && x.identifier === "three_shot_commuter/commute")
+	actions.delete((x) => x.from === from.identifier && x.identifier === "town_3_shot_commuter/commute")
 
-	await message.reply(":runner: You have decided not to commute tonight.")
+	from.misc.already_not_commuting = true
+	await message.reply(":camping: You have decided not to commute tonight.")
 }
 
 deselect.ALLOW_NONSPECIFIC = false

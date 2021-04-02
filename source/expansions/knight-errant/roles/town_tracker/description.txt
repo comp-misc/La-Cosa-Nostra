@@ -1,3 +1,8 @@
-You are an eagle-eyed observer, keen to camp outside houses and see if anyone visits.
+Role Description:
 
-Every night, you may check a player. You will be given a report of who visited that player in the morning.
+"Welcome to _____! You are a Town Tracker.
+
+Role Abilities:
+- You may each night choose to track a player to see who they visited, if anyone. You will receive the report next morning.
+
+Win Condition: You win when all threats to town have been eliminated and there is at least one member of town left."

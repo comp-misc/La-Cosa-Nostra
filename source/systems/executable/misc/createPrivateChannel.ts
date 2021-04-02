@@ -8,8 +8,6 @@ export interface RolePermission {
 
 export default async (game: Game, channel_name: string, permissions: RolePermission[]): Promise<TextChannel> => {
 	const config = game.config
-	const client = game.client
-
 	const guild = game.getGuild()
 
 	const spectator = guild.roles.cache.find((x) => x.name === config.permissions.spectator)

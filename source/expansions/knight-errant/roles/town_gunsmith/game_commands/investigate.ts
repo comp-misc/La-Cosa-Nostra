@@ -1,14 +1,14 @@
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 
 const investigate: TargetRoleCommand = async (game, message, target, from) => {
-	game.actions.delete((x) => x.from === from.identifier && x.identifier === "gunsmith/investigate")
+	game.actions.delete((x) => x.from === from.identifier && x.identifier === "town_gunsmith/investigate")
 
 	if (target === "nobody") {
 		await message.reply(":mag: You have decided not to investigate anyone tonight.")
 		return
 	}
 
-	game.addAction("gunsmith/investigate", ["cycle"], {
+	game.addAction("town_gunsmith/investigate", ["cycle"], {
 		name: "Gunsmith-investigation",
 		expiry: 1,
 		from,

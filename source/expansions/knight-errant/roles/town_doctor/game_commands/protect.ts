@@ -1,13 +1,13 @@
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 
 const protect: TargetRoleCommand = async (game, message, target, from) => {
-	game.actions.delete((x) => x.from === from.identifier && x.identifier === "doctor/protect")
+	game.actions.delete((x) => x.from === from.identifier && x.identifier === "town_doctor/protect")
 	if (target === "nobody") {
 		await message.reply(":shield: You have decided to protect nobody tonight.")
 		return
 	}
 
-	game.addAction("doctor/protect", ["cycle"], {
+	game.addAction("town_doctor/protect", ["cycle"], {
 		name: "Doc-protect",
 		expiry: 1,
 		from,

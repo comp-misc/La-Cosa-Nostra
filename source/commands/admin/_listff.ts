@@ -6,7 +6,7 @@ import Player, { FFStatus } from "../../systems/game_templates/Player"
 const formatList = (title: string, players: Player[]): string => {
 	let result = title + " (" + players.length + ")"
 	if (players.length > 0) {
-		result += ":```python"
+		result += ":```"
 		players.forEach((player, i) => {
 			result += `\n${i + 1}. ${player.getDisplayName()}`
 		})

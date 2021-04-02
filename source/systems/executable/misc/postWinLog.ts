@@ -1,5 +1,5 @@
-import format from "./__formatter.js"
-import texts from "./text/texts.js"
+import format from "./__formatter"
+import texts from "./text/texts"
 import Game from "../../game_templates/Game"
 
 const getSummary = (game: Game) => {

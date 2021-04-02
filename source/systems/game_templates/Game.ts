@@ -820,6 +820,12 @@ class Game {
 			// Player routines - configurable
 			await this.playerRoutines()
 
+			if (!this.isDay()) {
+				for (const player of this.getAlivePlayers()) {
+					await player.sendFFStatusMessage()
+				}
+			}
+
 			this.execute("postcycle", { period: this.period })
 		} else {
 			return null
@@ -930,11 +936,6 @@ class Game {
 		} else {
 			await executable.misc.openMainChats(this)
 		}
-
-		for (const player of this.getAlivePlayers()) {
-			await player.sendFFStatusMessage()
-		}
-
 		await this.checkFastForward()
 	}
 
@@ -1496,8 +1497,8 @@ class Game {
 		}
 	}
 
-	save(silent?: boolean): void {
-		this.timer?.save(silent)
+	save(silent?: boolean, saveFolder?: string): void {
+		this.timer?.save(silent, saveFolder)
 	}
 
 	tentativeSave(silent?: boolean, bufferTime?: number): void {

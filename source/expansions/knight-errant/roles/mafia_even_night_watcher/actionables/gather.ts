@@ -18,11 +18,11 @@ const gather: RoleActionable = (actionable, game) => {
 	visitor_names.sort()
 
 	if (visitor_names.length > 0) {
-		const message = ":mag: " + pettyFormat(visitor_names) + " visited your target last night."
+		const message = ":telescope: " + pettyFormat(visitor_names) + " visited your target last night."
 
 		game.addMessage(lookout, message)
 	} else {
-		game.addMessage(lookout, ":mag: Nobody visited your target last night.")
+		game.addMessage(lookout, ":telescope: Nobody visited your target last night.")
 	}
 }
 

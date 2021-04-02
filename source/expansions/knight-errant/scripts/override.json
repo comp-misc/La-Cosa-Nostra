@@ -1,6 +1,7 @@
 {
 	"messages": {
-		"name": "Knight-Errant",
+		"name": "Knight Errant",
+
 		"game-start": "**Welcome to Knight-Errant.**\nThis is the general chat channel and the primary platform for gameplay discussion. All players are able to see this channel.",
 		"whisper-log": "**This is the Billboard.**\n\nThis channel is normally used for whispers, but since whispers are disabled in this game, this channel has become a secondary discussion channel. Players are advised to direct the purpose of this channel to suit their needs.",
 		"mafia": "**This is the Mafia Chat.**\n\nThis channel is only open at night for members of the Mafia to communicate.",
@@ -8,7 +9,9 @@
 		"opening-quote": "May lies and deceit distort the dimming truth;\nfor calamity is sowed from the seeds of rivalry.",
 		"daytime-quote": "**It is now daytime. The trial has now begun.**",
 		"nighttime-quote": "**Night has descended. This chat is now locked until Daytime starts. Remember to use your night actions if you intend to!**",
-		"no-summary": "*Nothing of interest happened.*",
+
+		"no-summary": "Nothing of importance was uncovered.",
+		"no-summary-day": "The town chose to not lynch anyone.",
 
 		"singular-lynch": ":skull_crossbones: {;player} is dragged to a grotesque execution. A chess knight the size of a large boulder is repeatedly smashed onto their head, killing them. They have been lynched.",
 		"plural-lynch": ":skull_crossbones: {;players} are dragged to a grotesque execution. A chess knight the size of a large boulder is repeatedly smashed onto their heads, killing them. They have been lynched.",
@@ -18,6 +21,8 @@
 	},
 
 	"game": {
+		"show-roles": true,
+
 		"mafia": {
 			"has-chat": true,
 			"chat-name": "mafia",
@@ -28,11 +33,15 @@
 			"night-chat": false
 		},
 
+		"fast-forwarding": {
+			"allow": true
+		},
+
 		"day-zero": true,
 		"lynch-ratio-floored": 0,
 
 		"lynch": {
-			"top-voted-lynch": false,
+			"top-voted-lynch": true,
 			"top-voted-lynch-minimum-votes": 0,
 
 			"tied-random": false,

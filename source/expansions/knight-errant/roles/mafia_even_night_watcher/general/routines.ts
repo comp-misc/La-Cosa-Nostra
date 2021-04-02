@@ -10,9 +10,9 @@ const routines: RoleRoutine = async (player) => {
 			.getGame()
 			.sendPeriodPin(
 				channel,
-				":mag: You may choose to watch a player tonight instead of using the factional kill.\n\nUse `" +
+				":telescope: You may choose to watch a player tonight instead of using the factional kill.\n\nUse `" +
 					config["command-prefix"] +
-					"watch <alphabet/name/nobody>` to select your target."
+					"watch <player | nobody>` to select your target."
 			)
 	} else {
 		await player.getGame().sendPeriodPin(channel, ":mag: You may not watch a player tonight.")

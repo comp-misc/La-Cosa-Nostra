@@ -10,7 +10,7 @@ const roleblock_noresult: RoleActionable = (actionable, game) => {
 	const previously_roleblocked = player.getStatus("roleblocked")
 
 	if (watching && !previously_roleblocked) {
-		game.addMessage(player, ":mag: You got __No Result__.")
+		game.addMessage(player, ":no_entry_sign:  Your action was blocked. You got no result.")
 	}
 }
 

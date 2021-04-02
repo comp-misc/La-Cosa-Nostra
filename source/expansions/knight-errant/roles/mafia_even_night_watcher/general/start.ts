@@ -2,7 +2,7 @@
 
 import { RoleStart } from "../../../../../systems/Role"
 
-const start: RoleStart = (player) => {
+const start: RoleStart = async (player) => {
 	player.getGame().addAction("mafia_even_night_watcher/roleblock_noresult", ["roleblock"], {
 		from: player,
 		to: player,
@@ -10,7 +10,7 @@ const start: RoleStart = (player) => {
 		tags: ["permanent"],
 	})
 
-	player.addAttribute("mafia_factionkill")
+	await player.addAttribute("mafia_factionkill")
 }
 
 export default start

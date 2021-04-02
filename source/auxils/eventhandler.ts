@@ -27,13 +27,13 @@ export = (client: Client, config: LcnConfig): void => {
 		return ch
 	}
 	onWithError("message", function (message) {
-		if (hasTimer()) {
+		if (hasTimer() && getTimer().game) {
 			getTimer().game.execute("chat", { message: message })
 		}
 	})
 
 	onWithError("message", async (message) => {
-		if (!hasTimer() || getTimer().game.state !== "playing" || !message.member) {
+		if (!hasTimer() || !getTimer().game || getTimer().game.state !== "playing" || !message.member) {
 			return
 		}
 

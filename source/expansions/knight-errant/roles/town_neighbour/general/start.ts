@@ -16,7 +16,11 @@ const start: RoleStart = async (player) => {
 	// Form as many pairs as possible before forming triplets
 	const available = cryptographicShuffle(
 		game.findAll(
-			(x) => x.role_identifier === "mason" && x.isAlive() && x.identifier !== player.identifier && !x.misc.paired
+			(x) =>
+				x.role_identifier === "town_neighbour" &&
+				x.isAlive() &&
+				x.identifier !== player.identifier &&
+				!x.misc.paired
 		)
 	)
 
@@ -51,7 +55,7 @@ const start: RoleStart = async (player) => {
 			return 0
 		})
 
-		const name = "masons-" + players.map((x) => x.alphabet).join("-")
+		const name = "mason-" + players.map((x) => x.alphabet).join("-")
 
 		const perms: RolePermission[] = filterDefined(
 			players.map((x) => {
@@ -76,7 +80,7 @@ const start: RoleStart = async (player) => {
 			players[i].addSpecialChannel(channel)
 		}
 
-		await channel.send("**This is the Masons' chat.**\n\nThis chat is open to involved parties only at night.")
+		await channel.send("**This is the neighbour' chat.**\n\nThis chat is open to involved parties only at night.")
 
 		game.setChannel(name, channel)
 	}

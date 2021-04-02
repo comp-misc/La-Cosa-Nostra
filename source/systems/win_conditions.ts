@@ -2,6 +2,7 @@ import expansions from "../expansions"
 import auxils from "./auxils"
 import Game from "./game_templates/Game"
 import Player from "./game_templates/Player"
+import roles from "./roles"
 
 export interface WinCondition {
 	(game: Game): boolean
@@ -49,4 +50,12 @@ for (let i = 0; i < scripts.length; i++) {
 	ret[key] = runnable
 }
 
+for (const [id, role] of Object.entries(roles)) {
+	const winCon = ret[role.role["win-condition"]]
+	if (!winCon) {
+		throw new Error("Unknown win condition '" + role.role["win-condition"] + "' for role " + id)
+	}
+}
+
+console.log("Win Conditions: ", Object.keys(ret))
 export default ret

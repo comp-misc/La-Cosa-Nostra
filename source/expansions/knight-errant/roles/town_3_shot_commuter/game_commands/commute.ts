@@ -10,7 +10,7 @@ const commute: RoleCommand = async (game, message, params, from) => {
 	}
 
 	const already_commuting = game.actions.exists(
-		(x) => x.from === from.identifier && x.identifier === "three_shot_commuter/commute"
+		(x) => x.from === from.identifier && x.identifier === "town_3_shot_commuter/commute"
 	)
 
 	if (already_commuting) {
@@ -22,9 +22,11 @@ const commute: RoleCommand = async (game, message, params, from) => {
 		return
 	}
 
-	await message.reply(":runner: You have decided to commute tonight.")
+	from.misc.already_not_commuting = false
 
-	game.addAction("three_shot_commuter/commute", ["cycle"], {
+	await message.reply(":camping: You have decided to commute tonight.")
+
+	game.addAction("town_3_shot_commuter/commute", ["cycle"], {
 		name: "Commuter-commute",
 		expiry: 1,
 		from,

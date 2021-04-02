@@ -6,6 +6,7 @@ import roles from "./roles"
 import { Actionable, ExecutionParams } from "./game_templates/Actions"
 import Game from "./game_templates/Game"
 import recursiveFileFind from "../auxils/recursiveFileFind"
+import requireScript from "../auxils/requireScript"
 
 export interface RoleActionable<T = unknown> {
 	(actionable: Actionable<T>, game: Game, params?: ExecutionParams): void | boolean
@@ -21,7 +22,7 @@ const global_actionables = cycle(usable_directory)
 
 global_actionables.forEach((actionable) => {
 	const key = "g/" + actionable.substring(usable_directory.length + 1, actionable.length - 3)
-	actionables[key] = require(actionable)
+	actionables[key] = requireScript(actionable)
 })
 
 expansions.forEach((expansion) => {
@@ -29,8 +30,9 @@ expansions.forEach((expansion) => {
 
 	const global_actionables = cycle(usable_directory)
 	for (let j = 0; j < global_actionables.length; j++) {
-		const key = "g/" + global_actionables[j].substring(usable_directory.length + 1, global_actionables[j].length - 3)
-		actionables[key] = require(global_actionables[j])
+		const key =
+			"g/" + global_actionables[j].substring(usable_directory.length + 1, global_actionables[j].length - 3)
+		actionables[key] = requireScript(global_actionables[j])
 	}
 })
 
@@ -40,7 +42,7 @@ for (const role in roles) {
 
 	actions.forEach((action) => {
 		const key = role + action.substring(directory.length, action.length - 3)
-		actionables[key] = require(action)
+		actionables[key] = requireScript(action)
 	})
 }
 
@@ -50,7 +52,7 @@ for (const attribute in attributes) {
 
 	for (let i = 0; i < actions.length; i++) {
 		const key = "a/" + attribute + actions[i].substring(directory.length, actions[i].length - 3)
-		actionables[key] = require(actions[i])
+		actionables[key] = requireScript(actions[i])
 	}
 }
 

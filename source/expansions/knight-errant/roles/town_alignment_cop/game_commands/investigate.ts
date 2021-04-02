@@ -1,9 +1,9 @@
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 
 const investigate: TargetRoleCommand = async (game, message, target, from) => {
-	game.actions.delete((x) => x.from === from.identifier && x.identifier === "cop/investigate")
+	game.actions.delete((x) => x.from === from.identifier && x.identifier === "town_alignment_cop/investigate")
 	if (target === "nobody") {
-		await message.reply(":mag: You have decided not to investigate anyone tonight.")
+		await message.reply(":mag_right: You have decided not to investigate anyone tonight.")
 		return
 	}
 
@@ -13,7 +13,7 @@ const investigate: TargetRoleCommand = async (game, message, target, from) => {
 		from,
 		to: target,
 	})
-	await message.reply(":mag: You have decided to investigate **" + target.getDisplayName() + "** tonight.")
+	await message.reply(":mag_right: You have decided to investigate **" + target.getDisplayName() + "** tonight.")
 }
 
 investigate.ALLOW_NONSPECIFIC = false

@@ -15,7 +15,7 @@ import botDirectories from "./BotDirectories"
 import * as CommandExecutors from "./commands/CommandExecutors"
 import { findCommand } from "./commands/commandFinder"
 import getGuild from "./getGuild"
-import { getTimer, hasTimer } from "./getTimer"
+import { getTimer, hasTimer, setTimer } from "./getTimer"
 import init from "./init"
 import { ChannelsConfig } from "./LcnConfig"
 import MemberMessage from "./MemberMessage"
@@ -80,7 +80,7 @@ onWithError("ready", async () => {
 
 	ready()
 
-	setStatus(client)
+	await setStatus(client)
 
 	let save_status = "NONE ATTEMPTED"
 
@@ -283,7 +283,7 @@ async function autoload() {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-extra-semi
-	;(process as any)["timer"] = timer
+	setTimer(timer)
 
 	logger.log(2, "\x1b[1m%s\x1b[0m", "Restored save.")
 

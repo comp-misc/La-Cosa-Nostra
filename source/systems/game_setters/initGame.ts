@@ -13,7 +13,7 @@ import { Client } from "discord.js"
 import { LcnConfig } from "../../LcnConfig"
 import Timer from "../game_templates/Timer"
 import getLogger from "../../getLogger"
-import { getTimer, hasTimer } from "../../getTimer"
+import { getTimer, hasTimer, removeTimer, setTimer } from "../../getTimer"
 
 export class GameStartError extends Error {
 	constructor(message: string) {
@@ -35,8 +35,7 @@ const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 	// Destroy previous timer
 	if (hasTimer()) {
 		getTimer().destroy()
-
-		delete (process as any).timer
+		removeTimer()
 		logger.log(2, "Destroyed previous Timer instance.")
 	}
 
@@ -70,7 +69,7 @@ const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 	await game.postPrimeLog()
 
 	logger.log(2, "Game Timer instance created.")
-	;(process as any).timer = timer
+	setTimer(timer)
 
 	return timer
 }

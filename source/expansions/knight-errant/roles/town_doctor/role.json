@@ -25,5 +25,6 @@
 
 	"reveal-role-on-interrogation": false,
 
-	"win-condition": "town"
+	"win-condition": "town",
+	"has-actions": true
 }

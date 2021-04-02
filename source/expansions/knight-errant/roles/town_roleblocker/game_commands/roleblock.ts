@@ -3,14 +3,14 @@ import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/
 const roleblock: TargetRoleCommand = async (game, message, target, from) => {
 	const actions = game.actions
 
-	actions.delete((x) => x.from === from.identifier && x.identifier === "roleblocker/roleblock")
+	actions.delete((x) => x.from === from.identifier && x.identifier === "town_roleblocker/roleblock")
 
 	if (target === "nobody") {
 		await message.reply(":no_entry_sign: You have decided not to roleblock anyone tonight.")
 		return
 	}
 
-	game.addAction("roleblocker/roleblock", ["cycle"], {
+	game.addAction("town_roleblocker/roleblock", ["cycle"], {
 		name: "Roleblocker-roleblock",
 		expiry: 1,
 		from,

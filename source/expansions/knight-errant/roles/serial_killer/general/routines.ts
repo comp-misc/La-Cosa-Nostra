@@ -30,7 +30,10 @@ const routines: RoleRoutine = async (player) => {
 	}
 
 	const abilities = player.attributes.filter(
-		(x) => x.attribute.modular && x.attribute["modular-details"]["cluster"] === "ability"
+		(x) =>
+			x.attribute.modular &&
+			x.attribute["modular-details"] &&
+			x.attribute["modular-details"]["cluster"] === "ability"
 	)
 
 	abilities.sort((a, b) => a.tags.uses - b.tags.uses)

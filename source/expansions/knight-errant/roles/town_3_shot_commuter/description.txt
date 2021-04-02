@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town 3-shot Commuter.
+
+Role Abilities:
+- You can at night, twice during the game, choose to commute. As a result of this, all actions towards you will fail.
+
+Win Condition: You win when all threats to town have been eliminated and there is at least one member of town left."

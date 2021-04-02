@@ -5,14 +5,15 @@ const roleblock: TargetRoleCommand = async (game, message, target, from) => {
 
 	actions.delete(
 		(x) =>
-			x.from === from.identifier && (x.tags.includes("mafia_factional_side") || x.tags.includes("mafia_factional_main"))
+			x.from === from.identifier &&
+			(x.tags.includes("mafia_factional_side") || x.tags.includes("mafia_factional_main"))
 	)
 
 	if (target === "nobody") {
 		await message.reply(":no_entry_sign: You have decided not to roleblock anyone tonight.")
 		await game
 			.getChannel("mafia")
-			.send(":exclamation: **" + from.getDisplayName() + "** is not roleblocking anyone tonight.")
+			.send(":no_entry_sign: **" + from.getDisplayName() + "** is not roleblocking anyone tonight.")
 		return null
 	}
 
@@ -29,7 +30,7 @@ const roleblock: TargetRoleCommand = async (game, message, target, from) => {
 	await message.reply(":no_entry_sign: You have decided to roleblock **" + mention + "** tonight.")
 	await game
 		.getChannel("mafia")
-		.send(":exclamation: **" + from.getDisplayName() + "** is roleblocking **" + mention + "** tonight.")
+		.send(":no_entry_sign: **" + from.getDisplayName() + "** is roleblocking **" + mention + "** tonight.")
 }
 
 roleblock.ALLOW_NONSPECIFIC = false

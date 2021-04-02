@@ -1,4 +1,3 @@
-import investigationImmunity from "../../../rolesystem/knight_errant/investigationImmunity"
 import { Alignment } from "../../../../../systems/Role"
 import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
@@ -28,8 +27,8 @@ const investigate: RoleActionable = (actionable, game, params) => {
 	const targetRole = target.getRoleOrThrow()
 
 	// Not immune
-	if (immunity < 1 && !investigationImmunity(target)) {
-		if (targetRole["reveal-role-on-interrogation"] === true) {
+	if (immunity < 1) {
+		if (targetRole["reveal-role-on-interrogation"]) {
 			const response = responses["role"].replace(new RegExp("{;role}", "g"), targetRole["role-name"])
 			game.addMessage(from, response)
 		} else {

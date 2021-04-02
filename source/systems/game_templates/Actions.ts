@@ -4,7 +4,7 @@ import actionables from "../actionables" // for now
 import crypto from "crypto"
 import auxils from "../auxils"
 import Game from "./Game"
-import { Message, Snowflake } from "discord.js"
+import { Message } from "discord.js"
 import getLogger from "../../getLogger"
 import Player, { PlayerIdentifier } from "./Player"
 
@@ -196,55 +196,30 @@ export default class Actions {
 		})
 	}
 
-	find<T, K extends keyof Actionable<T>>(key: K, value: Actionable<T>[K]): Actionable<T> | null
-	find<T>(condition: ActionablePredicate<unknown>): Actionable<T> | null
-
-	find<T>(key: keyof Actionable<T> | ActionablePredicate<unknown>, value?: any): Actionable<T> | null {
-		if (typeof key === "function") {
-			return (this.actions.find(key) || null) as Actionable<T> | null
-		}
-		return (this.actions.find((action) => (action as Actionable<T>)[key] === value) || null) as Actionable<T> | null
+	find<T>(condition: ActionablePredicate<unknown>): Actionable<T> | null {
+		return (this.actions.find(condition) || null) as Actionable<T> | null
 	}
 
-	findAll<T, K extends keyof Actionable<T>>(key: K, value: Actionable<T>[K]): Actionable<T>[]
-	findAll<T>(condition: ActionablePredicate<unknown>): Actionable<T>[]
-
-	findAll<T>(key: keyof Actionable<T> | ActionablePredicate<unknown>, value?: any): Actionable<T>[] {
-		if (typeof key === "function") {
-			return (this.actions.filter(key) || null) as Actionable<T>[]
-		}
-		return (this.actions.filter((action) => (action as Actionable<T>)[key] === value) || null) as Actionable<T>[]
+	findAll<T>(condition: ActionablePredicate<unknown>): Actionable<T>[] {
+		return (this.actions.filter(condition) || null) as Actionable<T>[]
 	}
 
-	delete<T, K extends keyof Actionable<T>>(key: K, value: Actionable<T>[K]): Actionable<T>[]
-	delete<T>(condition: ActionablePredicate<unknown>): Actionable<T>[]
-
-	delete<T>(key: keyof Actionable<T> | ActionablePredicate<unknown>, value?: any): Actionable<T>[] {
-		const ret: Actionable<T>[] = []
-
-		for (let i = this.actions.length - 1; i >= 0; i--) {
-			const action = this.actions[i]
-			if (!action) continue
-
-			if (typeof key === "function" && key(this.actions[i])) {
-				ret.push(action as Actionable<T>)
-				this.actions.splice(i, 1)
-			} else if ((action as Actionable<T>)[key as keyof Actionable<T>] === value) {
-				ret.push(action as Actionable<T>)
-				this.actions.splice(i, 1)
+	delete<T>(condition: ActionablePredicate<unknown>): Actionable<T>[] {
+		const toKeep: StoredActionable<unknown>[] = []
+		const toRemove: Actionable<T>[] = []
+		for (const action of this.actions) {
+			if (condition(action)) {
+				toRemove.push(action as Actionable<T>)
+			} else {
+				toKeep.push(action)
 			}
 		}
-		return ret
+		this.actions = toKeep
+		return toRemove
 	}
 
-	exists<T, K extends keyof Actionable<T>>(key: K, value: Actionable<T>[K]): boolean
-	exists(condition: ActionablePredicate<unknown>): boolean
-
-	exists<T>(key: keyof Actionable<T> | ActionablePredicate<unknown>, value?: any): boolean {
-		if (typeof key === "function") {
-			return this.actions.some(key)
-		}
-		return this.actions.some((action) => (action as Actionable<T>)[key] === value)
+	exists(condition: ActionablePredicate<unknown>): boolean {
+		return this.actions.some(condition)
 	}
 
 	get(): Actionable<unknown>[] {

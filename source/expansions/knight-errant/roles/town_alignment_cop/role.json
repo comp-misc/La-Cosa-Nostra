@@ -1,5 +1,5 @@
 {
-	"role-name": "Town Cop",
+	"role-name": "Town Alignment Cop",
 
 	"alignment": "town",
 	"class": "unclassified",
@@ -25,5 +25,6 @@
 
 	"reveal-role-on-interrogation": false,
 
-	"win-condition": "town"
+	"win-condition": "town",
+	"has-actions": true
 }

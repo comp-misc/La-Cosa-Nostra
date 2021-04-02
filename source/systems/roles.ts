@@ -8,7 +8,6 @@ import attemptRequiring from "../auxils/attemptRequiring"
 import { Role, RoleInfo, RoleProperties, RoleRoutine, RoleStart } from "./Role"
 import { tryReadCommands } from "../commands/commandReader"
 import { RoleCommand } from "../commands/CommandType"
-import getLogger from "../getLogger"
 
 const attemptRead = (directory: string): string | null => {
 	const exists = fs.existsSync(directory)
@@ -70,6 +69,14 @@ for (let i = 0; i < roles.length; i++) {
 			throw new Error(`${role}'s info.json does not exist`)
 		}
 
+		if (!role_json["win-condition"]) {
+			throw new Error("No win condition for " + role)
+		}
+
+		if (role_json["has-actions"] === undefined) {
+			console.log("No has-actions for " + role)
+		}
+
 		ret[role] = {
 			directory,
 			role: role_json,
@@ -94,5 +101,7 @@ for (let i = 0; i < roles.length; i++) {
 		}
 	}
 }
+
+console.log("Roles: ", Object.keys(ret))
 
 export default ret

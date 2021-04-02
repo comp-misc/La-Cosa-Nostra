@@ -274,7 +274,7 @@ class Timer {
 		}
 	}
 
-	tentativeSave(silent = false, buffer_time = 500): void {
+	tentativeSave(silent = false, buffer_time = 500, saveFolder?: string): void {
 		// Save the game after requests stop coming in
 		if (this._tentativeSaveTimeout) {
 			clearTimeout(this._tentativeSaveTimeout)
@@ -285,11 +285,17 @@ class Timer {
 			if (!silent) {
 				this.logger.log(1, "Tentative save executed.")
 			}
-			this.save(true)
+			this.save(true, saveFolder)
 		}, buffer_time)
 	}
 
-	save(silent = false): void {
+	save(silent = false, saveFolder = "game_cache"): void {
+		if (!fs.existsSync(data_directory + "/" + saveFolder)) {
+			fs.mkdirSync(data_directory + "/" + saveFolder)
+		}
+		if (!fs.existsSync(data_directory + "/" + saveFolder + "/players")) {
+			fs.mkdirSync(data_directory + "/" + saveFolder + "/players")
+		}
 		// Save all components
 
 		// Clone Game instance to savable
@@ -317,7 +323,10 @@ class Timer {
 		savable.last_save_date = new Date()
 
 		// Save object
-		fs.writeFileSync(data_directory + "/game_cache/game.json", JSON.stringify(savable, jsonInfinityCensor, 2))
+		fs.writeFileSync(
+			data_directory + "/" + saveFolder + "/game.json",
+			JSON.stringify(savable, jsonInfinityCensor, 2)
+		)
 
 		// All of players class should be serialisable without deletions
 		for (let i = 0; i < players.length; i++) {
@@ -338,7 +347,7 @@ class Timer {
 			const string = JSON.stringify(player, jsonInfinityCensor, 2)
 
 			// Saved by Discord ID
-			fs.writeFileSync(data_directory + "/game_cache/players/" + id + ".json", string)
+			fs.writeFileSync(data_directory + "/" + saveFolder + "/players/" + id + ".json", string)
 		}
 
 		if (!silent) {
@@ -346,21 +355,21 @@ class Timer {
 		}
 	}
 
-	static load(client: Client, config: LcnConfig): Promise<Timer> {
-		return loadGame(client, config)
+	static load(client: Client, config: LcnConfig, saveFolder?: string): Promise<Timer> {
+		return loadGame(client, config, saveFolder)
 	}
 }
 
-const loadGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
+const loadGame = async (client: Client, config: LcnConfig, saveFolder = "game_cache"): Promise<Timer> => {
 	// Loads
-	const save = JSON.parse(fs.readFileSync(data_directory + "/game_cache/game.json", "utf8"), jsonReviver)
+	const save = JSON.parse(fs.readFileSync(data_directory + "/" + saveFolder + "/game.json", "utf8"), jsonReviver)
 
 	// Save is a game instance
 	let game = new Game(client, config, [])
 	game = Object.assign(game, save)
 
 	// Reload all players
-	const player_saves = fs.readdirSync(data_directory + "/game_cache/players/")
+	const player_saves = fs.readdirSync(data_directory + "/" + saveFolder + "/players/")
 	const players = []
 
 	for (let i = 0; i < player_saves.length; i++) {
@@ -370,7 +379,7 @@ const loadGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 		}
 
 		// Reload the save
-		const string = fs.readFileSync(data_directory + "/game_cache/players/" + player_saves[i], "utf8")
+		const string = fs.readFileSync(data_directory + "/" + saveFolder + "/players/" + player_saves[i], "utf8")
 		const player_save = JSON.parse(string, jsonReviver)
 
 		let player = new Player(client)

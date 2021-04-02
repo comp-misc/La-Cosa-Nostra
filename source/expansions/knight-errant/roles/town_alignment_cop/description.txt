@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Alignment Cop.
+
+Role Abilities:
+- You may each night choose to investigate a player to learn their alignment. You will receive the report next morning in the form of «Town» or «Anti-Town».
+
+Win Condition: You win when all threats to town have been eliminated and there is at least one member of town left."

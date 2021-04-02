@@ -21,10 +21,8 @@
 	"investigation": ["Town Bulletproof"],
 	"secondary-roles": null,
 
-	"role-actions": false,
-	"factional-abilities": [],
-
 	"reveal-role-on-interrogation": false,
 
-	"win-condition": "town"
+	"win-condition": "town",
+	"has-actions": false
 }

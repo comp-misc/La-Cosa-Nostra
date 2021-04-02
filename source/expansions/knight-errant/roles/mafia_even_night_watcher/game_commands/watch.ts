@@ -4,20 +4,17 @@ const watch: TargetRoleCommand = async (game, message, target, from) => {
 	const actions = game.actions
 	// Run checks, etc
 
-	// if (game.getPeriod() % 4 !== 3) {
-	// 	return null
-	// }
-
 	actions.delete(
 		(x) =>
-			x.from === from.identifier && (x.tags.includes("mafia_factional_side") || x.tags.includes("mafia_factional_main"))
+			x.from === from.identifier &&
+			(x.tags.includes("mafia_factional_side") || x.tags.includes("mafia_factional_main"))
 	)
 
 	if (target === "nobody") {
 		await message.reply(":mag: You have decided not to watch anyone tonight.")
 		await game
 			.getChannel("mafia")
-			.send(":exclamation: **" + from.getDisplayName() + "** is not watching anyone tonight.")
+			.send(":telescope: **" + from.getDisplayName() + "** is not watching anyone tonight.")
 		return
 	}
 
@@ -31,10 +28,10 @@ const watch: TargetRoleCommand = async (game, message, target, from) => {
 
 	const mention = target.getDisplayName()
 
-	await message.reply(":mag: You have decided to watch **" + mention + "** tonight.")
+	await message.reply(":telescope: You have decided to watch **" + mention + "** tonight.")
 	await game
 		.getChannel("mafia")
-		.send(":exclamation: **" + from.getDisplayName() + "** is watching **" + mention + "** tonight.")
+		.send(":telescope: **" + from.getDisplayName() + "** is watching **" + mention + "** tonight.")
 }
 
 watch.ALLOW_NONSPECIFIC = false
@@ -47,7 +44,7 @@ watch.DISALLOW_NIGHT = false
 export default createTargetCommand(watch, {
 	preValidation: async (game, message) => {
 		if (game.getPeriod() % 4 !== 3) {
-			await message.reply(":x: You can't watch a player on this night")
+			await message.reply(":x: You may only track on even nights")
 			return false
 		}
 		return true

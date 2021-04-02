@@ -2,7 +2,7 @@
 import { RoleStart } from "../../../../../systems/Role"
 
 const start: RoleStart = (player) =>
-	player.getGame().addAction("tracker/roleblock_noresult", ["roleblock"], {
+	player.getGame().addAction("town_tracker/roleblock_noresult", ["roleblock"], {
 		from: player,
 		to: player,
 		expiry: Infinity,

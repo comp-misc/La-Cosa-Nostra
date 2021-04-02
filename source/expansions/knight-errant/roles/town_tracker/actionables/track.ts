@@ -9,7 +9,7 @@ const track: RoleActionable = (actionable, game) => {
 		reason: "Tracker-track",
 	})
 
-	game.addAction("tracker/gather", ["cycle"], {
+	game.addAction("town_tracker/gather", ["cycle"], {
 		name: "Tracker-gather",
 		expiry: 1,
 		from: game.getPlayerOrThrow(actionable.from),

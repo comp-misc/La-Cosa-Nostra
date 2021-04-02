@@ -10,9 +10,9 @@ const routines: RoleRoutine = async (player) => {
 		.getGame()
 		.sendPeriodPin(
 			channel,
-			":mag: You may investigate a player tonight.\n\nUse `" +
+			":mag_right: You may investigate a player tonight.\n\nUse `" +
 				config["command-prefix"] +
-				"investigate <alphabet/name/nobody>` to select your target."
+				"investigate <player | nobody>` to select your target."
 		)
 }
 

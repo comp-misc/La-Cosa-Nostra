@@ -12,7 +12,7 @@ const routines: RoleRoutine = async (player) => {
 			channel,
 			":mag: You may choose to track a player tonight.\n\nUse `" +
 				config["command-prefix"] +
-				"track <alphabet/name/nobody>` to select your target."
+				"track <player | nobody>` to select your target."
 		)
 }
 

@@ -1,4 +1,4 @@
-import { getTimer, hasTimer } from "../../../getTimer"
+import { getTimer, hasTimer, setTimer } from "../../../getTimer"
 import deleteTimer from "../../../systems/game_reset/deleteTimer"
 import Timer from "../../../systems/game_templates/Timer"
 import { AdminCommand } from "../../CommandType"
@@ -19,9 +19,8 @@ const _reload: AdminCommand = async (message, params, config) => {
 
 	deleteTimer()
 
-	const timer = Timer.load(client, config)
-
-	;(process as any).timer = timer
+	const timer = await Timer.load(client, config)
+	setTimer(timer)
 
 	await message.channel.send(":ok: Reloaded.")
 }

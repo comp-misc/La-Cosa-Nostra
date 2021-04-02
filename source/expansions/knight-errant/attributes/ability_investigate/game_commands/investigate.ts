@@ -1,4 +1,4 @@
-import { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
+import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
 
 const investigate: TargetRoleCommand = async (game, message, target, from) => {
@@ -28,4 +28,7 @@ investigate.ALIVE_CANNOT_USE = false
 investigate.DISALLOW_DAY = true
 investigate.DISALLOW_NIGHT = false
 
-export default investigate
+export default createTargetCommand(investigate, {
+	name: "investigate",
+	description: "Investigate a player and find out their alignment",
+})
