@@ -1,4 +1,4 @@
-import { PermissionObject } from "discord.js"
+import { PermissionObject, Snowflake } from "discord.js"
 
 export interface GameConfig {
 	mafia: {
@@ -54,6 +54,7 @@ export interface GameConfig {
 		"hide-night": boolean
 		exceptions: string[]
 	}
+	"show-roles": boolean
 }
 
 export interface PermissionsConfig {
@@ -108,6 +109,11 @@ export interface MessageChecksConfig {
 		exempt: string[]
 		"minimum-character-count": number
 	}
+}
+
+export interface EmojiData {
+	name: string
+	id: Snowflake
 }
 
 export interface ChannelsConfig {
@@ -178,6 +184,7 @@ export interface LcnConfig {
 	"file-log-level": number
 	"encode-cache": boolean
 	"disabled-commands": string[]
+	emoji: Record<string, EmojiData>
 
 	"base-perms": BasePermsConfig
 	categories: CategoriesConfig

@@ -1,12 +1,14 @@
 // Executes BEFORE introduction
 
-import { RoleStart } from "../../../../../systems/Role"
+import { AttributeStart } from "../../../../../systems/Attribute"
 
-const start: RoleStart = (player) => {
+const start: AttributeStart = (player) => {
 	if (
 		player
 			.getGame()
-			.actions.find((x) => x.from === player.identifier && x.identifier === "a/ability_investigate/roleblock_noresult")
+			.actions.find(
+				(x) => x.from === player.identifier && x.identifier === "a/ability_investigate/roleblock_noresult"
+			)
 	) {
 		return
 	}

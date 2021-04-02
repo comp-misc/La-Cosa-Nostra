@@ -1,4 +1,5 @@
 import Player, { PlayerStats } from "./game_templates/Player"
+import { CommandType, RoleCommand } from "../commands/CommandType"
 
 export type Alignment = "town" | "mafia" | "neutral" | "undead" | string
 export type RoleClass = "unclassified" | "support" | "killing" | "investigative" | string
@@ -14,6 +15,7 @@ export interface RoleProperties {
 	"see-mafia-chat": boolean
 	"reveal-role-on-interrogation": boolean
 	"win-condition": WinConditionName
+	"has-actions": boolean
 
 	// I can't find this used anywhere
 	//"secondary-roles": string[] | null
@@ -34,6 +36,7 @@ export interface Role {
 	routine?: RoleRoutine
 	start?: RoleStart
 	role_card?: Promise<Buffer>
+	commands: CommandType<"role", RoleCommand>[]
 }
 
 export interface RoleRoutine {

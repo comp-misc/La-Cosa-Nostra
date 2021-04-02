@@ -62,7 +62,9 @@
 			"hide-day": false,
 			"hide-night": true,
 			"exceptions": ["modkill"]
-		}
+		},
+
+		"show-roles": true
 	},
 
 	"time": {

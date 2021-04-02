@@ -24,23 +24,23 @@ const dead: GameCommand = async (game, message) => {
 
 	//liste.push([a,b])
 
-	roles
-		.filter((role) => !role.status.alive)
-		.forEach((role) => {
-			players_dead++
+	const deadPlayers = roles.filter((role) => !role.status.alive)
 
-			if (role.misc.time_of_death == undefined) {
-				role.misc.time_of_death = game.getPeriod()
-				information_list.push([game.getPeriod(), role])
-			} else {
-				//if already defined -> either because, 1) defined here before or 2) defined in .../executable_misc/getDeathMessage.js
+	for (const role of deadPlayers) {
+		players_dead++
 
-				information_list.push([role.misc.time_of_death, role])
-			}
-		})
+		if (role.misc.time_of_death == undefined) {
+			role.misc.time_of_death = game.getPeriod()
+			information_list.push([game.getPeriod(), role])
+		} else {
+			//if already defined -> either because, 1) defined here before or 2) defined in .../executable_misc/getDeathMessage.js
+
+			information_list.push([role.misc.time_of_death, role])
+		}
+	}
 
 	if (players_dead < 1) {
-		message.channel.send("There are __0__ dead players.")
+		await message.channel.send("There are __0__ dead players.")
 	} else {
 		let grammar: string
 		if (players_dead == 1) {
@@ -62,7 +62,7 @@ const dead: GameCommand = async (game, message) => {
 				"\n"
 		}
 
-		message.channel.send(
+		await message.channel.send(
 			"There " +
 				grammar +
 				" __" +

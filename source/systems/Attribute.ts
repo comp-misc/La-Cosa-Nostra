@@ -1,5 +1,6 @@
 import Player, { PlayerAttribute } from "./game_templates/Player"
 import { RoleRoutine } from "./Role"
+import { CommandType, RoleCommand } from "../commands/CommandType"
 
 export interface DisplayField {
 	name: string
@@ -22,6 +23,7 @@ export interface Attribute {
 	attribute: AttributeInfo
 	start?: AttributeStart
 	routines?: RoleRoutine
+	commands: CommandType<"role", RoleCommand>[]
 }
 
 export interface AttributeStart {

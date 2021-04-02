@@ -1,7 +1,7 @@
 import Game from "../../game_templates/Game"
 import conditions from "../../win_conditions"
 
-export default (game: Game): void => {
+export default async (game: Game): Promise<void> => {
 	const win_conditions: string[] = []
 
 	game.players.forEach((player) => {
@@ -95,7 +95,7 @@ export default (game: Game): void => {
 
 	if (end_game) {
 		// Kill the game
-		game.postWinLog()
-		game.endGame()
+		await game.postWinLog()
+		await game.endGame()
 	}
 }

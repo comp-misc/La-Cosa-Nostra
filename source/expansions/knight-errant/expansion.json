@@ -8,10 +8,10 @@
 	"authors": ["Alduskkel"],
 
 	"overrides": {
-		"roles": ["-lcn/*"],
-		"attributes": ["-lcn/*", "lcn/arbitrary"]
+		"roles": ["+knight-errant/*"],
+		"attributes": ["+forum-auxiliaries/*", "+knight-errant/*"]
 	},
 
-	"dependencies": ["lcn", "forum-auxiliaries"],
+	"dependencies": ["forum-auxiliaries"],
 	"playersNeeded": 18
 }

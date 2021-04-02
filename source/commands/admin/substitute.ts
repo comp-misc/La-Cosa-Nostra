@@ -1,5 +1,6 @@
 import { getTimer, hasTimer } from "../../getTimer"
 import { AdminCommand } from "../CommandType"
+import makeCommand from "../makeCommand"
 
 const substitute: AdminCommand = async (message, params) => {
 	if (!hasTimer()) {
@@ -18,7 +19,7 @@ const substitute: AdminCommand = async (message, params) => {
 	await game.substitute(params[0], params[1], true)
 
 	if (game.isDay()) {
-		game.reloadTrialVoteMessage()
+		await game.reloadTrialVoteMessage()
 	}
 
 	game.save()
@@ -29,4 +30,8 @@ const substitute: AdminCommand = async (message, params) => {
 	)
 }
 
-export = substitute
+export default makeCommand(substitute, {
+	name: "substitute",
+	description: "Substitutes a player",
+	usage: "!substitute <current player id> <new player id>",
+})

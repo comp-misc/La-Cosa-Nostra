@@ -1,4 +1,5 @@
 import { GameCommand } from "../CommandType"
+import makeCommand from "../makeCommand"
 
 const getNumberEmoji = (count: number): string => {
 	switch (count) {
@@ -25,7 +26,7 @@ const getNumberEmoji = (count: number): string => {
 const outcome: GameCommand = async (game, message) => {
 	if (!game.isDay()) {
 		await message.channel.send(":x:  There is no trial during the night!")
-		return null
+		return
 	}
 
 	const config = game.config
@@ -39,19 +40,19 @@ const outcome: GameCommand = async (game, message) => {
 	const players_alive = roles.filter((role) => role.status.alive).length
 	let players: string[] = []
 
-	roles
-		.filter((role) => role.status.alive)
-		.forEach((role) => {
-			if (most_votes_on_player == role.countVotes()) {
-				players.push(role.getDisplayName())
-			}
-			if (most_votes_on_player < role.countVotes() && !(2 * most_votes_on_player > players_alive)) {
-				players = []
-				players.push(role.getDisplayName())
+	const alivePlayers = roles.filter((role) => role.status.alive)
 
-				most_votes_on_player = role.countVotes()
-			}
-		})
+	for (const role of alivePlayers) {
+		if (most_votes_on_player == role.countVotes()) {
+			players.push(role.getDisplayName())
+		}
+		if (most_votes_on_player < role.countVotes() && !(2 * most_votes_on_player > players_alive)) {
+			players = []
+			players.push(role.getDisplayName())
+
+			most_votes_on_player = role.countVotes()
+		}
+	}
 
 	if (lynch_config["top-voted-lynch"]) {
 		if (lynch_config["top-voted-lynch-minimum-votes"] > most_votes_on_player) {
@@ -61,7 +62,9 @@ const outcome: GameCommand = async (game, message) => {
 				message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
 			} else if (no_lynch_votes < most_votes_on_player) {
 				if (players.length == 1) {
-					message.channel.send(":thought_balloon:  With the current votes **" + players[0] + "** will be __lynched__.")
+					message.channel.send(
+						":thought_balloon:  With the current votes **" + players[0] + "** will be __lynched__."
+					)
 				} else {
 					if (lynch_config["tied-random"]) {
 						let display = ":one:  **" + players[0] + "** __lynced__!,   "
@@ -69,11 +72,14 @@ const outcome: GameCommand = async (game, message) => {
 							display = display + getNumberEmoji(i) + "  **" + players[i + 1] + "** __lynced__!,   "
 						}
 
-						message.channel.send(
-							":thought_balloon:  With the current votes one of the two following options will occur:\n" + display
+						await message.channel.send(
+							":thought_balloon:  With the current votes one of the two following options will occur:\n" +
+								display
 						)
 					} else {
-						message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
+						await message.channel.send(
+							":thought_balloon:  With the current votes a **no-lynch** will occur."
+						)
 					}
 				}
 			} else {
@@ -85,8 +91,9 @@ const outcome: GameCommand = async (game, message) => {
 						display = display + getNumberEmoji(i) + "  **" + players[i] + "** __lynched__!,   "
 					}
 
-					message.channel.send(
-						":thought_balloon:  With the current votes one of the two following options will occur:\n" + display
+					await message.channel.send(
+						":thought_balloon:  With the current votes one of the two following options will occur:\n" +
+							display
 					)
 				} else {
 					message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
@@ -95,7 +102,7 @@ const outcome: GameCommand = async (game, message) => {
 		}
 	} else {
 		if (lynch_config["allow-hammer"]) {
-			message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
+			await message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
 		} else {
 			let display = "**" + players[0] + "**"
 			if (players.length > 1) {
@@ -103,9 +110,11 @@ const outcome: GameCommand = async (game, message) => {
 					display = display + ", " + players[i + 1]
 				}
 				display = display + "**" + players[players.length - 1] + "**"
-				message.channel.send(":thought_balloon:  With the current votes " + display + " will be __lynched__.")
+				await message.channel.send(
+					":thought_balloon:  With the current votes " + display + " will be __lynched__."
+				)
 			} else {
-				message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
+				await message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
 			}
 		}
 	}
@@ -115,4 +124,7 @@ outcome.ALLOW_PREGAME = false
 outcome.ALLOW_GAME = true
 outcome.ALLOW_POSTGAME = false
 
-export = outcome
+export default makeCommand(outcome, {
+	name: "outcome",
+	description: "Shows the current vote outcome if the day ended now",
+})

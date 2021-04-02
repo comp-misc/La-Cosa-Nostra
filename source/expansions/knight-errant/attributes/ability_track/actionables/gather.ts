@@ -18,11 +18,11 @@ const gather: RoleActionable = (actionable, game) => {
 	visited_names.sort()
 
 	if (visited_names.length > 0) {
-		const message = ":mag: Your target visited " + pettyFormat(visited_names) + " last night."
+		const message = ":mag_right: Your target visited " + pettyFormat(visited_names) + " last night."
 
 		game.addMessage(tracker, message)
 	} else {
-		game.addMessage(tracker, ":mag: Your target did not visit anybody last night.")
+		game.addMessage(tracker, ":mag_right: Your target did not visit anybody last night.")
 	}
 }
 

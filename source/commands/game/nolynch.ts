@@ -25,7 +25,7 @@ const nolynch: GameCommand = async (game, message) => {
 		return
 	}
 
-	const result = game.toggleVote(self, "nl")
+	const result = await game.toggleVote(self, "nl")
 
 	if (!result) {
 		await message.channel.send(":x:  You have used up all your votes for the day.")

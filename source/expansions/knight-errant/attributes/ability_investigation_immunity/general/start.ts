@@ -1,7 +1,7 @@
 import { AttributeStart } from "../../../../../systems/Attribute"
 
-const start: AttributeStart = function (player, attribute) {
-	player.addAttribute("arbitrary", Infinity, {
+const start: AttributeStart = async (player, attribute) => {
+	await player.addAttribute("arbitrary", Infinity, {
 		type: "investigation_immunity",
 		amount: attribute.tags.uses,
 	})

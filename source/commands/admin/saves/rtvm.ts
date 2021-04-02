@@ -14,7 +14,7 @@ const rtvm: AdminCommand = async (message) => {
 		return
 	}
 
-	game.reloadTrialVoteMessage()
+	await game.reloadTrialVoteMessage()
 	await message.channel.send(":ok: Reloaded the trial vote message.")
 }
 

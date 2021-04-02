@@ -1,17 +1,21 @@
 import { getTimer, hasTimer } from "../../getTimer"
 import { AdminCommand } from "../CommandType"
+import makeCommand from "../makeCommand"
 
-const fforward: AdminCommand = async (message) => {
+const forceFastForward: AdminCommand = async (message) => {
 	if (!hasTimer() || !["playing"].includes(getTimer().game.state)) {
 		await message.channel.send(":x: No game in progress.")
-		return null
+		return
 	}
 
 	const game = getTimer().game
 
-	message.channel.send(":ok: Forcing fastforward.")
-
-	game.fastforward()
+	await message.channel.send(":ok: Forcing fastforward.")
+	await game.fastforward()
 }
 
-export = fforward
+export default makeCommand(forceFastForward, {
+	name: "forcefastforward",
+	description: "Forces a fast forward of the night",
+	aliases: ["ffforward"],
+})

@@ -12,7 +12,9 @@ const deadline: AdminCommand = async (message, params, config) => {
 
 	if (params.length < 2) {
 		await message.channel.send(
-			":x: Wrong syntax! Use `" + config["command-prefix"] + "deadline <set/change> <Unix timestamp/seconds>` instead!"
+			":x: Wrong syntax! Use `" +
+				config["command-prefix"] +
+				"deadline <set/change> <Unix timestamp/seconds>` instead!"
 		)
 		return
 	}
@@ -48,7 +50,9 @@ const deadline: AdminCommand = async (message, params, config) => {
 		}
 		default:
 			await message.channel.send(
-				":x: Wrong syntax! Use `" + config["command-prefix"] + "deadline <set/change> <epoch/milliseconds>` instead!"
+				":x: Wrong syntax! Use `" +
+					config["command-prefix"] +
+					"deadline <set/change> <epoch/milliseconds>` instead!"
 			)
 			return
 	}
@@ -73,7 +77,7 @@ const deadline: AdminCommand = async (message, params, config) => {
 	game.next_action = date
 
 	// Reprime the timer and save
-	getTimer().prime()
+	await getTimer().prime()
 	game.save()
 
 	await message.channel.send(":ok: Set new deadline to **" + auxils.formatUTCDate(game.next_action) + "**.")

@@ -25,7 +25,7 @@ const createGame = async (
 		}
 	}
 
-	const timer = new Timer(game).init()
+	const timer = await new Timer(game).init()
 	return [game, timer]
 }
 

@@ -85,7 +85,7 @@ onWithError("ready", async () => {
 	let save_status = "NONE ATTEMPTED"
 
 	if (config["automatically-load-saves"]) {
-		save_status = autoload()
+		save_status = await autoload()
 	}
 
 	const total_load_time = process.uptime() * 1000
@@ -255,7 +255,7 @@ function ready() {
 }
 
 // Autoload
-function autoload() {
+async function autoload() {
 	// Check for game save
 	const saved = fs.existsSync(botDirectories.data + "/game_cache/game.json")
 
@@ -267,7 +267,7 @@ function autoload() {
 	// Load the save
 	let timer: Timer
 	try {
-		timer = Timer.load(client, config)
+		timer = await Timer.load(client, config)
 	} catch (err) {
 		logger.log(
 			4,

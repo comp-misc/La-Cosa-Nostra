@@ -5,7 +5,7 @@ const jail: TargetRoleCommand = async (game, message, target, from) => {
 	clearModuleActions(game, from.identifier, "ability")
 
 	if (target === "nobody") {
-		await message.reply(":raised_back_of_hand: You have decided not to jail anyone tonight.")
+		await message.reply(":european_castle: You have decided not to jail anyone tonight.")
 		return
 	}
 
@@ -18,7 +18,7 @@ const jail: TargetRoleCommand = async (game, message, target, from) => {
 		priority: 0.1,
 	})
 
-	await message.reply(":raised_back_of_hand: You have decided to jail **" + target.getDisplayName() + "** tonight.")
+	await message.reply(":european_castle: You have decided to jail **" + target.getDisplayName() + "** tonight.")
 }
 
 jail.ALLOW_NONSPECIFIC = false

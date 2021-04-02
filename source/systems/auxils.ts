@@ -14,6 +14,7 @@ import filterDefined from "../auxils/filterDefined"
 import flipObject from "../auxils/flipObject"
 import formatDate from "../auxils/formatDate"
 import formatDateVerbose from "../auxils/formatDateVerbose"
+import formatEmoji from "../auxils/formatEmoji"
 import formatUTCDate from "../auxils/formatUTCDate"
 import getAssetAttachment from "../auxils/getAssetAttachment"
 import getRegex from "../auxils/getRegex"
@@ -59,6 +60,7 @@ export = {
 	flipObject,
 	formatDate,
 	formatDateVerbose,
+	formatEmoji,
 	formatUTCDate,
 	getAssetAttachment,
 	getRegex,

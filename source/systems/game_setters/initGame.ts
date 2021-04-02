@@ -43,7 +43,7 @@ const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 	const new_config = configModifier(config)
 
 	// assign roles first
-	const roles = assignRoles(client, new_config)
+	const roles = await assignRoles(client, new_config)
 
 	await deletePrivate(client, new_config)
 
@@ -67,7 +67,7 @@ const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 
 	timer.save()
 
-	game.postPrimeLog()
+	await game.postPrimeLog()
 
 	logger.log(2, "Game Timer instance created.")
 	;(process as any).timer = timer

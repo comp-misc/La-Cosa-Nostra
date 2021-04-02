@@ -19,6 +19,7 @@
 		"playing.json",
 		"messages.json",
 		"tick.json",
-		"disabled_commands.json"
+		"disabled_commands.json",
+		"emoji.json"
 	]
 }

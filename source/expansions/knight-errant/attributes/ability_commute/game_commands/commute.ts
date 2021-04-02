@@ -1,4 +1,3 @@
-// Register heal
 import { RoleCommand } from "../../../../../commands/CommandType"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
 import makeCommand from "../../../../../commands/makeCommand"
@@ -27,7 +26,7 @@ const commute: RoleCommand = async (game, message, params, from) => {
 
 	clearModuleActions(game, from.identifier, "ability")
 
-	await message.reply(":runner: You have decided to commute tonight.")
+	await message.reply(":camping: You have decided to commute tonight.")
 
 	game.addAction("a/ability_commute/commute", ["cycle"], {
 		name: "Modular-commute",

@@ -1,5 +1,6 @@
 import { getTimer, hasTimer } from "../../getTimer"
 import { AdminCommand } from "../CommandType"
+import makeCommand from "../makeCommand"
 
 const clearallvotes: AdminCommand = async (message) => {
 	if (!hasTimer() || !["playing"].includes(getTimer().game.state)) {
@@ -13,7 +14,7 @@ const clearallvotes: AdminCommand = async (message) => {
 	game.clearNoLynchVotes()
 
 	if (game.isDay()) {
-		game.reloadTrialVoteMessage()
+		await game.reloadTrialVoteMessage()
 	}
 
 	game.save()
@@ -21,4 +22,7 @@ const clearallvotes: AdminCommand = async (message) => {
 	await message.channel.send(":ok: All votes cleared.")
 }
 
-export = clearallvotes
+export default makeCommand(clearallvotes, {
+	name: "clearallvotes",
+	description: "Clears all votes",
+})

@@ -1,5 +1,5 @@
-import { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
+import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 
 const track: TargetRoleCommand = async (game, message, target, from) => {
 	// Run checks, etc
@@ -7,7 +7,7 @@ const track: TargetRoleCommand = async (game, message, target, from) => {
 	clearModuleActions(game, from.identifier, "ability")
 
 	if (target === "nobody") {
-		await message.reply(":mag: You have decided not to track anyone tonight.")
+		await message.reply(":mag_right: You have decided not to track anyone tonight.")
 		return
 	}
 
@@ -20,7 +20,7 @@ const track: TargetRoleCommand = async (game, message, target, from) => {
 		priority: 9,
 	})
 
-	await message.reply(":mag: You have decided to track **" + target.getDisplayName() + "** tonight.")
+	await message.reply(":mag_right: You have decided to track **" + target.getDisplayName() + "** tonight.")
 }
 
 track.ALLOW_NONSPECIFIC = false
@@ -30,4 +30,7 @@ track.ALIVE_CANNOT_USE = false
 track.DISALLOW_DAY = true
 track.DISALLOW_NIGHT = false
 
-export default track
+export default createTargetCommand(track, {
+	name: "track",
+	description: "Selects a player to track",
+})

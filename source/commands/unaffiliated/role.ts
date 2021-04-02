@@ -7,6 +7,7 @@ import { UnaffiliatedCommand } from "../CommandType"
 import flavours from "../../systems/flavours"
 import role_info from "../../systems/roles"
 import win_conditions from "../../systems/win_conditions"
+import makeCommand from "../makeCommand"
 
 const butterflyEffectSetup = [
 	"town_citizen",
@@ -40,7 +41,10 @@ const butterflyEffectSetup = [
 
 const role: UnaffiliatedCommand = async (message, params, config) => {
 	// Categorise
-
+	if (!config.game["show-roles"]) {
+		await message.reply(":placard: Role info may not be checked during this game.")
+		return
+	}
 	const ret: Record<string, Record<string, { id: string; name: string }[]>> = {}
 
 	for (const key in role_info) {
@@ -111,8 +115,8 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 				config["command-prefix"] +
 				"role [info/desc/card] <role>`."
 
-			message.channel.send(msg)
-			return null
+			await message.channel.send(msg)
+			return
 		} else {
 			sendable += "\n\n[" + Object.keys(role_info).length + " roles loaded]"
 
@@ -124,17 +128,17 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 				"role [info/desc/card] <role name>`."
 
 			if (sendable.length < 2000) {
-				message.channel.send(sendable)
+				await message.channel.send(sendable)
 			} else {
 				const channel1 = guild.channels.cache.find((x) => x.name === config.channels.roles)
-				message.channel.send(
+				await message.channel.send(
 					":information_source:  The role list length exceeds the characted limit. Refer to the role list provided in " +
 						channel1?.toString() +
 						" instead."
 				)
 			}
 
-			return null
+			return
 		}
 	}
 
@@ -198,7 +202,7 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 
 	if (score < 0.7) {
 		await message.channel.send(":x: I cannot find that role!")
-		return null
+		return
 	}
 
 	const role = roles[best_match_index]
@@ -302,4 +306,8 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 	}
 }
 
-export = role
+export default makeCommand(role, {
+	name: "role",
+	description: "Shows information about a role",
+	usage: "!role [info | desc | card] <role>",
+})

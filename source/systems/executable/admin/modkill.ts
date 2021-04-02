@@ -6,6 +6,6 @@ export = async (game: Game, player: Player): Promise<void> => {
 	await game
 		.getMainChannel()
 		.send(":exclamation: **" + player.getDisplayName() + "** has been removed from the game by a moderator.")
-	game.kill(player, "__modkilled__")
-	game.checkWin()
+	await game.kill(player, "__modkilled__")
+	await game.checkWin()
 }

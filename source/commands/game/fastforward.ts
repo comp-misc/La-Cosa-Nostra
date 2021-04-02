@@ -1,121 +1,78 @@
-import getLogger from "../../getLogger"
-import { GameCommand } from "../CommandType"
+import { CommandUsageError, GameCommand } from "../CommandType"
+import makeCommand from "../makeCommand"
+import { FFStatus } from "../../systems/game_templates/Player"
+
+const description = "Fast forward is a tool that skips the night when everyone has selected to fast forward"
+const usage = `
+ - '!ff auto' automatically fast forwards every night. Ideal for roles with no night actions
+ - '!ff on' will fast forward only this night. Use this once you've completed all night actions
+ - '!ff off' will stop fast forwarding this night
+ - '!ff status' shows if you are currently fast forwarding
+`.trim()
+
+const getFFStatusDescription = (status: FFStatus): string => {
+	switch (status) {
+		case FFStatus.ON:
+			return "You are fast forwarding this night"
+		case FFStatus.AUTO:
+			return "You are automatically fast forwarding this night and all future nights"
+		case FFStatus.OFF:
+			return "You are not currently fast forwarding the night"
+	}
+}
 
 const fastforward: GameCommand = async (game, message, params) => {
-	const logger = getLogger()
 	const config = game.config
-
-	const ratio = config["game"]["fast-forwarding"]["ratio"]
-
-	if (!config["game"]["fast-forwarding"]["allow"] || ratio <= 0 || ratio > 1) {
-		await message.channel.send(":x:  Fast forwarding is disabled in this game!")
-		return
-	}
-
-	if (game.isDay() && !config["game"]["fast-forwarding"]["day"]) {
-		await message.channel.send(":x:  Fast forwarding is disabled during the day phase.")
-		return
-	} else if (!game.isDay() && !config["game"]["fast-forwarding"]["night"]) {
-		await message.channel.send(":x:  Fast forwarding is disabled during the night phase.")
-		return
-	}
-
-	if (ratio <= 0.5) {
-		logger.log(3, "The fast forward ratio is ≤ 0.5, be noted of anti-sense parity fast forwards.")
-	}
-
 	const player = game.getPlayerById(message.author.id)
-
-	// Check existent
-	if (player === null) {
+	if (!player) {
 		await message.channel.send(":x:  You are not in the game!")
-		return null
+		return
 	}
 
 	if (!player.status.alive) {
-		await message.channel.send(":x:  Dead people may not vote to skip ahead with the time!")
+		await message.channel.send(":x:  Dead people may not fast forward!")
 		return
 	}
 
-	// Check private channel
-	if (player.channel?.id !== message.channel.id) {
+	if (!config.game["fast-forwarding"].allow) {
+		await message.channel.send(":x:  Fast forwarding is disabled for this game!")
+		return
+	}
+
+	if (player.getPrivateChannel().id !== message.channel.id) {
 		await message.channel.send(":x:  You cannot use that command here!")
-		return null
-	}
-
-	// Put fast forward vote in the game
-	const identifier = player.identifier
-	const fast_forwarded = game.votedFastForward(identifier)
-
-	const percentage = Math.round(ratio * 1000) / 10
-
-	if (params.length < 1) {
-		if (!fast_forwarded) {
-			game.addFastForwardVote(identifier)
-			await message.channel.send(
-				":fast_forward:  You have __selected__ to fast forward__ **" +
-					game.getFormattedDay() +
-					"**.\n\n*[__" +
-					percentage +
-					"%__ of all players have to vote for the game to be fast forwarded.]*"
-			)
-
-			game.checkFastForward()
-		} else {
-			game.removeFastForwardVote(identifier)
-			await message.channel.send(
-				":play_pause:  You have __retracted__ your vote to fast forward **" +
-					game.getFormattedDay() +
-					"**.\n\n*[__" +
-					percentage +
-					"%__ of all players have to vote for the game to be fast forwarded.]*"
-			)
-		}
-
 		return
 	}
 
-	switch (params[0]) {
-		case "vote":
-			if (fast_forwarded) {
-				await message.channel.send(":x: You have already voted to fast forward **" + game.getFormattedDay() + "**!")
-				break
-			}
+	if (params.length != 1) {
+		throw new CommandUsageError()
+	}
 
-			game.addFastForwardVote(identifier)
-			await message.channel.send(
-				":fast_forward: You have __voted to fast forward__ **" +
-					game.getFormattedDay() +
-					"**.\n\n[*__" +
-					percentage +
-					"%__ of all players have to vote for the game to be fast forwarded.*]"
-			)
+	const arg = params[0].toLowerCase()
+	if (arg === "status" || arg === "info") {
+		await message.reply(getFFStatusDescription(player.ffstatus))
+		return
+	}
+	if (arg === "help") {
+		await message.reply(description + "\nUsage:\n" + usage)
+		return
+	}
 
-			game.checkFastForward()
-
-			break
-
-		case "unvote":
-			if (!fast_forwarded) {
-				await message.channel.send(":x: You are not voting to fast forward **" + game.getFormattedDay() + "**!")
-				break
-			}
-
-			game.removeFastForwardVote(identifier)
-			await message.channel.send(
-				":play_pause: You have __revoked__ your vote to fast forward **" +
-					game.getFormattedDay() +
-					"**.\n\n[*__" +
-					percentage +
-					"%__ of all players have to vote for the game to be fast forwarded.*]"
-			)
-			break
-
-		default:
-			await message.channel.send(
-				":x: Wrong syntax! Use `" + config["command-prefix"] + "fastforward <vote/unvote>` instead!"
-			)
-			break
+	if (arg === "auto") {
+		player.ffstatus = FFStatus.AUTO
+		await message.reply("You are now fast forwarding this night and all future nights. Disable this with '!ff off'")
+	} else if (arg === "on") {
+		player.ffstatus = FFStatus.ON
+		await message.reply("You are now fast forwarding the night")
+	} else if (arg === "off") {
+		const currentStatus = player.ffstatus
+		if (currentStatus == FFStatus.OFF) {
+			await message.reply("You are not fast forwarding the night")
+		} else {
+			await message.reply("You are no longer fast forwarding the night")
+		}
+	} else {
+		throw new CommandUsageError("Unknown action '" + params[0] + "'")
 	}
 }
 
@@ -123,4 +80,9 @@ fastforward.ALLOW_PREGAME = false
 fastforward.ALLOW_GAME = true
 fastforward.ALLOW_POSTGAME = false
 
-export = fastforward
+export default makeCommand(fastforward, {
+	name: "fastforward",
+	description: description,
+	usage: usage,
+	aliases: ["ff"],
+})

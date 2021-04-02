@@ -3,6 +3,8 @@ import attemptRequiringScript from "../auxils/attemptRequringScript"
 import expansions from "../expansions"
 import { Attribute, AttributeInfo } from "./Attribute"
 import auxils from "./auxils"
+import { tryReadCommands } from "../commands/commandReader"
+import { RoleCommand } from "../commands/CommandType"
 
 let attributes: string[] = []
 let rules: string[] = []
@@ -35,11 +37,19 @@ for (let i = 0; i < attributes.length; i++) {
 		throw new Error(`No 'attribute.json' found at attribute directory ${directory}`)
 	}
 
+	const commands = tryReadCommands<"role", RoleCommand>(directory + "/game_commands", "role")
+	for (const { command } of commands) {
+		if (!command.attribute) {
+			command.attribute = attribute
+		}
+	}
+
 	ret[attribute] = {
 		directory,
 		attribute: info,
 		start: attemptRequiringScript(directory + "/general/", "start"),
 		routines: attemptRequiringScript(directory + "/general/", "routines"),
+		commands,
 	}
 }
 

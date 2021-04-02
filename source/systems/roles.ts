@@ -6,6 +6,9 @@ import auxils from "./auxils"
 import attemptRequiringScript from "../auxils/attemptRequringScript"
 import attemptRequiring from "../auxils/attemptRequiring"
 import { Role, RoleInfo, RoleProperties, RoleRoutine, RoleStart } from "./Role"
+import { tryReadCommands } from "../commands/commandReader"
+import { RoleCommand } from "../commands/CommandType"
+import getLogger from "../getLogger"
 
 const attemptRead = (directory: string): string | null => {
 	const exists = fs.existsSync(directory)
@@ -53,6 +56,13 @@ for (let i = 0; i < roles.length; i++) {
 		const routine = attemptRequiringScript<RoleRoutine>(directory + "/general/", "routines")
 		const start = attemptRequiringScript<RoleStart>(directory + "/general/", "start")
 
+		const commands = tryReadCommands<"role", RoleCommand>(directory + "/game_commands", "role")
+		for (const { command } of commands) {
+			if (!command.role) {
+				command.role = role
+			}
+		}
+
 		if (!role_json) {
 			throw new Error(`${role}'s role.json does not exist!`)
 		}
@@ -67,6 +77,7 @@ for (let i = 0; i < roles.length; i++) {
 			info: info,
 			routine,
 			start,
+			commands,
 		}
 
 		// Get role card

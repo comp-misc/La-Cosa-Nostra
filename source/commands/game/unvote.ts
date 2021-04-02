@@ -25,26 +25,28 @@ const unvote: GameCommand = async (game, message, params) => {
 	if (params.length < 1) {
 		// Unvote everybody
 		const voted = game.getVotesBy(self.identifier)
-		voted.forEach((vote) => game.toggleVote(self, vote))
-
-		if (game.isVotingNoLynch(self.identifier)) {
-			game.toggleVote(self, "nl")
+		for (const vote of voted) {
+			await game.toggleVote(self, vote)
 		}
 
-		special_vote_types.forEach((voteType) => {
+		if (game.isVotingNoLynch(self.identifier)) {
+			await game.toggleVote(self, "nl")
+		}
+
+		for (const voteType of special_vote_types) {
 			if (voteType.voters.some((x) => x.identifier === self.identifier)) {
 				if (voteType.identifier === "nl") {
-					game.toggleVote(self, voteType.identifier, true)
+					await game.toggleVote(self, voteType.identifier, true)
 				} else {
 					const who = game.getPlayerByIdentifier(voteType.identifier)
 					if (who) {
-						game.toggleVote(self, who, true)
+						await game.toggleVote(self, who, true)
 					} else {
 						game.logger.logError(new Error(`No player found with identifier ${voteType.identifier}`))
 					}
 				}
 			}
-		})
+		}
 		return
 	}
 
@@ -77,7 +79,7 @@ const unvote: GameCommand = async (game, message, params) => {
 			return
 		}
 
-		game.toggleVote(self, thePlayer)
+		await game.toggleVote(self, thePlayer)
 	} else if (max_score.special_vote) {
 		const special_vote = max_score.special_vote
 
@@ -86,11 +88,11 @@ const unvote: GameCommand = async (game, message, params) => {
 			return
 		}
 		if (special_vote.identifier === "nl") {
-			game.toggleVote(self, special_vote.identifier, true)
+			await game.toggleVote(self, special_vote.identifier, true)
 		} else {
 			const who = game.getPlayerByIdentifier(special_vote.identifier)
 			if (who) {
-				game.toggleVote(self, who, true)
+				await game.toggleVote(self, who, true)
 			} else {
 				game.logger.logError(new Error(`No player found with identifier ${special_vote.identifier}`))
 			}

@@ -1,13 +1,13 @@
 import { getTimer, hasTimer } from "../../getTimer"
 import { ConsoleCommand } from "../CommandType"
 
-const checkWin: ConsoleCommand = () => {
+const checkWin: ConsoleCommand = async () => {
 	if (!hasTimer()) {
 		console.log("No game active")
 		return
 	}
 	const { game } = getTimer()
-	game.checkWin()
+	await game.checkWin()
 
 	console.log("Win check complete.")
 }

@@ -10,9 +10,9 @@ const routines: RoleRoutine = async (player) => {
 		.getGame()
 		.sendPeriodPin(
 			channel,
-			":no_entry: You may kill a player tonight using the faction kill.\n\nUse `" +
+			":dagger: You may kill a player tonight using the faction kill.\n\nUse `" +
 				config["command-prefix"] +
-				"kill <alphabet/name/nobody>` to select your target."
+				"kill <player | nobody>` to select your target."
 		)
 }
 

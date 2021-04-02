@@ -11,7 +11,9 @@ const vote: GameCommand = async (game, message, params) => {
 	}
 
 	if (params.length < 1) {
-		await message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "vote <alphabet/name>` instead!")
+		await message.channel.send(
+			":x: Wrong syntax! Use `" + config["command-prefix"] + "vote <alphabet/name>` instead!"
+		)
 		return
 	}
 
@@ -49,7 +51,7 @@ const vote: GameCommand = async (game, message, params) => {
 		return
 	}
 
-	let result: boolean
+	let result: boolean | null
 	if (player.score > max_score.score) {
 		const thePlayer = player.player
 
@@ -63,7 +65,7 @@ const vote: GameCommand = async (game, message, params) => {
 			return
 		}
 
-		result = game.toggleVote(self, thePlayer)
+		result = await game.toggleVote(self, thePlayer)
 	} else {
 		const special_vote = max_score.special_vote as SpecialVoteType
 
@@ -72,11 +74,11 @@ const vote: GameCommand = async (game, message, params) => {
 			return
 		}
 		if (special_vote.identifier === "nl") {
-			result = game.toggleVote(self, special_vote.identifier, true)
+			result = await game.toggleVote(self, special_vote.identifier, true)
 		} else {
 			const voter = game.getPlayerByIdentifier(special_vote.identifier)
 			if (voter) {
-				result = game.toggleVote(self, voter, true)
+				result = await game.toggleVote(self, voter, true)
 			} else {
 				game.logger.logError(new Error(`No player found with identifier ${special_vote.identifier}`))
 				result = false
@@ -84,35 +86,37 @@ const vote: GameCommand = async (game, message, params) => {
 		}
 	}
 
-	if (result === false) {
-		// reverts the vote and passes the vote onto the other player
-		const voted = game.getVotesBy(self.identifier)
-		voted.forEach((voter) => game.toggleVote(self, voter))
-
-		if (game.isVotingNoLynch(self.identifier)) {
-			game.toggleVote(self, "nl")
+	if (result !== false) {
+		if (!result) {
+			await message.channel.send(":x: You cannot vote on that option right now.")
 		}
+		return
+	}
+	// reverts the vote and passes the vote onto the other player
+	const voted = game.getVotesBy(self.identifier)
+	voted.forEach((voter) => game.toggleVote(self, voter))
 
-		for (let i = 0; i < special_vote_types.length; i++) {
-			if (special_vote_types[i].voters.some((x) => x.identifier === self.identifier)) {
-				const identifier = special_vote_types[i].identifier
-				if (identifier === "nl") {
-					game.toggleVote(self, identifier, true)
+	if (game.isVotingNoLynch(self.identifier)) {
+		await game.toggleVote(self, "nl")
+	}
+
+	for (let i = 0; i < special_vote_types.length; i++) {
+		if (special_vote_types[i].voters.some((x) => x.identifier === self.identifier)) {
+			const identifier = special_vote_types[i].identifier
+			if (identifier === "nl") {
+				await game.toggleVote(self, identifier, true)
+			} else {
+				const voter = game.getPlayerByIdentifier(identifier)
+				if (voter) {
+					await game.toggleVote(self, voter, true)
 				} else {
-					const voter = game.getPlayerByIdentifier(identifier)
-					if (voter) {
-						game.toggleVote(self, voter, true)
-					} else {
-						game.logger.logError(new Error(`No player found with identifier ${identifier}`))
-					}
+					game.logger.logError(new Error(`No player found with identifier ${identifier}`))
 				}
 			}
 		}
-
-		game.toggleVote(self, player.player)
-	} else if (!result) {
-		await message.channel.send(":x: You cannot vote on that option right now.")
 	}
+
+	await game.toggleVote(self, player.player)
 }
 
 vote.ALLOW_PREGAME = false

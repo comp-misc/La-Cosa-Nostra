@@ -11,8 +11,8 @@ const _stalemate: AdminCommand = async (message) => {
 
 	// Declare stalemate
 	game.primeWinLog("stalemate", "Nobody wins.")
-	game.postWinLog()
-	game.endGame()
+	await game.postWinLog()
+	await game.endGame()
 
 	await message.channel.send(":ok: Forced a game stalemate.")
 }

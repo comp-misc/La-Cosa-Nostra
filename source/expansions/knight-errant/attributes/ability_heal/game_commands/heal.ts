@@ -5,7 +5,7 @@ const heal: TargetRoleCommand = async (game, message, target, from) => {
 	clearModuleActions(game, from.identifier, "ability")
 
 	if (target === "nobody") {
-		await message.reply(":syringe: You have decided to heal nobody tonight.")
+		await message.reply(":shield: You have decided not to heal anyone tonight.")
 		return
 	}
 
@@ -18,7 +18,7 @@ const heal: TargetRoleCommand = async (game, message, target, from) => {
 		priority: 3,
 	})
 
-	await message.reply(":syringe: You have decided to heal **" + target.getDisplayName() + "** tonight.")
+	await message.reply(":shield: You have decided to heal **" + target.getDisplayName() + "** tonight.")
 }
 
 heal.ALLOW_NONSPECIFIC = false

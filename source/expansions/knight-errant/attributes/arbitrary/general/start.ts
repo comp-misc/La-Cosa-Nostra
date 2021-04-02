@@ -1,8 +1,7 @@
 import { AttributeStart } from "../../../../../systems/Attribute"
 
-const start: AttributeStart = async (player, attribute) => {
-	await player.addAttribute("protection", Infinity, { amount: attribute.tags.uses })
-	attribute.expiry = 0
+const start: AttributeStart = (player) => {
+	player.setPermanentStat("detection-immunity", 1, "set")
 }
 
 start.DO_NOT_RUN_ON_GAME_START = false

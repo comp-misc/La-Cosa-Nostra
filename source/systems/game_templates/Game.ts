@@ -19,7 +19,6 @@ import {
 } from "discord.js"
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
-import lcn from "../../lcn"
 import { GameConfig, LcnConfig, PermissionsConfig } from "../../LcnConfig"
 import alphabets from "../alpha_table"
 import auxils from "../auxils"
@@ -28,9 +27,10 @@ import expansions from "../../expansions"
 import flavours, { FlavourData } from "../flavours"
 import Actions, { Actionable, ActionOptions, ExecutionParams, Trigger } from "./Actions"
 import Logger from "./Logger"
-import Player, { PlayerProperty } from "./Player"
+import Player, { FFStatus, PlayerProperty } from "./Player"
 import Timer from "./Timer"
 import { RolePermission } from "../executable/misc/createPrivateChannel"
+import formatEmoji from "../../auxils/formatEmoji"
 
 interface ChannelMeta {
 	id: Snowflake
@@ -116,7 +116,7 @@ class Game {
 	logger: Logger
 	client: Client
 	init_time: Date
-	readonly config: LcnConfig
+	config: LcnConfig
 	players: Player[]
 	players_tracked: number
 	voting_halted: boolean
@@ -135,13 +135,14 @@ class Game {
 	flavour_identifier: string | null
 	timer: Timer | undefined
 	timer_identifier: string | undefined
-	fast_forward_votes: string[]
 	trial_vote_operations: TrialVoteOperation[]
 	private period_log: Record<string, PeriodLogEntry>
 	private previously_uploaded_role_info: string[]
 	private win_log: WinLog | undefined
 	private trial_collectors: ReactionCollector[]
 	tampered_load_times?: Date[]
+
+	private fastForwarded: boolean
 
 	constructor(client: Client, config: LcnConfig, players: Player[]) {
 		this.logger = getLogger()
@@ -158,7 +159,7 @@ class Game {
 
 		this.players_tracked = players.length
 
-		this.fast_forward_votes = []
+		this.fastForwarded = false
 
 		this.channels = {}
 
@@ -190,7 +191,9 @@ class Game {
 
 			this.game_start_message_sent = false
 
-			game_init(this)
+			//Can't use async/await in a constructor, so the best I can do is log an error on promise failure
+			const result = game_init(this)
+			if (result) result.catch(this.logger.logError)
 		}
 
 		this.primeDesignatedTime()
@@ -241,7 +244,8 @@ class Game {
 	findTextChannel(name: string | Snowflake): TextChannel {
 		const channels = this.getGuild().channels
 		const channel =
-			channels.cache.find((channel) => channel.id === name) || channels.cache.find((channel) => channel.name === name)
+			channels.cache.find((channel) => channel.id === name) ||
+			channels.cache.find((channel) => channel.name === name)
 		if (!channel) {
 			throw new Error(`Unknown channel ${name}`)
 		}
@@ -328,7 +332,7 @@ class Game {
 		return this.players.filter((player) => player.status.alive)
 	}
 
-	async createTrialVote(load_preemptives = true): Promise<void> {
+	async createTrialVote(load_preemptive = true): Promise<void> {
 		const messages = await executable.misc.createTrialVote(this)
 
 		if (this.getPeriod() != 1 && messages && messages.length) {
@@ -345,10 +349,10 @@ class Game {
 
 			this.save()
 
-			this.instantiateTrialVoteCollector()
+			await this.instantiateTrialVoteCollector()
 
-			if (load_preemptives) {
-				this.loadPreemptiveVotes()
+			if (load_preemptive) {
+				await this.loadPreemptiveVotes()
 			}
 
 			await this.reloadTrialVoteMessage()
@@ -384,7 +388,7 @@ class Game {
 		this.trial_collectors = []
 	}
 
-	clearTrialVoteReactions(remove_extra = true): void {
+	async clearTrialVoteReactions(remove_extra = true): Promise<void> {
 		const period_log = this.getPeriodLog()
 
 		if (period_log.trial_vote === null) {
@@ -396,11 +400,11 @@ class Game {
 
 		for (let i = 0; i < messages_id.length; i++) {
 			if (i < 1 || !remove_extra) {
-				executable.misc.clearReactions(this, channel_id, messages_id[i])
+				await executable.misc.clearReactions(this, channel_id, messages_id[i])
 			}
 
 			if (i > 0 && remove_extra) {
-				executable.misc.deleteMessage(this, channel_id, messages_id[i])
+				await executable.misc.deleteMessage(this, channel_id, messages_id[i])
 			}
 		}
 
@@ -415,7 +419,10 @@ class Game {
 		await reaction.users.remove(user)
 
 		if (!this.isAlive(user.id)) {
-			this.logger.log(3, user.id + " tried to vote on the trial although they are either dead or not in the game!")
+			this.logger.log(
+				3,
+				user.id + " tried to vote on the trial although they are either dead or not in the game!"
+			)
 			await user.send(
 				":x: You are not alive and in the game, please do not vote in the trials! If you try that again, I will have you kicked."
 			)
@@ -442,7 +449,7 @@ class Game {
 			if (emote.name === vote_type.emote) {
 				const player = this.getPlayerByIdentifier(vote_type.identifier)
 				if (player) {
-					this.toggleVote(voter, player, true)
+					await this.toggleVote(voter, player, true)
 				} else {
 					this.logger.logError(new Error(`No player found with identifier ${vote_type.identifier}`))
 				}
@@ -457,7 +464,10 @@ class Game {
 		let voted_against: VoteTarget
 		if (alphabet === "nl") {
 			if (!this.config["game"]["lynch"]["no-lynch-option"]) {
-				this.logger.log(3, user.id + " tried voting no-lynch using the reaction poll but no-lynches are disabled!")
+				this.logger.log(
+					3,
+					user.id + " tried voting no-lynch using the reaction poll but no-lynches are disabled!"
+				)
 				await user.send(":x: The no-lynch vote is disabled.")
 				return
 			}
@@ -479,18 +489,18 @@ class Game {
 			}
 		}
 
-		this.toggleVote(voter, voted_against)
+		await this.toggleVote(voter, voted_against)
 	}
 
-	toggleVote(voter: Player, voted_against: VoteTarget, special_vote = false): boolean {
+	async toggleVote(voter: Player, voted_against: VoteTarget, special_vote = false): Promise<boolean | null> {
 		// Post corresponding messages
 
 		if (this.voting_halted) {
-			return false
+			return null
 		}
 
 		if (voter.getStatus("voteBlocked")) {
-			return false
+			return null
 		}
 
 		const no_lynch_vote = voted_against === "nl" && !special_vote
@@ -498,7 +508,9 @@ class Game {
 
 		// Check for (a) singular (b) total lynch counts
 		const special_vote_types = this.getPeriodLog().special_vote_types
-		const special_votes_from = special_vote_types.filter((x) => x.voters.some((y) => y.identifier === voter.identifier))
+		const special_votes_from = special_vote_types.filter((x) =>
+			x.voters.some((y) => y.identifier === voter.identifier)
+		)
 		const voted_singular = special_votes_from.some((x) => x.singular)
 
 		const magnitude = voter.getVoteMagnitude()
@@ -521,10 +533,10 @@ class Game {
 			if (voted_no_lynch) {
 				// Remove no-lynch vote
 				this.clearNoLynchVotesBy(voter.identifier)
-				executable.misc.removedNolynch(this, voter)
+				await executable.misc.removedNolynch(this, voter)
 			} else {
 				this.addNoLynchVote(voter.identifier, magnitude)
-				executable.misc.addedNolynch(this, voter)
+				await executable.misc.addedNolynch(this, voter)
 			}
 
 			const after_votes = this.getNoLynchVoteCount()
@@ -562,9 +574,9 @@ class Game {
 			if (toggle_on) {
 				// New vote
 				// OLD SYSTEM: uses IDs directly
-				executable.misc.addedLynch(this, voter, voted_against)
+				await executable.misc.addedLynch(this, voter, voted_against)
 			} else {
-				executable.misc.removedLynch(this, voter, voted_against)
+				await executable.misc.removedLynch(this, voter, voted_against)
 			}
 
 			this.checkLynchAnnouncement(voted_against.identifier, before_votes, after_votes)
@@ -613,13 +625,13 @@ class Game {
 			}
 		}
 
-		this.reloadTrialVoteMessage()
+		await this.reloadTrialVoteMessage()
 
 		// Save file
 		this.save()
 
 		if (this.hammerActive() && !this.voting_halted) {
-			this.checkLynchHammer()
+			await this.checkLynchHammer()
 		}
 
 		return true
@@ -670,11 +682,11 @@ class Game {
 		}
 	}
 
-	private checkLynchHammer(): boolean {
+	private async checkLynchHammer(): Promise<boolean> {
 		const no_lynch_votes = this.getNoLynchVoteCount()
 
 		if (no_lynch_votes >= this.getNoLynchVotesRequired()) {
-			this.fastforward()
+			await this.fastforward()
 			return true
 		}
 
@@ -688,7 +700,7 @@ class Game {
 				//var success = this.lynch(this.players[i]);
 
 				// Fastforward cycle
-				this.fastforward()
+				await this.fastforward()
 				return true
 			}
 		}
@@ -696,8 +708,8 @@ class Game {
 		return false
 	}
 
-	reloadTrialVoteMessage(): void {
-		executable.misc.editTrialVote(this)
+	reloadTrialVoteMessage(): Promise<void> {
+		return executable.misc.editTrialVote(this)
 	}
 
 	clearAllVotesBy(identifier: string): boolean {
@@ -712,12 +724,12 @@ class Game {
 		return cleared
 	}
 
-	clearVotes(edit_trial = false): void {
+	async clearVotes(edit_trial = false): Promise<void> {
 		// Clear ALL votes
 		this.players.forEach((player) => player.clearVotes())
 
 		if (edit_trial) {
-			this.reloadTrialVoteMessage()
+			await this.reloadTrialVoteMessage()
 		}
 	}
 
@@ -763,7 +775,7 @@ class Game {
 
 		if (this.state === GameState.PRE_GAME) {
 			this.routines()
-			this.cycle()
+			await this.cycle()
 			await this.start()
 
 			// Periodic updates are handled in roles/postRoleIntroduction
@@ -791,19 +803,19 @@ class Game {
 			this.routines()
 
 			// Broadcast
-			const broadcast = this.getBroadcast(-1, true)
+			const broadcast = await this.getBroadcast(-1, true)
 			await executable.misc.postNewPeriod(this, broadcast)
 
 			// Win check
-			this.checkWin()
+			await this.checkWin()
 
-			if ((this.state as any) === GameState.ENDED) {
+			if ((this.state as GameState) === GameState.ENDED) {
 				this.save()
 				return null
 			}
 
 			// Open Mafia chat, create votes, routine stuff
-			this.cycle()
+			await this.cycle()
 
 			// Player routines - configurable
 			await this.playerRoutines()
@@ -831,20 +843,20 @@ class Game {
 	}
 
 	private async precycle() {
-		this.clearPeriodPins()
+		await this.clearPeriodPins()
 
 		if (this.period % 2 === 0) {
 			await executable.misc.editTrialVote(this, true)
-			this.clearTrialVoteReactions()
+			await this.clearTrialVoteReactions()
 
 			// Dusk
-			this.checkLynches()
-			this.clearVotes()
+			await this.checkLynches()
+			await this.clearVotes()
 		}
 
 		this.execute("cycle", { period: this.period })
 		this.enterDeathMessages()
-		this.sendMessages()
+		await this.sendMessages()
 	}
 
 	private async messagePeriodicUpdate(offset = 0) {
@@ -860,18 +872,18 @@ class Game {
 				const channel = this.players[i].getPrivateChannel()
 
 				if (pin === "period") {
-					this.sendPeriodPin(channel, message)
+					await this.sendPeriodPin(channel, message)
 				} else if (pin === "permanent") {
-					this.sendPin(channel, message)
+					await this.sendPin(channel, message)
 				} else {
-					channel.send(message)
+					await channel.send(message)
 				}
 				await auxils.delay(100)
 			}
 		}
 	}
 
-	cycle(): void {
+	async cycle(): Promise<void> {
 		for (let i = expansions.length - 1; i >= 0; i--) {
 			const cycle = expansions[i].scripts.cycle
 
@@ -879,45 +891,51 @@ class Game {
 				continue
 			}
 
-			cycle(this)
+			await cycle(this)
 		}
 
 		if (this.period % 2 === 0) {
-			this.day()
+			await this.day()
 		} else {
-			this.night()
+			await this.night()
 		}
 	}
 
-	day(): void {
+	async day(): Promise<void> {
 		// Executed at the start of daytime
 
-		if (this.game_start_message_sent == true) {
-			this.createTrialVote()
+		if (this.game_start_message_sent) {
+			await this.createTrialVote()
 		}
 
-		if (this.config["game"]["mafia"]["night-only"]) {
-			executable.misc.lockMafiaChat(this)
+		if (this.config.game.mafia["night-only"]) {
+			await executable.misc.lockMafiaChat(this)
 		} else {
-			executable.misc.openMafiaChat(this)
-			executable.misc.postMafiaPeriodicMessage(this)
+			await executable.misc.openMafiaChat(this)
+			await executable.misc.postMafiaPeriodicMessage(this)
 		}
 
-		executable.misc.openMainChats(this)
+		await executable.misc.openMainChats(this)
 	}
 
-	night(): void {
+	async night(): Promise<void> {
 		// Executed at the start of nighttime
 
 		// Lynch players
-		executable.misc.openMafiaChat(this)
-		executable.misc.postMafiaPeriodicMessage(this)
+		await executable.misc.openMafiaChat(this)
+		await executable.misc.postMafiaPeriodicMessage(this)
 
-		if (!this.config["game"]["town"]["night-chat"]) {
-			executable.misc.lockMainChats(this)
+		if (!this.config.game.town["night-chat"]) {
+			await executable.misc.lockMainChats(this)
 		} else {
-			executable.misc.openMainChats(this)
+			await executable.misc.openMainChats(this)
 		}
+
+		for (const player of this.getAlivePlayers()) {
+			await player.sendFFStatusMessage()
+		}
+
+		await this.checkFastForward()
 	}
 
 	private async createPeriodPin(message: Message): Promise<boolean> {
@@ -950,7 +968,7 @@ class Game {
 		await this.createPin(out)
 	}
 
-	checkLynches(): void {
+	async checkLynches(): Promise<void> {
 		// Find players who will be lynched
 
 		let lynchable = []
@@ -1024,7 +1042,7 @@ class Game {
 
 		// Successful lynches go into lynched
 		// Broadcast the lynches in the main channel
-		executable.misc.broadcastMainLynch(this, lynched)
+		await executable.misc.broadcastMainLynch(this, lynched)
 	}
 
 	lynch(role: Player): boolean {
@@ -1037,32 +1055,32 @@ class Game {
 		return success
 	}
 
-	kill(
+	async kill(
 		role: Player,
 		reason: string,
 		secondary_reason?: string,
 		broadcast_position_offset = 0,
 		circumstances: Record<string, any> = {}
-	): void {
+	): Promise<void> {
 		// Secondary reason is what the player sees
 		// Can be used to mask death but show true
 		// reason of death to the player killed
-		this.silentKill(role, reason, secondary_reason, broadcast_position_offset, circumstances)
+		await this.silentKill(role, reason, secondary_reason, broadcast_position_offset, circumstances)
 
 		if (this.getPeriodLog() && this.getPeriodLog().trial_vote) {
 			this.clearAllVotesFromAndTo(role.identifier)
-			this.reloadTrialVoteMessage()
-			this.checkLynchHammer()
+			await this.reloadTrialVoteMessage()
+			await this.checkLynchHammer()
 		}
 	}
 
-	silentKill(
+	async silentKill(
 		role: Player,
 		reason: string,
 		secondary_reason?: string,
 		broadcast_position_offset = 0,
 		circumstances: Record<string, any> = {}
-	): void {
+	): Promise<void> {
 		// Work in progress, should remove emote
 		/*
     if (this.getPeriodLog() && this.getPeriodLog().trial_vote) {
@@ -1077,7 +1095,7 @@ class Game {
 			target: role.identifier,
 			circumstances: circumstances,
 		})
-		executable.misc.kill(this, role)
+		await executable.misc.kill(this, role)
 		this.primeDeathMessages(role, reason, secondary_reason, broadcast_position_offset)
 	}
 
@@ -1133,7 +1151,7 @@ class Game {
 		}
 	}
 
-	enterDeathBroadcasts(offset = 0): void {
+	async enterDeathBroadcasts(offset = 0): Promise<void> {
 		// Enters in from log.death_broadcasts
 		const log = this.getPeriodLog(offset)
 
@@ -1193,10 +1211,10 @@ class Game {
 			this.addBroadcastSummary(message, offset)
 		})
 
-		this.uploadPublicRoleInformation(unique)
+		await this.uploadPublicRoleInformation(unique)
 	}
 
-	uploadPublicRoleInformation(role_identifiers: string[]): void {
+	private async uploadPublicRoleInformation(role_identifiers: string[]): Promise<void> {
 		const display: Player[] = []
 
 		if (!this.previously_uploaded_role_info) {
@@ -1225,7 +1243,7 @@ class Game {
 			}
 		}
 
-		executable.roles.uploadPublicRoleInformation(this, display)
+		await executable.roles.uploadPublicRoleInformation(this, display)
 	}
 
 	private addDeathBroadcast(role: Player, reason: string, position_offset = 0) {
@@ -1260,15 +1278,9 @@ class Game {
 		})
 	}
 
-	addMessages(roles: Player[], message: string): void {
-		for (let i = 0; i < roles.length; i++) {
-			this.addMessage(roles[i], message)
-		}
-	}
-
-	getBroadcast(offset = 0, enter = false): string | undefined {
+	async getBroadcast(offset = 0, enter = false): Promise<string | undefined> {
 		if (enter) {
-			this.enterDeathBroadcasts(offset)
+			await this.enterDeathBroadcasts(offset)
 		}
 
 		// Get the summary broadcast
@@ -1300,13 +1312,13 @@ class Game {
 		for (let i = 0; i < messages.length; i++) {
 			const message = messages[i].message
 
-			executable.misc.sendIndivMessage(this, messages[i].recipient, message)
+			await executable.misc.sendIndivMessage(this, messages[i].recipient, message)
 
 			await auxils.delay(80)
 		}
 	}
 
-	private clearPeriodPins() {
+	private async clearPeriodPins(): Promise<void> {
 		// Clears the pinned messages in the period log
 
 		const log = this.getPeriodLog()
@@ -1314,7 +1326,7 @@ class Game {
 
 		for (let i = 0; i < pins.length; i++) {
 			const pin = pins[i]
-			executable.misc.unpinMessage(this, pin.channel, pin.message)
+			await executable.misc.unpinMessage(this, pin.channel, pin.message)
 		}
 	}
 
@@ -1340,16 +1352,16 @@ class Game {
 
 		this.game_start_message_sent = true
 
-		executable.misc.postGameStart(this)
+		await executable.misc.postGameStart(this)
 
 		setTimeout(() => this.createTrialVote(), 1600)
 
 		await Promise.all(cache)
 
 		if (!this.isDay() && !this.config["game"]["town"]["night-chat"]) {
-			executable.misc.lockMainChats(this)
+			await executable.misc.lockMainChats(this)
 		} else {
-			executable.misc.openMainChats(this)
+			await executable.misc.openMainChats(this)
 		}
 
 		for (let i = expansions.length - 1; i >= 0; i--) {
@@ -1374,7 +1386,7 @@ class Game {
 		)
 
 		// Clear fast forward votes
-		this.fast_forward_votes = []
+		this.clearFastForwardVotes()
 
 		for (let i = 0; i < this.trial_vote_operations.length; i++) {
 			const operation = this.trial_vote_operations[i].operation
@@ -1398,12 +1410,20 @@ class Game {
 		}
 	}
 
+	private clearFastForwardVotes(): void {
+		for (const player of this.players) {
+			if (player.ffstatus == FFStatus.ON) {
+				player.ffstatus = FFStatus.OFF
+			}
+		}
+		this.fastForwarded = false
+	}
+
 	addTrialVoteOperation(operation: OperationType, amount: number): void {
 		const allowed = ["addition", "subtraction", "multiplication", "division", "modulo", "max", "min"]
 
 		if (!allowed.includes(operation)) {
-			const err = new Error("Operation " + operation + " is not allowed!")
-			throw err
+			throw new Error("Operation " + operation + " is not allowed!")
 		}
 
 		this.trial_vote_operations.push({ operation, amount })
@@ -1449,8 +1469,8 @@ class Game {
 		return this.client.users.cache.get(player.id) || null
 	}
 
-	setPresence(presence: PresenceData): void {
-		executable.misc.updatePresence(this.client, presence)
+	setPresence(presence: PresenceData): Promise<void> {
+		return executable.misc.updatePresence(this.client, presence)
 	}
 
 	getFormattedDay(offset = 0): string {
@@ -1488,7 +1508,7 @@ class Game {
 		return executable.misc.__formatter(this, string)
 	}
 
-	reinstantiate(timer: Timer, players: Player[]): void {
+	async reinstantiate(timer: Timer, players: Player[]): Promise<void> {
 		this.timer = timer
 		this.players = players
 
@@ -1515,15 +1535,21 @@ class Game {
 			const errors = [
 				{
 					type: "role",
-					items: auxils.getUniqueArray(incompatible.filter((x) => x.type === "role").map((x) => x.identifier)),
+					items: auxils.getUniqueArray(
+						incompatible.filter((x) => x.type === "role").map((x) => x.identifier)
+					),
 				},
 				{
 					type: "attribute",
-					items: auxils.getUniqueArray(incompatible.filter((x) => x.type === "attribute").map((x) => x.identifier)),
+					items: auxils.getUniqueArray(
+						incompatible.filter((x) => x.type === "attribute").map((x) => x.identifier)
+					),
 				},
 				{
 					type: "flavour",
-					items: auxils.getUniqueArray(incompatible.filter((x) => x.type === "flavour").map((x) => x.identifier)),
+					items: auxils.getUniqueArray(
+						incompatible.filter((x) => x.type === "flavour").map((x) => x.identifier)
+					),
 				},
 			]
 
@@ -1548,7 +1574,7 @@ class Game {
 		this.players_tracked = players.length
 
 		this.actions.reinstantiate(this)
-		this.instantiateTrialVoteCollector()
+		await this.instantiateTrialVoteCollector()
 	}
 
 	addAction<T>(identifier: string, triggers: Trigger[], options: ActionOptions<T>, rearrange = true): Actionable<T> {
@@ -1601,47 +1627,30 @@ class Game {
 		return { score, player }
 	}
 
-	find<K extends keyof Player>(key: K, value: Player[K]): Player | null
-	find(condition: PlayerPredicate): Player | null
-
-	find(key: keyof Player | PlayerPredicate, value?: any): Player | null {
-		if (typeof key === "function") {
-			return this.players.find(key) || null
-		}
-		return this.players.find((player) => player[key] === value) || null
+	find(condition: PlayerPredicate): Player | null {
+		return this.players.find(condition) || null
 	}
 
-	findAll<K extends keyof Player>(key: K, value: Player[K]): Player[]
-	findAll(condition: PlayerPredicate): Player[]
-
-	findAll(key: keyof Player | PlayerPredicate, value?: any): Player[] {
-		if (typeof key === "function") {
-			return this.players.filter(key)
-		}
-		return this.players.filter((player) => player[key] === value)
+	findAll(condition: PlayerPredicate): Player[] {
+		return this.players.filter(condition)
 	}
 
-	exists<K extends keyof Player>(key: K, value: Player[K]): boolean
-	exists(condition: PlayerPredicate): boolean
-	exists(key: keyof Player | PlayerPredicate, value?: any): boolean {
-		if (typeof key === "function") {
-			return !!this.players.find(key)
-		}
-		return !!this.players.find((player) => player[key] === value)
+	exists(condition: PlayerPredicate): boolean {
+		return this.players.some(condition)
 	}
 
-	checkWin(): void {
-		executable.wins.checkWin(this)
+	checkWin(): Promise<void> {
+		return executable.wins.checkWin(this)
 	}
 
-	endGame(): void {
+	async endGame(): Promise<void> {
 		this.logger.log(2, "Game ended!")
 
-		executable.conclusion.endGame(this)
+		await executable.conclusion.endGame(this)
 
-		this.getMainChannel().send(this.config["messages"]["game-over"])
+		await this.getMainChannel().send(this.config["messages"]["game-over"])
 
-		this.clearTrialVoteReactions()
+		await this.clearTrialVoteReactions()
 
 		// End the game
 		this.state = GameState.ENDED
@@ -1652,9 +1661,9 @@ class Game {
 		return getGuild(this.client)
 	}
 
-	postWinLog(): void {
+	async postWinLog(): Promise<void> {
 		if (this.win_log) {
-			executable.misc.postWinLog(this, this.win_log.faction, this.win_log.caption)
+			await executable.misc.postWinLog(this, this.win_log.faction, this.win_log.caption)
 		} else {
 			this.logger.log(3, "The win log has not been primed!")
 		}
@@ -1692,14 +1701,14 @@ class Game {
 		return this.getPeriod() % 2 === 0
 	}
 
-	setWin(role: Player): void {
-		executable.misc.postWinMessage(role)
+	async setWin(role: Player): Promise<void> {
+		await executable.misc.postWinMessage(role)
 		role.setWin()
 	}
 
-	setWins(roles: Player[]): void {
+	async setWins(roles: Player[]): Promise<void> {
 		for (let i = 0; i < roles.length; i++) {
-			this.setWin(roles[i])
+			await this.setWin(roles[i])
 		}
 	}
 
@@ -1707,12 +1716,12 @@ class Game {
 		return (await executable.misc.createPrivateChannel(this, channelName, permissions)) as TextChannel
 	}
 
-	postPrimeLog(): void {
-		executable.misc.postPrimeMessage(this)
+	postPrimeLog(): Promise<void> {
+		return executable.misc.postPrimeMessage(this)
 	}
 
-	postDelayNotice(): void {
-		executable.misc.postDelayNotice(this)
+	postDelayNotice(): Promise<void> {
+		return executable.misc.postDelayNotice(this)
 	}
 
 	substitute(id1: string, id2: string, detailed_substitution: boolean): Promise<void> {
@@ -1725,7 +1734,7 @@ class Game {
 		}
 	}
 
-	loadPreemptiveVotes(clear_cache = true): void {
+	async loadPreemptiveVotes(clear_cache = true): Promise<void> {
 		const lynches = this.getLynchesAvailable()
 
 		for (let i = 0; i < this.players.length; i++) {
@@ -1751,7 +1760,7 @@ class Game {
 				const alive = current.isAlive()
 
 				if (alive && !already_voted) {
-					this.toggleVote(player, current)
+					await this.toggleVote(player, current)
 
 					successes.push(current)
 
@@ -1762,7 +1771,7 @@ class Game {
 			}
 
 			if (successes.length > 0) {
-				executable.misc.sendPreemptMessage(player, successes)
+				await executable.misc.sendPreemptMessage(player, successes)
 			}
 		}
 
@@ -1789,47 +1798,17 @@ class Game {
 		return flavour
 	}
 
-	addFastForwardVote(identifier: string): void {
-		if (this.votedFastForward(identifier)) {
+	async checkFastForward(): Promise<void> {
+		if (this.fastForwarded) {
+			return
+		}
+		const players = this.players.filter((p) => p.status.alive)
+		if (!players.every((player) => player.ffstatus === FFStatus.AUTO || player.ffstatus === FFStatus.ON)) {
 			return
 		}
 
-		this.fast_forward_votes.push(identifier)
-	}
-
-	removeFastForwardVote(identifier: string): void {
-		if (!this.votedFastForward(identifier)) {
-			return
-		}
-		this.fast_forward_votes = this.fast_forward_votes.filter((x) => x !== identifier)
-	}
-
-	votedFastForward(identifier: string): boolean {
-		return this.fast_forward_votes.includes(identifier)
-	}
-
-	checkFastForward(): void {
-		// Wrt to the configuration
-
-		const alive_count = this.getAlive()
-
-		const minimum = Math.ceil(alive_count * this.config["game"]["fast-forwarding"]["ratio"])
-
-		let ff_votes = this.fast_forward_votes
-
-		// Confirm that all players are alive
-		ff_votes = ff_votes.filter((x) => this.getPlayerByIdentifier(x)?.isAlive())
-
-		const ratio = ff_votes.length / alive_count
-		const percentage = Math.round(ratio * 1000) / 10
-
-		if (ff_votes.length >= minimum) {
-			// Fast forward the game
-			this.addBroadcastSummary(
-				"The game has been **fastforwarded** with __" + percentage + "%__ of alive players voting for such last cycle."
-			)
-			this.fastforward()
-		}
+		this.addBroadcastSummary(formatEmoji(this.config.emoji["ff"]) + "  The night was **fastforwarded**.")
+		await this.fastforward()
 	}
 
 	async getDiscordRoleOrThrow(roleType: keyof PermissionsConfig): Promise<Role> {
@@ -1850,7 +1829,7 @@ class Game {
 		if (typeof condition === "function") {
 			// Check
 			return this.exists(condition)
-		} else if (typeof condition === "string") {
+		} else {
 			condition = condition.toLowerCase()
 
 			// Check separately
@@ -1863,13 +1842,14 @@ class Game {
 			if (condition.includes("-")) {
 				const parts = condition.split("-")
 				cond4 = this.exists(
-					(x) => x.isAlive() && x.getRoleOrThrow().alignment === parts[0] && x.getRoleOrThrow().class === parts[1]
+					(x) =>
+						x.isAlive() &&
+						x.getRoleOrThrow().alignment === parts[0] &&
+						x.getRoleOrThrow().class === parts[1]
 				)
 			}
 
 			return cond1 || cond2 || cond3 || cond4
-		} else {
-			return false
 		}
 	}
 
@@ -1996,10 +1976,6 @@ class Game {
 		if (update_immediately) {
 			this.config.game = auxils.objectOverride(this.config.game, this.game_config_override)
 		}
-	}
-
-	getAPI(): typeof lcn {
-		return lcn
 	}
 }
 

@@ -4,12 +4,12 @@ import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
 
 const responses: Record<Alignment, string> = {
-	neutral: ":mag: Your target is __Anti-town__.",
-	cult: ":mag: Your target is __Anti-town__.",
-	mafia: ":mag: Your target is __Anti-town__.",
-	town: ":mag: Your target is __Town__.",
+	neutral: ":mag_right: Your target is __Anti-town__.",
+	cult: ":mag_right: Your target is __Anti-town__.",
+	mafia: ":mag_right: Your target is __Anti-town__.",
+	town: ":mag_right: Your target is __Town__.",
 
-	role: ":mag: Your target's role is **{;role}**.",
+	role: ":mag_right: Your target's role is **{;role}**.",
 }
 
 const investigate: RoleActionable = (actionable, game, params) => {

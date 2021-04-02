@@ -55,6 +55,12 @@ export interface PlayerStats {
 	"vote-magnitude": number
 }
 
+export enum FFStatus {
+	AUTO = "auto",
+	ON = "on",
+	OFF = "off",
+}
+
 export type PlayerIdentifier = string
 
 class Player {
@@ -89,6 +95,8 @@ class Player {
 	modular_log?: string[]
 	modular_success_log?: string[]
 
+	ffstatus: FFStatus
+
 	constructor(client: Client) {
 		this.client = client
 		this.logger = getLogger()
@@ -111,6 +119,7 @@ class Player {
 		this.alphabet = "nl"
 		this.role_identifier = ""
 		this.initial_role_identifier = []
+		this.ffstatus = FFStatus.OFF
 
 		this.channel = undefined
 		this.see_mafia_chat = false
@@ -149,10 +158,9 @@ class Player {
 
 		this.identifier = crypto.randomBytes(8).toString("hex")
 
-		this.instantiateRole()
+		const role = this.instantiateRole()
 
-		this.see_mafia_chat = this.getRoleOrThrow()["see-mafia-chat"]
-
+		this.see_mafia_chat = role["see-mafia-chat"]
 		this.permanent_stats = {
 			"basic-defense": 0,
 			"roleblock-immunity": 0,
@@ -162,7 +170,7 @@ class Player {
 			"kidnap-immunity": 0,
 			priority: 0,
 			"vote-offset": 0,
-			"vote-magnitude": this.getRoleOrThrow().stats["vote-magnitude"],
+			"vote-magnitude": role.stats["vote-magnitude"],
 		}
 
 		// Initialise stats
@@ -470,7 +478,7 @@ class Player {
 		}
 
 		await this.postIntro()
-		this.__routines()
+		await this.__routines()
 	}
 
 	private async postIntro() {
@@ -618,7 +626,7 @@ class Player {
 		}
 	}
 
-	instantiateRole(): void {
+	instantiateRole(): ExpandedRole {
 		const role = executable.roles.getRole(this.role_identifier)
 		if (!role) {
 			throw new Error(`No role found by id ${this.role_identifier}`)
@@ -628,6 +636,10 @@ class Player {
 		if (!this.role.tags) {
 			this.role.tags = []
 		}
+		if (role["has-actions"] || role["has-actions"] === undefined) {
+			this.ffstatus = FFStatus.OFF
+		}
+		return role
 	}
 
 	instantiateFlavour(): void {
@@ -668,7 +680,7 @@ class Player {
 	async __routines(): Promise<void> {
 		this.resetTemporaryStats()
 
-		this.checkAttributeExpiries()
+		this.checkAttributeExpires()
 
 		const role = this.getRoleOrThrow()
 		if (role.routine) {
@@ -721,11 +733,11 @@ class Player {
 	}
 
 	hasWon(): boolean {
-		return this.status.won === true
+		return this.status.won
 	}
 
 	canWin(): boolean {
-		return this.status["canWin"] === true
+		return this.status["canWin"]
 	}
 
 	addIntroMessage(message: string): void {
@@ -740,7 +752,7 @@ class Player {
 		return this.attributes.some((x) => x.identifier === attribute)
 	}
 
-	addAttribute(attribute: string, expiry = Infinity, tags: Record<string, unknown> = {}): void {
+	async addAttribute(attribute: string, expiry = Infinity, tags: Record<string, unknown> = {}): Promise<void> {
 		const playerAttribute = attributes[attribute]
 		if (!playerAttribute) {
 			throw new Error(`Invalid attribute identifier ${attribute}!`)
@@ -759,8 +771,7 @@ class Player {
 			}
 
 			try {
-				// Define truestart synchronisation
-				playerAttribute.start(this, addable, false)
+				await playerAttribute.start(this, addable, false)
 			} catch (err) {
 				this.logger.log(
 					4,
@@ -776,7 +787,7 @@ class Player {
 		this.attributes.push(addable)
 	}
 
-	checkAttributeExpiries(): void {
+	checkAttributeExpires(): void {
 		this.attributes.forEach((attribute) => {
 			if (attribute.expiry !== Infinity) {
 				attribute.expiry--
@@ -785,66 +796,25 @@ class Player {
 		this.attributes = this.attributes.filter((attribute) => attribute.expiry === Infinity || attribute.expiry > 0)
 	}
 
-	deleteAttributes(condition: (attribute: PlayerAttribute) => boolean): PlayerAttribute[]
-	deleteAttributes<K extends keyof PlayerAttribute>(key: K, value: PlayerAttribute[K]): PlayerAttribute[]
-
-	deleteAttributes(
-		key: keyof PlayerAttribute | ((attribute: PlayerAttribute) => boolean),
-		value?: any
-	): PlayerAttribute[] {
+	deleteAttributes(condition: (attribute: PlayerAttribute) => boolean): PlayerAttribute[] {
 		const ret = []
-
 		for (let i = this.attributes.length - 1; i >= 0; i--) {
-			if (!this.attributes[i]) {
-				continue
-			}
-
-			if (typeof key === "function") {
-				const condition = key(this.attributes[i])
-
-				if (condition) {
-					ret.push(this.attributes[i])
-					this.attributes.splice(i, 1)
-				}
-			} else {
-				if (this.attributes[i][key] === value) {
-					ret.push(this.attributes[i])
-					this.attributes.splice(i, 1)
-				}
+			if (this.attributes[i] && condition(this.attributes[i])) {
+				ret.push(this.attributes[i])
+				this.attributes.splice(i, 1)
 			}
 		}
 		return ret
 	}
 
-	deleteAttribute(condition: (attribute: PlayerAttribute) => boolean): PlayerAttribute | null
-	deleteAttribute<K extends keyof PlayerAttribute>(key: K, value: PlayerAttribute[K]): PlayerAttribute | null
-
-	deleteAttribute(
-		key: keyof PlayerAttribute | ((attribute: PlayerAttribute) => boolean),
-		value?: any
-	): PlayerAttribute | null {
+	deleteAttribute(condition: (attribute: PlayerAttribute) => boolean): PlayerAttribute | null {
 		for (let i = this.attributes.length - 1; i >= 0; i--) {
-			if (!this.attributes[i]) {
-				continue
-			}
-
-			if (typeof key === "function") {
-				const condition = key(this.attributes[i])
-				if (condition) {
-					const ret = this.attributes[i]
-					this.attributes.splice(i, 1)
-					return ret
-				}
-			} else {
-				if (this.attributes[i][key] === value) {
-					const ret = this.attributes[i]
-					this.attributes.splice(i, 1)
-
-					return ret
-				}
+			if (this.attributes[i] && condition(this.attributes[i])) {
+				const ret = this.attributes[i]
+				this.attributes.splice(i, 1)
+				return ret
 			}
 		}
-
 		return null
 	}
 
@@ -878,6 +848,22 @@ class Player {
 
 	getGuild(): Guild {
 		return getGuild(this.client)
+	}
+
+	async sendFFStatusMessage(): Promise<void> {
+		if (!this.isAlive()) {
+			return
+		}
+		const channel = this.getPrivateChannel()
+		if (this.ffstatus === FFStatus.AUTO) {
+			await channel.send(
+				"Fast forwarding is set to auto. Use '!ff off' if you wish to disable automatic fast forwarding"
+			)
+		} else if (this.ffstatus === FFStatus.OFF) {
+			await channel.send(
+				"Please use `!ff on` once you have used all your night actions and are ready to skip the night"
+			)
+		}
 	}
 }
 

@@ -1,0 +1,8 @@
+Role Description:
+
+"Welcome to _____! You are a Town Bulletproof.
+
+Role Abilities:
+- You will survive one night kill. This ability will be used instantly, and you will not be alerted.
+
+Win Condition: You win when all threats to town have been eliminated and there is at least one member of town left."

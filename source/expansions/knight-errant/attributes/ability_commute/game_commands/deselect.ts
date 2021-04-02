@@ -20,12 +20,12 @@ const deselect: RoleCommand = async (game, message, params, from) => {
 				config["command-prefix"] +
 				"commute` to choose to commute tonight."
 		)
-		return null
+		return
 	}
 
 	clearModuleActions(game, from.identifier, "ability")
 
-	await message.reply(":runner: You have decided not to commute tonight.")
+	await message.reply(":camping: You have decided not to commute tonight.")
 }
 
 deselect.ALLOW_NONSPECIFIC = false

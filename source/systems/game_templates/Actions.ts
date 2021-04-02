@@ -257,7 +257,7 @@ export default class Actions {
 	}
 
 	// "params" is optional
-	execute(type: Trigger, params?: ExecutionParams, check_expiries = true) {
+	execute(type: Trigger, params?: ExecutionParams, check_expiries = true): void {
 		// Actions: [from, to, game]
 		// Returns: boolean
 		// If true for chat, lynch, arbitrary types, subtract one

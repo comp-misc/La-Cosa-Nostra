@@ -10,7 +10,6 @@ import Player from "./Player"
 import Actions from "./Actions"
 
 import auxils from "../auxils"
-import hash from "../../auxils/hash"
 import jsonInfinityCensor from "../../auxils/jsonInfinityCensor"
 import botDirectories from "../../BotDirectories"
 import vocab from "../../auxils/vocab"
@@ -76,18 +75,18 @@ class Timer {
 		this.ticks = 0
 	}
 
-	init(): this {
+	async init(): Promise<this> {
 		this.ticks = 0
 
-		this.prime()
+		await this.prime()
 
 		this.createTick()
 
-		this.updatePresence()
+		await this.updatePresence()
 		return this
 	}
 
-	reinstantiate(game: Game): this {
+	async reinstantiate(game: Game): Promise<this> {
 		this.game = game
 		game.timer = this
 		this.game.timer_identifier = this.identifier
@@ -95,15 +94,15 @@ class Timer {
 		this.ticks = 0
 
 		// Reprime
-		this.prime()
+		await this.prime()
 		this.createTick()
 
-		this.updatePresence()
+		await this.updatePresence()
 
 		return this
 	}
 
-	prime(): void {
+	async prime(): Promise<void> {
 		const current = new Date()
 		const designated = this.game.next_action
 
@@ -123,7 +122,7 @@ class Timer {
 			this.game.primeDesignatedTime(true)
 
 			// Alert players
-			this.game.postDelayNotice()
+			await this.game.postDelayNotice()
 
 			delta = (this.game.next_action as Date).getTime() - current.getTime()
 		}
@@ -137,7 +136,7 @@ class Timer {
 		this.day_night_mediator = setTimeout(this.step, delta)
 
 		// IMPORTANT: Substitute time for delta
-		this.updatePresence()
+		await this.updatePresence()
 	}
 
 	async step(): Promise<void> {
@@ -149,9 +148,9 @@ class Timer {
 		if (next_action === null) {
 			// Game ended
 			this.clearDayNightMediator()
-			this.updatePresence()
+			await this.updatePresence()
 		} else {
-			this.prime()
+			await this.prime()
 		}
 	}
 
@@ -163,28 +162,28 @@ class Timer {
 			// Game ended
 			this.clearDayNightMediator()
 		} else {
-			this.prime()
+			await this.prime()
 		}
 	}
 
-	tick(): void {
+	async tick(): Promise<void> {
 		const config = this.game.config
 
 		this.ticks++
 
 		// Autosave
 
-		if (this.ticks % config["ticks"]["autosave-ticks"] === 0) {
+		if (this.ticks % config.ticks["autosave-ticks"] === 0) {
 			this.save()
 		}
 
 		if (this.game.state === "pre-game" || this.game.state === "playing") {
 			// Tick to update small things
-			this.checkPresenceUpdate()
+			await this.checkPresenceUpdate()
 		}
 	}
 
-	checkPresenceUpdate(): void {
+	async checkPresenceUpdate(): Promise<void> {
 		const current = new Date()
 
 		const delta = (this.designated || current).getTime() - current.getTime()
@@ -202,7 +201,7 @@ class Timer {
 		}
 
 		if (this.ticks % amount === 0) {
-			this.updatePresence()
+			await this.updatePresence()
 		}
 	}
 
@@ -347,12 +346,12 @@ class Timer {
 		}
 	}
 
-	static load(client: Client, config: LcnConfig): Timer {
+	static load(client: Client, config: LcnConfig): Promise<Timer> {
 		return loadGame(client, config)
 	}
 }
 
-const loadGame = (client: Client, config: LcnConfig): Timer => {
+const loadGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 	// Loads
 	const save = JSON.parse(fs.readFileSync(data_directory + "/game_cache/game.json", "utf8"), jsonReviver)
 
@@ -390,8 +389,8 @@ const loadGame = (client: Client, config: LcnConfig): Timer => {
 
 	// Reinstantiate deleted properties
 	const timer = new Timer(game)
-	game.reinstantiate(timer, players)
-	timer.reinstantiate(game)
+	await game.reinstantiate(timer, players)
+	await timer.reinstantiate(game)
 	return timer
 }
 
