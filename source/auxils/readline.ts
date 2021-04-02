@@ -1,7 +1,7 @@
 import readline from "readline"
 import { Client } from "discord.js"
 import { LcnConfig } from "../LcnConfig"
-import { Command, ConsoleCommand } from "../commands/CommandType"
+import { Command, CommandUsageError, ConsoleCommand } from "../commands/CommandType"
 import getLogger from "../getLogger"
 import { findCommand } from "../commands/commandFinder"
 
@@ -24,10 +24,14 @@ const rdline = (client: Client, config: LcnConfig, commands: Command[]): void =>
 		try {
 			await (command.command as ConsoleCommand)(client, config, details.slice(1))
 		} catch (e) {
-			const logger = getLogger()
-			console.log(e)
-			logger.log(4, "Command execution error.")
-			logger.logError(e)
+			if (e instanceof CommandUsageError) {
+				const usage = command.usage || config["command-prefix"] + command.name
+				console.log(`:x: ${e.message}. Usage: ${usage}`)
+			} else {
+				const logger = getLogger()
+				logger.log(4, "Command execution error.")
+				logger.logError(e)
+			}
 		}
 	})
 }
