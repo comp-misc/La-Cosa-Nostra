@@ -1,7 +1,6 @@
 // TODO: rewrite and assign by player instance
 
 import { CategoryChannel, Client, OverwriteData, Permissions, TextChannel } from "discord.js"
-import delay from "../../auxils/delay"
 import getGuild from "../../getGuild"
 import { LcnConfig } from "../../LcnConfig"
 import Player from "../game_templates/Player"

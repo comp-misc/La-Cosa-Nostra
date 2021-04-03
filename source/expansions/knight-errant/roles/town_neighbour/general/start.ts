@@ -43,7 +43,7 @@ const start: RoleStart = async (player) => {
 
 	// Always put lower alphabet first
 	const createMasonChannels = async (players: Player[]) => {
-		const read_perms = config["base-perms"]["read"]
+		const read_perms = config["base-perms"].read
 
 		players.sort((a, b) => {
 			if (a.alphabet < b.alphabet) {

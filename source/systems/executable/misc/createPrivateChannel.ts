@@ -29,7 +29,9 @@ export default async (game: Game, channel_name: string, permissions: RolePermiss
 
 	const channel = (await guild.channels.create(channel_name, {
 		type: "text",
-		permissionOverwrites: [{ id: guild.id, deny: [Permissions.FLAGS.READ_MESSAGE_HISTORY] }],
+		permissionOverwrites: [
+			{ id: guild.id, deny: [Permissions.FLAGS.READ_MESSAGE_HISTORY, Permissions.FLAGS.VIEW_CHANNEL] },
+		],
 		parent: cat_channel,
 		position: 0,
 	})) as TextChannel
