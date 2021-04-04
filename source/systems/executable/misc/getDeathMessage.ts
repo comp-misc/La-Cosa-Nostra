@@ -17,7 +17,7 @@ export = function (game: Game, role: Player, reason: string): string {
 
 	let will = "We could not find a last will."
 
-	if (!role.will) {
+	if (role.will) {
 		will = "We found a will next to their body:\n```fix\n" + role.will + "```"
 	}
 

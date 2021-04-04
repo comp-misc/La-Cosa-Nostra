@@ -43,7 +43,9 @@ class Logger {
 				message = message.replace(/\x1b\[[0-9]+m/g, "")
 			}
 
-			this.stream.write(`[${new Date().toUTCString()}; ${log_level}] ${message}\n`, console.error)
+			this.stream.write(`[${new Date().toUTCString()}; ${log_level}] ${message}\n`, (e) => {
+				if (e) console.error("Failed to write: ", e)
+			})
 		}
 	}
 

@@ -57,7 +57,7 @@ export = async (game: Game, broadcast?: string): Promise<void> => {
 	sendable = sendable.replace(new RegExp("{;summary}", "g"), broadcast)
 	sendable = sendable.replace("{;alive_tag}", getAliveTag(game))
 
-	log.send(format(game, sendable))
+	await log.send(format(game, sendable))
 
 	const main_pinnable = await main.send(
 		"**" +

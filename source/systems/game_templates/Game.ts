@@ -983,8 +983,8 @@ class Game {
 			const required = this.getVotesRequired() - this.players[i].getVoteOffset()
 
 			const top_voted_lynch =
-				this.config["game"]["lynch"]["top-voted-lynch"] &&
-				votes >= this.config["game"]["lynch"]["top-voted-lynch-minimum-votes"]
+				this.config.game.lynch["top-voted-lynch"] &&
+				votes >= this.config.game.lynch["top-voted-lynch-minimum-votes"]
 
 			if (votes >= required || top_voted_lynch) {
 				// Execute the player
@@ -1008,7 +1008,7 @@ class Game {
 
 		const lynched = []
 		const no_lynch_votes = this.getNoLynchVoteCount()
-		const top_voted_lynch = this.config["game"]["lynch"]["top-voted-lynch"]
+		const top_voted_lynch = this.config.game.lynch["top-voted-lynch"]
 
 		// Check no-lynch
 		if (no_lynch_votes < this.getNoLynchVotesRequired() || top_voted_lynch) {
@@ -1025,13 +1025,13 @@ class Game {
 				// Encased in loop in event of > 2 lynches available and second-ups are tied
 				if (
 					lynchable.filter((x) => x.score === score).length > lynches_available - lynched.length &&
-					!this.config["game"]["lynch"]["tied-random"]
+					!this.config.game.lynch["tied-random"]
 				) {
 					// Stop further lynch
 					break
 				}
 
-				const success = this.lynch(target)
+				const success = await this.lynch(target)
 
 				if (success) {
 					lynched.push(target)
@@ -1046,12 +1046,12 @@ class Game {
 		await executable.misc.broadcastMainLynch(this, lynched)
 	}
 
-	lynch(role: Player): boolean {
+	async lynch(role: Player): Promise<boolean> {
 		const success = executable.misc.lynch(this, role)
 
 		// Add lynch summary
 		if (success) {
-			this.silentKill(role, "__lynched__", "lynched")
+			await this.silentKill(role, "__lynched__", "lynched")
 		}
 		return success
 	}
@@ -1168,8 +1168,8 @@ class Game {
 			}
 		}
 
-		const cause_of_death_config = this.config["game"]["cause-of-death"]
-		const exceptions = cause_of_death_config["exceptions"]
+		const cause_of_death_config = this.config.game["cause-of-death"]
+		const exceptions = cause_of_death_config.exceptions
 
 		// Inverted
 		const hide_day = cause_of_death_config["hide-day"] && !this.isDay()
