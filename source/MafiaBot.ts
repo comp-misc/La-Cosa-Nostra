@@ -127,7 +127,11 @@ onWithError("message", async (message) => {
 
 	const content = message.content
 
-	if (!content.startsWith(config["command-prefix"])) {
+	const cmdPrefix = config["command-prefix"]
+	if (
+		!content.startsWith(cmdPrefix) ||
+		content.startsWith(cmdPrefix + cmdPrefix) //Extra check prevents messages such as !!! being treated as commands
+	) {
 		return
 	}
 	if (message.channel.type === "dm") {
