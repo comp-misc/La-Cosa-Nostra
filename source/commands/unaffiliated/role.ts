@@ -250,20 +250,12 @@ const role: UnaffiliatedCommand = async (message, params, config) => {
 			const cond1 = info.abilities.length > 0
 			const cond2 = info.attributes.length > 0
 
-			if (cond1 || cond2) {
-				embed.addField("", "")
-			}
-
 			if (cond1) {
 				embed.addField("Abilities", info.abilities.map((x) => "- " + x).join("\n"))
 			}
 
 			if (cond2) {
 				embed.addField("Attributes", info.attributes.map((x) => "- " + x).join("\n"))
-			}
-
-			if (cond1 || cond2) {
-				embed.addField("", "")
 			}
 
 			if (info.thumbnail) {
