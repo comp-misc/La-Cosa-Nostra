@@ -251,7 +251,7 @@ class Timer {
 		}
 
 		this.tick_time = time
-		this.tick_interval = setInterval(() => this.tick, time)
+		this.tick_interval = setInterval(() => this.tick(), time)
 	}
 
 	destroy(): void {
