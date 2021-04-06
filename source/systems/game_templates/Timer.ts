@@ -133,7 +133,7 @@ class Timer {
 		this.primed = current
 
 		this.clearDayNightMediator()
-		this.day_night_mediator = setTimeout(this.step, delta)
+		this.day_night_mediator = setTimeout(() => this.step(), delta)
 
 		// IMPORTANT: Substitute time for delta
 		await this.updatePresence()

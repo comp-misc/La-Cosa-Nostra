@@ -1,0 +1,19 @@
+import { ConsoleCommand } from "../CommandType"
+import { getTimer, hasTimer } from "../../getTimer"
+import makeCommand from "../makeCommand"
+
+const save: ConsoleCommand = async (client, config, params) => {
+	if (!hasTimer()) {
+		console.error(":x: No savable instance.")
+		return
+	}
+	getTimer().game.save(undefined, params[0])
+
+	console.log(":ok: Saved the game.")
+}
+
+export default makeCommand(save, {
+	name: "save",
+	description: "Saves the game state",
+	usage: "save [name]",
+})
