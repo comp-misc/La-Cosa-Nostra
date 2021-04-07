@@ -1,9 +1,9 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 import basicKidnap from "../../../../../rolesystem/prototypes/basicKidnap"
 
-const jail: RoleActionable = (actionable, game, params) => {
+const jail: RoleActionable = async (actionable, game, params) => {
 	basicKidnap.reason = "abducted"
-	basicKidnap(actionable, game, params)
+	await basicKidnap(actionable, game, params)
 }
 
 jail.TAGS = ["drivable", "visit"]

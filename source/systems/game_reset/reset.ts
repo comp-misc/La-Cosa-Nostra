@@ -13,7 +13,7 @@ const reset = async (client: Client, config: LcnConfig): Promise<void> => {
 
 	deleteCaches()
 
-	setStatus(client)
+	await setStatus(client)
 }
 
 export = reset

@@ -71,7 +71,7 @@ export default async (game: Game): Promise<void> => {
 
 		if (eliminated && surviving) {
 			// Run the condition
-			const response = condition(game)
+			const response = await condition(game)
 
 			// Winners would already have been declared
 			// by condition function

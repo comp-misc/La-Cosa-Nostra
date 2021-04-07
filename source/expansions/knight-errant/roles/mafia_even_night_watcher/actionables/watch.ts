@@ -1,15 +1,15 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 
-const watch: RoleActionable = (actionable, game) => {
+const watch: RoleActionable = async (actionable, game) => {
 	// Visit the target
-	game.execute("visit", {
+	await game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
 		reason: "Watcher-watch",
 	})
 
-	game.addAction("mafia_even_night_watcher/gather", ["cycle"], {
+	await game.addAction("mafia_even_night_watcher/gather", ["cycle"], {
 		name: "watcher-gather",
 		expiry: 1,
 		from: game.getPlayerOrThrow(actionable.from),

@@ -1,4 +1,4 @@
-import { CategoryChannel, Client, GuildChannel, Message, Snowflake, SnowflakeUtil, TextChannel } from "discord.js"
+import { CategoryChannel, Client, Message, Snowflake, SnowflakeUtil, TextChannel } from "discord.js"
 import fs from "fs"
 import fetch from "node-fetch"
 import zlib from "zlib"
@@ -208,7 +208,6 @@ const serialise = async (
 		// Text
 		if (channel instanceof TextChannel) {
 			channels.push(channel)
-			continue
 		}
 	}
 

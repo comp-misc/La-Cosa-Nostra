@@ -42,7 +42,7 @@ const _checksaves: AdminCommand = async (message, params) => {
 
 	const sendable =
 		"**Saves output at `[Game]" +
-		(region.length > 0 ? "." + region.join(".") : new String()) +
+		(region.length > 0 ? "." + region.join(".") : String()) +
 		"`** `[depth = " +
 		depth +
 		"]`:\n```js\n" +

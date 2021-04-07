@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Governor.
-
-Role Abilities:
-- You can once during the game override a lynch. This must be done prior to the lynch.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

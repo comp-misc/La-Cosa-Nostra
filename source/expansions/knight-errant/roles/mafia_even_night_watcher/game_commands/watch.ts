@@ -18,7 +18,7 @@ const watch: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	game.addAction("mafia_even_night_watcher/watch", ["cycle"], {
+	await game.addAction("mafia_even_night_watcher/watch", ["cycle"], {
 		name: "Watcher-watch",
 		expiry: 1,
 		from,

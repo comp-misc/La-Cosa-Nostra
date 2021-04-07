@@ -1,8 +1,8 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
 
-const investigate: RoleActionable = (actionable, game, params) => {
-	game.execute("visit", {
+const investigate: RoleActionable = async (actionable, game, params) => {
+	await game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
@@ -27,7 +27,7 @@ const investigate: RoleActionable = (actionable, game, params) => {
 		game.addMessage(from, ":mag: You got the result of __False__.")
 	}
 
-	attributeDecrement(actionable, game, params)
+	await attributeDecrement(actionable, game, params)
 }
 
 investigate.TAGS = ["drivable", "roleblockable", "visit"]

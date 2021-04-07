@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Even-Day Dayshooter.
-
-Role Abilities:
-- You may on even days choose to shoot a player. The action will be resolved instantly, however the role of a killed player is not revealed until the day is over. 
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

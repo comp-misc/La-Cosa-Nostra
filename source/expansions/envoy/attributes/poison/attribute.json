@@ -1,9 +1,0 @@
-{
-	"name": "Poison",
-
-	"modular": true,
-
-	"modular-details": {
-		"cluster": "envoy"
-	}
-}

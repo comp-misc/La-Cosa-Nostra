@@ -16,7 +16,7 @@ const kill: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	game.addAction("serial_killer/kill", ["cycle"], {
+	await game.addAction("serial_killer/kill", ["cycle"], {
 		name: "SK-kill",
 		expiry: 1,
 		from,

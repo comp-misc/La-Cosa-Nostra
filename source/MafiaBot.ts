@@ -198,7 +198,7 @@ onWithError("message", async (message) => {
 	}
 })
 
-onWithError("guildMemberAdd", (member) => {
+onWithError("guildMemberAdd", async (member) => {
 	const guild = getGuild(client)
 	const welcome = guild.channels.cache.find((x) => x.name === config.channels["welcome-channel"])
 
@@ -210,16 +210,16 @@ onWithError("guildMemberAdd", (member) => {
 	const welcomeMessage = config.messages["welcome-message"]
 	if (welcomeMessage) {
 		const msg = welcomeMessage.replace(new RegExp("{;member}", "g"), "<@" + member.id + ">")
-		;(welcome as TextChannel).send(msg)
+		await (welcome as TextChannel).send(msg)
 	}
 
 	const welcomeDmMessage = config.messages["welcome-dm-message"]
 	if (welcomeDmMessage) {
-		member.send(welcomeDmMessage)
+		await member.send(welcomeDmMessage)
 	}
 })
 
-onWithError("disconnect", (close_event) => {
+onWithError("disconnect", async (close_event) => {
 	if (hasTimer()) {
 		getTimer().save()
 	}
@@ -229,7 +229,7 @@ onWithError("disconnect", (close_event) => {
 	if (config["auto-reconnect"]) {
 		logger.log(3, "Automatic restart script initialised.")
 		// Attempt reconnection
-		client.login(process.env["bot-token"])
+		await client.login(process.env["bot-token"])
 	}
 })
 

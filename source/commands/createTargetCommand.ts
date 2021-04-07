@@ -2,7 +2,6 @@ import { Message } from "discord.js"
 import Game from "../systems/game_templates/Game"
 import Player from "../systems/game_templates/Player"
 import { CommandProperties, CommandUsageError, RoleCommand, RoleCommandAttributes } from "./CommandType"
-import sarcasm from "../rolesystem/misc/sarcasm"
 
 export interface TargetRoleCommand extends RoleCommandAttributes {
 	(game: Game, message: Message, target: Player | "nobody", player: Player): void
@@ -40,11 +39,11 @@ export const createTargetCommand = (
 		}
 		const to = playerMatch.player
 		if (!canPerformOnDeadPlayers && !to.isAlive()) {
-			await message.reply(":x: You can't use your ability on a dead player! " + sarcasm())
+			await message.reply(":x: You can't use your ability on a dead player!")
 			return
 		}
 		if (!canPerformOnSelf && player === to) {
-			await message.reply("You can't use your ability on yourself! " + sarcasm())
+			await message.reply("You can't use your ability on yourself!")
 			return
 		}
 		await command(game, message, to, player)

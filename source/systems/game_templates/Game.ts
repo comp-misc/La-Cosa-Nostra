@@ -532,10 +532,10 @@ class Game {
 			// Count NL vote
 			if (voted_no_lynch) {
 				// Remove no-lynch vote
-				this.clearNoLynchVotesBy(voter.identifier)
+				await this.clearNoLynchVotesBy(voter.identifier)
 				await executable.misc.removedNolynch(this, voter)
 			} else {
-				this.addNoLynchVote(voter.identifier, magnitude)
+				await this.addNoLynchVote(voter.identifier, magnitude)
 				await executable.misc.addedNolynch(this, voter)
 			}
 
@@ -567,7 +567,7 @@ class Game {
 
 			const before_votes = voted_against.countVotes()
 
-			const toggle_on = voted_against.toggleVotes(voter.identifier, magnitude)
+			const toggle_on = await voted_against.toggleVotes(voter.identifier, magnitude)
 
 			const after_votes = voted_against.countVotes()
 
@@ -609,7 +609,7 @@ class Game {
 			if (already_voting) {
 				// Remove special vote
 				special_vote.voters = special_vote.voters.filter((x) => x.identifier !== voter.identifier)
-				this.execute("unvote", {
+				await this.execute("unvote", {
 					target: "s/" + voted_against,
 					voter: voter.identifier,
 				})
@@ -618,7 +618,7 @@ class Game {
 					identifier: voter.identifier,
 					magnitude: magnitude,
 				})
-				this.execute("vote", {
+				await this.execute("vote", {
 					target: "s/" + voted_against,
 					voter: voter.identifier,
 				})
@@ -712,14 +712,14 @@ class Game {
 		return executable.misc.editTrialVote(this)
 	}
 
-	clearAllVotesBy(identifier: string): boolean {
+	private async clearAllVotesBy(identifier: string): Promise<boolean> {
 		// Clears all the votes on other people
 		// by id specified
 
 		let cleared = false
 
 		for (let i = 0; i < this.players.length; i++) {
-			cleared = cleared || this.players[i].clearVotesBy(identifier)
+			cleared = cleared || (await this.players[i].clearVotesBy(identifier))
 		}
 		return cleared
 	}
@@ -784,7 +784,7 @@ class Game {
 			// Player routines in start
 			//this.playerRoutines();
 
-			this.execute("postcycle", { period: this.period })
+			await this.execute("postcycle", { period: this.period })
 		} else if (this.state === GameState.PLAYING) {
 			this.voting_halted = true
 
@@ -826,7 +826,7 @@ class Game {
 				}
 			}
 
-			this.execute("postcycle", { period: this.period })
+			await this.execute("postcycle", { period: this.period })
 		} else {
 			return null
 		}
@@ -860,7 +860,7 @@ class Game {
 			await this.clearVotes()
 		}
 
-		this.execute("cycle", { period: this.period })
+		await this.execute("cycle", { period: this.period })
 		this.enterDeathMessages()
 		await this.sendMessages()
 	}
@@ -1069,7 +1069,7 @@ class Game {
 		await this.silentKill(role, reason, secondary_reason, broadcast_position_offset, circumstances)
 
 		if (this.getPeriodLog() && this.getPeriodLog().trial_vote) {
-			this.clearAllVotesFromAndTo(role.identifier)
+			await this.clearAllVotesFromAndTo(role.identifier)
 			await this.reloadTrialVoteMessage()
 			await this.checkLynchHammer()
 		}
@@ -1092,7 +1092,7 @@ class Game {
 		// Secondary reason is what the player sees
 		// Can be used to mask death but show true
 		// reason of death to the player killed
-		this.execute("killed", {
+		await this.execute("killed", {
 			target: role.identifier,
 			circumstances: circumstances,
 		})
@@ -1578,13 +1578,18 @@ class Game {
 		await this.instantiateTrialVoteCollector()
 	}
 
-	addAction<T>(identifier: string, triggers: Trigger[], options: ActionOptions<T>, rearrange = true): Actionable<T> {
+	addAction<T>(
+		identifier: string,
+		triggers: Trigger[],
+		options: ActionOptions<T>,
+		rearrange = true
+	): Promise<Actionable<T>> {
 		// Inherits
 		return this.actions.add(identifier, triggers, options, rearrange)
 	}
 
-	execute(type: Trigger, params: ExecutionParams, check_expiries = true): void {
-		this.actions.execute(type, params, check_expiries)
+	async execute(type: Trigger, params: ExecutionParams, check_expiries = true): Promise<void> {
+		await this.actions.execute(type, params, check_expiries)
 	}
 
 	getPlayerMatch(name: string): { score: number; player: Player } {
@@ -1895,14 +1900,14 @@ class Game {
 		return count
 	}
 
-	addNoLynchVote(identifier: string, magnitude: number): void {
+	private async addNoLynchVote(identifier: string, magnitude: number) {
 		const no_lynch_vote = this.getPeriodLog()["no_lynch_vote"]
 
 		no_lynch_vote.push({ identifier: identifier, magnitude: magnitude })
-		this.execute("vote", { target: "nl", voter: identifier })
+		await this.execute("vote", { target: "nl", voter: identifier })
 	}
 
-	clearNoLynchVotesBy(identifier: string): boolean {
+	async clearNoLynchVotesBy(identifier: string): Promise<boolean> {
 		const no_lynch_vote = this.getPeriodLog()["no_lynch_vote"]
 
 		let cleared = false
@@ -1915,7 +1920,7 @@ class Game {
 		}
 
 		if (cleared) {
-			this.execute("unvote", { target: "nl", voter: identifier })
+			await this.execute("unvote", { target: "nl", voter: identifier })
 		}
 
 		return cleared
@@ -1953,10 +1958,10 @@ class Game {
 		}
 	}
 
-	clearAllVotesFromAndTo(identifier: string): void {
+	private async clearAllVotesFromAndTo(identifier: string) {
 		// Stops votes to and from player
-		this.clearNoLynchVotesBy(identifier)
-		this.clearAllVotesBy(identifier)
+		await this.clearNoLynchVotesBy(identifier)
+		await this.clearAllVotesBy(identifier)
 		this.clearAllVotesOn(identifier)
 	}
 

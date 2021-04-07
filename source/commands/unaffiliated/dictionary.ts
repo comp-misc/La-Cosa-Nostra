@@ -45,7 +45,7 @@ const dictionary: UnaffiliatedCommand = async (message, params, config) => {
 	embed.setColor("RED")
 	embed.setTitle("Lookup for term: **" + key + "**")
 
-	Object.entries(info).forEach(([name, value], i) => {
+	Object.entries(info).forEach(([name, value]) => {
 		embed.addField(capFirstLetter(name), value, false)
 	})
 

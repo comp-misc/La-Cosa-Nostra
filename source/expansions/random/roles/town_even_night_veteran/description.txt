@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Even-Night Veteran.
-
-Role Abilities:
-- You may on even nights choose to be alert. As a result of this, you will attack any player unfortunate enough to visit you.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

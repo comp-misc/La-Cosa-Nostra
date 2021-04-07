@@ -10,7 +10,7 @@ const roleblock: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	game.addAction("town_roleblocker/roleblock", ["cycle"], {
+	await game.addAction("town_roleblocker/roleblock", ["cycle"], {
 		name: "Roleblocker-roleblock",
 		expiry: 1,
 		from,

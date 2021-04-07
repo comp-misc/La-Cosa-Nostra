@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Survivor.
-
-You have no actions.
-
-Win Condition: You win if you survive until the end of the game."
-

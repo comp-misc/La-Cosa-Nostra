@@ -8,7 +8,7 @@ export default interface AttackPrototype {
 		_params?: ExecutionParams,
 		astral?: boolean,
 		broadcast_offset?: number
-	): boolean
+	): Promise<boolean>
 
 	reason: string
 	secondary_reason?: string

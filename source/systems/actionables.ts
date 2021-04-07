@@ -9,7 +9,7 @@ import recursiveFileFind from "../auxils/recursiveFileFind"
 import requireScript from "../auxils/requireScript"
 
 export interface RoleActionable<T = unknown> {
-	(actionable: Actionable<T>, game: Game, params?: ExecutionParams): void | boolean
+	(actionable: Actionable<T>, game: Game, params?: ExecutionParams): void | boolean | Promise<void> | Promise<boolean>
 	TAGS?: string[]
 }
 

@@ -9,7 +9,7 @@ const jail: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	game.addAction("a/ability_jail/jail", ["cycle"], {
+	await game.addAction("a/ability_jail/jail", ["cycle"], {
 		name: "Modular-jail",
 		expiry: 1,
 		from,

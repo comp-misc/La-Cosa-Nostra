@@ -24,10 +24,11 @@ const _attributes: AdminCommand = async (message, params, config) => {
 
 	const attributes = player.attributes
 
-	let sendable: string[] = []
+	let sendable: string[]
 	if (attributes.length > 0) {
 		sendable = attributes.map(
-			(x, i) => "Attribute **[" + (i + 1) + "]**:\n" + "```fix\n" + JSON.stringify(x, auxils.jsonInfinityCensor) + "```"
+			(x, i) =>
+				"Attribute **[" + (i + 1) + "]**:\n" + "```fix\n" + JSON.stringify(x, auxils.jsonInfinityCensor) + "```"
 		)
 	} else {
 		sendable = [":x: No attributes found!"]

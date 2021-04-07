@@ -43,11 +43,11 @@ export const executeGameCommand = async (
 		return
 	}
 	if (game.state === "playing" && command.command.ALLOW_GAME === false) {
-		message.reply(":x: That command cannot be used when the game is running!")
+		await message.reply(":x: That command cannot be used when the game is running!")
 		return
 	}
 	if (game.state === "ended" && command.command.ALLOW_POSTGAME === false) {
-		message.reply(":x: That command cannot be used in the post-game!")
+		await message.reply(":x: That command cannot be used in the post-game!")
 		return
 	}
 	await command.command(game, message, params)

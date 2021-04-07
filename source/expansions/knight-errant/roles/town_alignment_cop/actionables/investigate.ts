@@ -9,8 +9,8 @@ const responses: Record<Alignment, string> = {
 	role: ":mag_right: Your target's role is **{;role}**.",
 }
 
-const investigate: RoleActionable = (actionable, game) => {
-	game.execute("visit", {
+const investigate: RoleActionable = async (actionable, game) => {
+	await game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,

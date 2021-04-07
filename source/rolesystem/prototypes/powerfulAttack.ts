@@ -2,16 +2,16 @@ import { Actionable, ExecutionParams } from "../../systems/game_templates/Action
 import Game from "../../systems/game_templates/Game"
 import AttackPrototype from "./AttackPrototype"
 
-const powerfulAttack: AttackPrototype = <T>(
+const powerfulAttack: AttackPrototype = async <T>(
 	actionable: Actionable<T>,
 	game: Game,
 	_params?: ExecutionParams,
 	astral = false,
 	broadcast_offset = 0
-): boolean => {
-	const attacked = game.getPlayerByIdentifierOrThrow(actionable.to)
+): Promise<boolean> => {
+	const attacked = game.getPlayerOrThrow(actionable.to)
 
-	const attack_parameters: Record<string, any> = {
+	const attack_parameters: ExecutionParams = {
 		attacker: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
@@ -21,10 +21,10 @@ const powerfulAttack: AttackPrototype = <T>(
 		secondary_reason: powerfulAttack.secondary_reason,
 	}
 
-	game.execute("attacked", attack_parameters)
+	await game.execute("attacked", attack_parameters)
 
 	if (!astral) {
-		game.execute("visit", {
+		await game.execute("visit", {
 			visitor: actionable.from,
 			target: actionable.to,
 			priority: actionable.priority,
@@ -38,7 +38,13 @@ const powerfulAttack: AttackPrototype = <T>(
 	if (stat < 2) {
 		// Kill the player
 		attack_parameters.type = "attack"
-		game.kill(attacked, powerfulAttack.reason, powerfulAttack.secondary_reason, broadcast_offset, attack_parameters)
+		await game.kill(
+			attacked,
+			powerfulAttack.reason,
+			powerfulAttack.secondary_reason,
+			broadcast_offset,
+			attack_parameters
+		)
 		return true
 	} else {
 		return false

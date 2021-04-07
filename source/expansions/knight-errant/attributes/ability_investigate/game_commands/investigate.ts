@@ -9,7 +9,7 @@ const investigate: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	game.addAction("a/ability_investigate/investigate", ["cycle"], {
+	await game.addAction("a/ability_investigate/investigate", ["cycle"], {
 		name: "Modular-investigate",
 		expiry: 1,
 		from,

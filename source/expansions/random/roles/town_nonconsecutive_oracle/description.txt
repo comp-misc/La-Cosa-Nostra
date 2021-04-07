@@ -1,9 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Nonconsecutive Oracle.
-
-Role Abilities:
-- You may each night choose to select a player. If you die, the role of your last selected player is revealed.
-Your action may not be used on two nights consecutively.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

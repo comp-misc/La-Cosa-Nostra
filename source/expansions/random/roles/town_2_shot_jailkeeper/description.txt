@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town 2-shot Jailkeeper.
-
-Role Abilities:
-- You can at night, twice during the game, choose to jail a player. As a result the player is unable to do any actions, in addition to being protected from a single night attack.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

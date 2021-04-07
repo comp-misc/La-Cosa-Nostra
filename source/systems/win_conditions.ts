@@ -5,7 +5,7 @@ import Player from "./game_templates/Player"
 import roles from "./roles"
 
 export interface WinCondition {
-	(game: Game): boolean
+	(game: Game): boolean | Promise<boolean>
 	STOP_GAME: boolean
 	STOP_CHECKS: boolean
 	FACTIONAL: boolean
@@ -57,5 +57,4 @@ for (const [id, role] of Object.entries(roles)) {
 	}
 }
 
-console.log("Win Conditions: ", Object.keys(ret))
 export default ret

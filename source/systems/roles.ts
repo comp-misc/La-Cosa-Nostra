@@ -102,6 +102,4 @@ for (let i = 0; i < roles.length; i++) {
 	}
 }
 
-console.log("Roles: ", Object.keys(ret))
-
 export default ret

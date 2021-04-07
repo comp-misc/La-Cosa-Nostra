@@ -28,7 +28,7 @@ const commute: RoleCommand = async (game, message, params, from) => {
 
 	await message.reply(":camping: You have decided to commute tonight.")
 
-	game.addAction("a/ability_commute/commute", ["cycle"], {
+	await game.addAction("a/ability_commute/commute", ["cycle"], {
 		name: "Modular-commute",
 		expiry: 1,
 		meta: { type: "ability" },

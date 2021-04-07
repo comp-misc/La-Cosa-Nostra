@@ -2,7 +2,7 @@
 
 import { AttributeStart } from "../../../../../systems/Attribute"
 
-const start: AttributeStart = (player): void => {
+const start: AttributeStart = async (player) => {
 	if (
 		player
 			.getGame()
@@ -11,7 +11,7 @@ const start: AttributeStart = (player): void => {
 		return
 	}
 
-	player.getGame().addAction("a/ability_track/roleblock_noresult", ["roleblock"], {
+	await player.getGame().addAction("a/ability_track/roleblock_noresult", ["roleblock"], {
 		from: player,
 		to: player,
 		expiry: Infinity,

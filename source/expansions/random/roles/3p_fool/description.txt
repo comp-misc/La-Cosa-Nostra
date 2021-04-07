@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Fool.
-
-You have no actions. If you get lynched, all the remaining players will lose.
-
-Win Condition: You win when you get lynched."
-

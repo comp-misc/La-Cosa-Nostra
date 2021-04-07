@@ -15,7 +15,7 @@ const _retrial: AdminCommand = async (message) => {
 	}
 
 	// Do not load pre-emptives
-	game.createTrialVote(false)
+	await game.createTrialVote(false)
 
 	game.clearTrialVoteCollectors()
 	game.voting_halted = false

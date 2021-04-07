@@ -100,7 +100,9 @@ const will: GameCommand = async (game, message, params) => {
 			break
 		}
 		default:
-			message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "will <view/write> [will]` instead!")
+			await message.channel.send(
+				":x: Wrong syntax! Use `" + config["command-prefix"] + "will <view/write> [will]` instead!"
+			)
 			break
 	}
 

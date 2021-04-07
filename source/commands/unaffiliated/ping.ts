@@ -6,7 +6,7 @@ const ping: UnaffiliatedCommand = async (message) => {
 
 	const delta = now.getTime() - timestamp.getTime()
 
-	message.channel.send(":ping_pong: Pong! (" + delta + " ms)")
+	await message.channel.send(":ping_pong: Pong! (" + delta + " ms)")
 }
 
 export = ping

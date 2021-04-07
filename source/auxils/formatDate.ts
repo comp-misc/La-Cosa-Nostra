@@ -6,7 +6,7 @@ export = (milliseconds: number): string => {
 	const weeks = Math.floor(milliseconds / (1000 * 60 * 60 * 24 * 7))
 
 	// Calculate
-	let concat = new String()
+	let concat = String()
 
 	if (weeks >= 1) {
 		concat += weeks + "w "

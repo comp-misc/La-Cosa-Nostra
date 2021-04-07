@@ -26,9 +26,9 @@ export = (client: Client, config: LcnConfig): void => {
 		}
 		return ch
 	}
-	onWithError("message", function (message) {
+	onWithError("message", async (message) => {
 		if (hasTimer() && getTimer().game) {
-			getTimer().game.execute("chat", { message: message })
+			await getTimer().game.execute("chat", { message: message })
 		}
 	})
 
@@ -94,7 +94,7 @@ export = (client: Client, config: LcnConfig): void => {
 		}
 
 		if (count > ping_config["threshold"]) {
-			message.channel.send(
+			await message.channel.send(
 				":x: <@" +
 					message.author.id +
 					">, please refrain from pinging the Alive role more than __" +
@@ -108,7 +108,7 @@ export = (client: Client, config: LcnConfig): void => {
 		}
 	})
 
-	onWithError("messageUpdate", (old_message, new_message) => {
+	onWithError("messageUpdate", async (old_message, new_message) => {
 		if (!hasTimer() || getTimer().game.state !== "playing" || !new_message.member) {
 			return
 		}
@@ -128,7 +128,7 @@ export = (client: Client, config: LcnConfig): void => {
 		const whisper_channel = getChannel("whisper-log")
 
 		if (new_message.channel.id !== main_channel.id && new_message.channel.id !== whisper_channel.id) {
-			return null
+			return
 		}
 
 		for (let i = 0; i < edit_config["exempt"].length; i++) {
@@ -139,7 +139,7 @@ export = (client: Client, config: LcnConfig): void => {
 			)
 
 			if (exempt_role && new_message.member.roles.cache.some((x) => x.id === exempt_role.id)) {
-				return null
+				return
 			}
 		}
 
@@ -158,7 +158,7 @@ export = (client: Client, config: LcnConfig): void => {
 		if (delta / edit_config["minimum-character-count"] >= edit_config["edit-ratio"]) {
 			const edit_delta = new Date().getTime() - (old_message.editedAt || old_message.createdAt).getTime()
 
-			new_message.channel.send(
+			await new_message.channel.send(
 				":x: <@" +
 					new_message.author.id +
 					">, you edited message " +
@@ -180,7 +180,7 @@ export = (client: Client, config: LcnConfig): void => {
 		}
 	})
 
-	client.on("messageDelete", (message) => {
+	client.on("messageDelete", async (message) => {
 		if (!hasTimer() || getTimer().game.state !== "playing" || !message.member) {
 			return
 		}
@@ -208,9 +208,7 @@ export = (client: Client, config: LcnConfig): void => {
 			return
 		}
 
-		for (let i = 0; i < deletion_config["exempt"].length; i++) {
-			const role_key: string = deletion_config["exempt"][i]
-
+		for (const role_key of deletion_config.exempt) {
 			const exempt_role = guild.roles.cache.find(
 				(x) => x.name === config.permissions[role_key as keyof PermissionsConfig]
 			)
@@ -223,7 +221,7 @@ export = (client: Client, config: LcnConfig): void => {
 		const length = message.content.length
 
 		if (length >= deletion_config["minimum-character-count"]) {
-			message.channel.send(
+			await message.channel.send(
 				":x: <@" +
 					message.author.id +
 					">, you deleted message " +

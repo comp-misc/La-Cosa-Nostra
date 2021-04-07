@@ -52,5 +52,4 @@ for (let i = 0; i < attributes.length; i++) {
 		commands,
 	}
 }
-console.log("Attributes: ", Object.keys(ret))
 export = ret

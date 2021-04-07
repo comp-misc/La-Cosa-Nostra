@@ -1,7 +1,7 @@
 import { Actionable } from "../../systems/game_templates/Actions"
 import Game from "../../systems/game_templates/Game"
 
-const logSuccess = <T>(actionable: Actionable<T>, game: Game): void => {
+const logSuccess = async <T>(actionable: Actionable<T>, game: Game): Promise<void> => {
 	const player = game.getPlayerByIdentifier(actionable.from)
 	if (!player) {
 		throw new Error(`Unknown player '${actionable.from}'`)
@@ -16,7 +16,7 @@ const logSuccess = <T>(actionable: Actionable<T>, game: Game): void => {
 
 	player.modular_success_log.push(identifier)
 
-	game.execute("miscellaneous", { target: player.identifier, event: "modular_log_success", module: identifier })
+	await game.execute("miscellaneous", { target: player.identifier, event: "modular_log_success", module: identifier })
 }
 
 export = logSuccess

@@ -7,7 +7,9 @@ import makeCommand from "../makeCommand"
 const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 	if (params.length < 1) {
 		await message.channel.send(
-			":x: Wrong syntax! Please use `" + config["command-prefix"] + 'memberinfo <username/nickname/id/"user">` instead!'
+			":x: Wrong syntax! Please use `" +
+				config["command-prefix"] +
+				'memberinfo <username/nickname/id/"user">` instead!'
 		)
 		return
 	}
@@ -41,7 +43,7 @@ const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 	})
 
 	if (members.length < 1) {
-		message.channel.send(
+		await message.channel.send(
 			":x: Oi! I can't find a member with that name! Try again using a legitimate username/nickname/id!"
 		)
 		return null
@@ -80,7 +82,7 @@ const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 			embed.setThumbnail(avatar)
 		}
 
-		message.channel.send(embed)
+		await message.channel.send(embed)
 	}
 }
 

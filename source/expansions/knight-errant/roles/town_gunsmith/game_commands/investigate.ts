@@ -8,7 +8,7 @@ const investigate: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	game.addAction("town_gunsmith/investigate", ["cycle"], {
+	await game.addAction("town_gunsmith/investigate", ["cycle"], {
 		name: "Gunsmith-investigation",
 		expiry: 1,
 		from,

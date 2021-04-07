@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town 2-shot Neapolitan.
-
-Role Abilities:
-- You can at night, twice during the game, choose to investigate whether someone is a vanilla townie or not. You will the next morning recieve a report in the form of «True» or «False».
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

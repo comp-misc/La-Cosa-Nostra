@@ -3,7 +3,7 @@
 import { RoleStart } from "../../../../../systems/Role"
 
 const start: RoleStart = async (player) => {
-	player.getGame().addAction("mafia_even_night_watcher/roleblock_noresult", ["roleblock"], {
+	await player.getGame().addAction("mafia_even_night_watcher/roleblock_noresult", ["roleblock"], {
 		from: player,
 		to: player,
 		expiry: Infinity,

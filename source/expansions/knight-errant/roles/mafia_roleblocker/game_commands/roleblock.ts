@@ -17,7 +17,7 @@ const roleblock: TargetRoleCommand = async (game, message, target, from) => {
 		return null
 	}
 
-	game.addAction("mafia_roleblocker/roleblock", ["cycle"], {
+	await game.addAction("mafia_roleblocker/roleblock", ["cycle"], {
 		name: "Mafia-roleblocker-roleblock",
 		expiry: 1,
 		from,

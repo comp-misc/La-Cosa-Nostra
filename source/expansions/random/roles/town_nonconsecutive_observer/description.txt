@@ -1,9 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Nonconsecutive Observer.
-
-Role Abilities:
-- You may each night choose to simultaneously track and watch a player. You will recieve a report the following morning containing who the player visited and was visited by, however both reports are shuffled into one.
-Your action may not be used on two nights consecutively.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

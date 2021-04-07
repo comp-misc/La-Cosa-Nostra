@@ -1,5 +1,0 @@
-As any good typical alien, you have a flair for abducting people and running experiments on them.
-
-Every night, you are able to probe a player. This roleblocks the player and also stops night actions from being performed on them.
-
-You win immediately when all the players alive have been probed.

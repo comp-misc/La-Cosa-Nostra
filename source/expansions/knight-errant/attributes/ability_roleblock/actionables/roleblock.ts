@@ -1,18 +1,18 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
 
-const roleblock: RoleActionable = (actionable, game, params) => {
+const roleblock: RoleActionable = async (actionable, game, params) => {
 	const target = game.getPlayerOrThrow(actionable.to)
 
 	// Considered as visit
-	game.execute("visit", {
+	await game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
 		reason: "Modular-visit",
 	})
 
-	game.execute("roleblock", {
+	await game.execute("roleblock", {
 		roleblocker: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
@@ -28,7 +28,7 @@ const roleblock: RoleActionable = (actionable, game, params) => {
 		target.setStatus("roleblocked", true)
 	}
 
-	attributeDecrement(actionable, game, params)
+	await attributeDecrement(actionable, game, params)
 }
 
 roleblock.TAGS = ["drivable", "visit"]

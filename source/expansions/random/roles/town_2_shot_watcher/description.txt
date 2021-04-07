@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town 2-shot Watcher.
-
-Role Abilities:
-- You can at night, twice during the game, choose to watch a player to see who they were visited by, if anyone. You will recieve the report next morning.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

@@ -1,9 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Nonconsecutive Vigilante.
-
-Role Abilities:
-- You may each night choose to kill a player.
-Your action may not be used on two nights consecutively.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

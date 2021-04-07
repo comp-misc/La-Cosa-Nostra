@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Even-Night Firefighter.
-
-Role Abilities:
-- You may on even nights choose to extinguish a player. If the player was previously doused, they no longer are.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

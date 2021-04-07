@@ -94,7 +94,12 @@ export default class Actions {
 		return this
 	}
 
-	add<T>(identifier: string, triggers: Trigger[], options: ActionOptions<T>, rearrange = true): Actionable<T> {
+	async add<T>(
+		identifier: string,
+		triggers: Trigger[],
+		options: ActionOptions<T>,
+		rearrange = true
+	): Promise<Actionable<T>> {
 		// Actions are calculated relative to the step
 
 		for (let i = 0; i < triggers.length; i++) {
@@ -175,7 +180,7 @@ export default class Actions {
 
 		if (triggers.includes("instant")) {
 			// Execute immediately
-			this.execute("instant")
+			await this.execute("instant")
 		}
 
 		this.game.tentativeSave()
@@ -226,13 +231,13 @@ export default class Actions {
 		return this.actions
 	}
 
-	step(): void {
+	async step(): Promise<void> {
 		// Iterate through actions
-		this.execute("cycle")
+		await this.execute("cycle")
 	}
 
 	// "params" is optional
-	execute(type: Trigger, params?: ExecutionParams, check_expiries = true): void {
+	async execute(type: Trigger, params?: ExecutionParams, check_expiries = true): Promise<void> {
 		// Actions: [from, to, game]
 		// Returns: boolean
 		// If true for chat, lynch, arbitrary types, subtract one
@@ -261,7 +266,7 @@ export default class Actions {
 				throw new Error("Must specify params for a visit")
 			}
 			this.visit_log.push(params)
-			this.execute("outvisit", params)
+			await this.execute("outvisit", params)
 		}
 
 		let i = 0
@@ -323,11 +328,11 @@ export default class Actions {
 
 			let rerun = false
 
-			const execute = (): boolean | void => {
+			const execute = async (): Promise<boolean | void> => {
 				rerun = true
 
 				try {
-					return run(action, game, params)
+					return await run(action, game, params)
 				} catch (err) {
 					getLogger().logError(err)
 					getLogger().log(
@@ -373,7 +378,7 @@ export default class Actions {
 
 				if (check === target || target === "*") {
 					if (action.execution <= 0) {
-						const result = execute()
+						const result = await execute()
 
 						if (result === true) {
 							// Immediately mark for deletion
@@ -386,7 +391,7 @@ export default class Actions {
 			// Periodic-triggers
 			if (["cycle", "postcycle", "instant", "retrocycle"].includes(type)) {
 				if (action.execution <= 0) {
-					const result = execute()
+					const result = await execute()
 
 					if (result === true) {
 						// Immediately mark for deletion
@@ -424,7 +429,7 @@ export default class Actions {
 			for (let i = 0; i < this.visit_log.length; i++) {
 				const visit_log = this.visit_log[i]
 
-				this.execute("retrovisit", visit_log)
+				await this.execute("retrovisit", visit_log)
 
 				const inverse_log = Object.assign({}, visit_log)
 
@@ -433,10 +438,10 @@ export default class Actions {
 
 				delete inverse_log.visitor
 
-				this.execute("retrooutvisit", inverse_log)
+				await this.execute("retrooutvisit", inverse_log)
 			}
 
-			this.execute("retrocycle")
+			await this.execute("retrocycle")
 
 			this.previous_visit_log = this.previous_visit_log.concat(this.visit_log)
 			this.visit_log = []

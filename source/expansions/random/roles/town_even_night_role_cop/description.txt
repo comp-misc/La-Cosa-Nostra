@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Even-Night Role Cop.
-
-Role Abilities:
-- You may on even nights choose to check what role a player has. You will recieve the report next morning.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

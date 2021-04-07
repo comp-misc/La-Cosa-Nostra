@@ -1,7 +1,7 @@
 import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
 
-export = (game: Game, role: Player): boolean => {
+export = async (game: Game, role: Player): Promise<boolean> => {
 	const lynchable = role.lynchable()
 
 	if (!lynchable) {
@@ -9,7 +9,7 @@ export = (game: Game, role: Player): boolean => {
 	}
 
 	const lynches = Array.from(role.votes)
-	game.execute("lynch", { target: role.identifier, votes: lynches })
+	await game.execute("lynch", { target: role.identifier, votes: lynches })
 
 	return lynchable
 }

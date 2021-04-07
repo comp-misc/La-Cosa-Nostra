@@ -25,7 +25,7 @@ const hash_type = "sha256"
 const hashcheck: AdminCommand = async (message, params) => {
 	const hash = crypto.createHash(hash_type)
 
-	let addendum = new String()
+	let addendum = String()
 	if (params.length > 0) {
 		const additional_directory = params.join(" ")
 		addendum =

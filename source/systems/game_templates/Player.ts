@@ -210,27 +210,27 @@ class Player {
 		return false
 	}
 
-	voteAgainst(identifier: string, magnitude = 1): void {
+	private async voteAgainst(identifier: string, magnitude = 1) {
 		// x votes against this player
 		this.votes.push({ identifier: identifier, magnitude: magnitude })
-		this.getGame().execute("vote", { target: identifier, voter: this.identifier })
+		await this.getGame().execute("vote", { target: identifier, voter: this.identifier })
 	}
 
-	toggleVotes(identifier: string, magnitude = 1): boolean {
+	async toggleVotes(identifier: string, magnitude = 1): Promise<boolean> {
 		if (this.isVotedAgainstBy(identifier)) {
-			this.clearVotesBy(identifier)
+			await this.clearVotesBy(identifier)
 			return false
 		} else {
-			this.voteAgainst(identifier, magnitude)
+			await this.voteAgainst(identifier, magnitude)
 			return true
 		}
 	}
 
-	clearVotesBy(identifier: string): boolean {
+	async clearVotesBy(identifier: string): Promise<boolean> {
 		for (let i = 0; i < this.votes.length; i++) {
 			if (this.votes[i].identifier === identifier) {
 				this.votes.splice(i, 1)
-				this.getGame().execute("unvote", {
+				await this.getGame().execute("unvote", {
 					target: identifier,
 					voter: this.identifier,
 				})

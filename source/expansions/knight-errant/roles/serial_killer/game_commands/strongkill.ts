@@ -16,7 +16,7 @@ const strongkill: TargetRoleCommand = async (game, message, target, from) => {
 		await message.reply(":x: You have run out of strong kills")
 		return
 	}
-	game.addAction("serial_killer/strongkill", ["cycle"], {
+	await game.addAction("serial_killer/strongkill", ["cycle"], {
 		name: "SK-kill",
 		expiry: 1,
 		from,

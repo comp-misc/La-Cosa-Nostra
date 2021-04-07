@@ -24,7 +24,7 @@ const alive: GameCommand = async (game, message) => {
 		} else {
 			grammar = "are"
 		}
-		message.channel.send(
+		await message.channel.send(
 			"There " +
 				grammar +
 				" __" +

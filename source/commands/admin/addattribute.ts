@@ -55,7 +55,7 @@ const addattribute: AdminCommand = async (message, params, config) => {
 		}
 	}
 
-	player.addAttribute(params[1], expiry, tags)
+	await player.addAttribute(params[1], expiry, tags)
 
 	await message.channel.send(
 		":ok: Added attribute `" +

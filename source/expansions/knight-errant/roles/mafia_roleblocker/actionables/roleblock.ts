@@ -1,17 +1,17 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 
-const roleblock: RoleActionable = (actionable, game) => {
+const roleblock: RoleActionable = async (actionable, game) => {
 	const target = game.getPlayerOrThrow(actionable.to)
 
 	// Considered as visit
-	game.execute("visit", {
+	await game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
 		reason: "Mafia-Roleblocker-visit",
 	})
 
-	game.execute("roleblock", {
+	await game.execute("roleblock", {
 		roleblocker: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,

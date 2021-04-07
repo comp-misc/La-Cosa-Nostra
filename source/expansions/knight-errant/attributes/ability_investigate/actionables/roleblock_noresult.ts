@@ -1,6 +1,6 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 
-const roleblock_noresult: RoleActionable = (actionable, game, params) => {
+const roleblock_noresult: RoleActionable = (actionable, game) => {
 	const player = game.getPlayerOrThrow(actionable.from)
 
 	// Check if exists

@@ -2,13 +2,13 @@ import { Actionable, ExecutionParams } from "../../systems/game_templates/Action
 import Game from "../../systems/game_templates/Game"
 import AttackPrototype from "./AttackPrototype"
 
-const unstoppableAttack: AttackPrototype = <T>(
+const unstoppableAttack: AttackPrototype = async <T>(
 	actionable: Actionable<T>,
 	game: Game,
 	_params?: ExecutionParams,
 	astral = false,
 	broadcast_offset = 0
-): boolean => {
+): Promise<boolean> => {
 	const attacked = game.getPlayerByIdentifierOrThrow(actionable.to)
 
 	const attack_parameters: Record<string, any> = {
@@ -21,10 +21,10 @@ const unstoppableAttack: AttackPrototype = <T>(
 		secondary_reason: unstoppableAttack.secondary_reason,
 	}
 
-	game.execute("attacked", attack_parameters)
+	await game.execute("attacked", attack_parameters)
 
 	if (!astral) {
-		game.execute("visit", {
+		await game.execute("visit", {
 			visitor: actionable.from,
 			target: actionable.to,
 			priority: actionable.priority,
@@ -38,7 +38,7 @@ const unstoppableAttack: AttackPrototype = <T>(
 	if (stat < 3) {
 		// Kill the player
 		attack_parameters.type = "attack"
-		game.kill(
+		await game.kill(
 			attacked,
 			unstoppableAttack.reason,
 			unstoppableAttack.secondary_reason,

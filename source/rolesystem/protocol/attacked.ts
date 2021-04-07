@@ -1,7 +1,7 @@
 import { Actionable, ExecutionParams } from "../../systems/game_templates/Actions"
 import Game from "../../systems/game_templates/Game"
 
-const attackedExport = <T>(actionable: Actionable<T>, game: Game, params: ExecutionParams): void => {
+const attackedExport = async <T>(actionable: Actionable<T>, game: Game, params: ExecutionParams): Promise<void> => {
 	const attacked = game.getPlayerByIdentifier(actionable.from)
 	if (!attacked) {
 		throw new Error(`No player found with identifier '${actionable.from}'`)
@@ -22,7 +22,7 @@ const attackedExport = <T>(actionable: Actionable<T>, game: Game, params: Execut
 			game.addMessage(attacked, ":exclamation: You were " + attackedExport.NIGHT_MESSAGE + "!")
 		} else {
 			if (attackedExport.INSTANT_FOR_DAY) {
-				attacked.getPrivateChannel().send(":exclamation: You were " + attackedExport.DAY_MESSAGE + "!")
+				await attacked.getPrivateChannel().send(":exclamation: You were " + attackedExport.DAY_MESSAGE + "!")
 			} else {
 				game.addMessage(attacked, ":exclamation: You were " + attackedExport.DAY_MESSAGE + "!")
 			}

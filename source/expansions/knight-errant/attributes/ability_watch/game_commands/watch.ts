@@ -11,7 +11,7 @@ const watch: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	game.addAction("a/ability_watch/watch", ["cycle"], {
+	await game.addAction("a/ability_watch/watch", ["cycle"], {
 		name: "Modular-watch",
 		expiry: 1,
 		from,

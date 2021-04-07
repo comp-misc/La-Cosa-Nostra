@@ -42,7 +42,7 @@ const qcheck: AdminCommand = async (message) => {
 		await message.channel.send(":x: The qcheck channel is not a text channel")
 		return
 	} else {
-		alwchannel.send(`Roles`)
+		await alwchannel.send(`Roles`)
 		const displays: string[] = []
 		for (let i = 0; i < roles.length; i++) {
 			if (roles[i].status.alive) {

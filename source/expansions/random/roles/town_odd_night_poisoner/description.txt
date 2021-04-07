@@ -1,8 +1,0 @@
-Role Description:
-
-"Welcome to _____! You are a Town Odd-Night Poisoner.
-
-Role Abilities:
-- You may on odd nights choose to poison a player. Unless they are cured either this or the next night, they will die. They will be informed of this.
-
-Win Condition: You win when all threats to town has been eliminated and there is at least one member of town left."

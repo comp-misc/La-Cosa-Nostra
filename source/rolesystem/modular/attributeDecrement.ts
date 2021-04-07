@@ -1,13 +1,13 @@
 import { Actionable, ExecutionParams } from "../../systems/game_templates/Actions"
 import Game from "../../systems/game_templates/Game"
 
-const attributeDecrement = <T>(
+const attributeDecrement = async <T>(
 	actionable: Actionable<T>,
 	game: Game,
 	params?: ExecutionParams,
 	greedy = false,
 	log = true
-): void => {
+): Promise<void> => {
 	const player = game.getPlayerByIdentifier(actionable.from)
 	if (!player) {
 		throw new Error(`No player found with identifier '${actionable.from}'`)
@@ -47,7 +47,11 @@ const attributeDecrement = <T>(
 		}
 	}
 
-	game.execute("miscellaneous", { target: player.identifier, event: "modular_log_decrement", module: identifier })
+	await game.execute("miscellaneous", {
+		target: player.identifier,
+		event: "modular_log_decrement",
+		module: identifier,
+	})
 }
 
 export = attributeDecrement

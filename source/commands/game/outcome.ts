@@ -56,13 +56,13 @@ const outcome: GameCommand = async (game, message) => {
 
 	if (lynch_config["top-voted-lynch"]) {
 		if (lynch_config["top-voted-lynch-minimum-votes"] > most_votes_on_player) {
-			message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
+			await message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
 		} else {
 			if (no_lynch_votes > most_votes_on_player) {
-				message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
+				await message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
 			} else if (no_lynch_votes < most_votes_on_player) {
 				if (players.length == 1) {
-					message.channel.send(
+					await message.channel.send(
 						":thought_balloon:  With the current votes **" + players[0] + "** will be __lynched__."
 					)
 				} else {
@@ -96,7 +96,7 @@ const outcome: GameCommand = async (game, message) => {
 							display
 					)
 				} else {
-					message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
+					await message.channel.send(":thought_balloon:  With the current votes a **no-lynch** will occur.")
 				}
 			}
 		}

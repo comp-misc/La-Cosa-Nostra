@@ -11,8 +11,8 @@ const responses: Record<Alignment, string> = {
 	role: ":mag_right: Your target's role is **{;role}**.",
 }
 
-const investigate: RoleActionable = (actionable, game, params) => {
-	game.execute("visit", {
+const investigate: RoleActionable = async (actionable, game, params) => {
+	await game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
@@ -40,7 +40,7 @@ const investigate: RoleActionable = (actionable, game, params) => {
 		game.addMessage(from, responses["town"])
 	}
 
-	attributeDecrement(actionable, game, params)
+	await attributeDecrement(actionable, game, params)
 }
 
 investigate.TAGS = ["drivable", "roleblockable", "visit"]

@@ -1,5 +1,4 @@
 import Discord, { ColorResolvable, GuildChannel } from "discord.js"
-import capitaliseFirstLetter from "../../auxils/capitaliseFirstLetter"
 import { findCommand, isValidRoleCommandFor } from "../commandFinder"
 import { Command, CommandProperties, UnaffiliatedCommand } from "../CommandType"
 

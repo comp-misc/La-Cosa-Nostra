@@ -1,6 +1,6 @@
 const objectOverride = <T, S>(j1: T, j2: S): T & S => {
 	// Scan through j1, replace
-	const ret: Record<string, any> = Object.assign(new Object(), j1)
+	const ret: Record<string, any> = Object.assign({}, j1)
 
 	Object.entries(j2).forEach(([key, item]) => {
 		// Addition
