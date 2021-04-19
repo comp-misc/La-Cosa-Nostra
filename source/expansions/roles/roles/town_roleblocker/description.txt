@@ -1,0 +1,6 @@
+Welcome to ${game.name}! You are a Town Roleblocker.
+
+Role Abilities:
+- Each night, you may choose to roleblock a player. This action cannot be roleblocked.
+
+Win Condition: You win when all threats to town have been eliminated and there is at least one member of town left.

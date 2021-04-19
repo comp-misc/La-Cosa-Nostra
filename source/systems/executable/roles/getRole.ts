@@ -3,7 +3,7 @@ import roles from "../../roles"
 
 export interface ExpandedRole extends RoleProperties {
 	description: string
-	role_card?: Promise<Buffer>
+	card?: Promise<Buffer>
 	routine?: RoleRoutine
 	start?: RoleStart
 }
@@ -29,7 +29,7 @@ export default (identifier: string, silent = false): ExpandedRole | null => {
 	return {
 		...role.role,
 		description: role.description,
-		role_card: role.role_card,
+		card: role.role_card,
 		routine: role.routine,
 		start: role.start,
 	}

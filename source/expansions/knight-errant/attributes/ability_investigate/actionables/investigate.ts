@@ -3,7 +3,7 @@ import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
 
 const responses: Record<Alignment, string> = {
-	neutral: ":mag_right: Your target is __Anti-town__.",
+	"3p": ":mag_right: Your target is __Anti-town__.",
 	cult: ":mag_right: Your target is __Anti-town__.",
 	mafia: ":mag_right: Your target is __Anti-town__.",
 	town: ":mag_right: Your target is __Town__.",

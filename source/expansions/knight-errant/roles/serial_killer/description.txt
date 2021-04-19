@@ -1,0 +1,9 @@
+Welcome to ${game.name}! You are a Serial Killer.
+
+Abilities:
+- Limited-Use Abilities: You are granted special limited-use abilities at the start of the game depending on the role distribution which you may use accordingly in conjunction with the kill.
+- Kill: Each night phase, you may target another player in the game to attempt to kill them.
+- Strong Kill: Once, at night, instead of using your normal kill, you may target a player to deal an unstoppable kill on them.
+
+Win condition:
+- You win when you are the last player alive, or that is inevitable.

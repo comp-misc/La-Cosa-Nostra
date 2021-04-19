@@ -78,7 +78,8 @@ onWithError("ready", async () => {
 
 	const login_time = process.uptime() * 1000
 
-	ready()
+	readline(client, config, commands)
+	eventhandler(client, config)
 
 	await setStatus(client)
 
@@ -248,15 +249,6 @@ client.on("resume", () => {
 client.on("warn", (warning) => {
 	logger.log(3, "[Discord.js warning] %s", warning)
 })
-
-// Ready
-function ready() {
-	if (!(process as any).ready) {
-		readline(client, config, commands)
-		eventhandler(client, config)
-		;(process as any).ready = true
-	}
-}
 
 // Autoload
 async function autoload() {

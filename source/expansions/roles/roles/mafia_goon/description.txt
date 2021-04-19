@@ -1,0 +1,8 @@
+Welcome to ${game.name}! You are a Mafia Goon.
+
+Abilities:
+- Factional Communication: Each night phase, you may communicate with your group.
+- Factional Kill: Each night phase, you may send a member of your group to target another player in the game, attempting to kill them.
+
+Win condition:
+- You win when the Mafia obtain a majority with all threats eliminated.

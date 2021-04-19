@@ -10,6 +10,9 @@ const checkFileExtension = (file: string, extensions: string[]): boolean =>
 
 type OptionParam = ((path: string, stats: Stats) => boolean) | string[]
 const recurse = (directory: string, result: string[], option?: OptionParam): void => {
+	if (!fs.existsSync(directory)) {
+		return
+	}
 	const stats = fs.lstatSync(directory)
 	if (typeof option === "function" && !option(directory, stats)) {
 		return

@@ -1,0 +1,11 @@
+{
+	"name": "Roles",
+	"type": "Expansion",
+	"description": "Adds many different roles for games to utilise",
+	"authors": ["Comp"],
+	"overrides": {
+		"attributes": ["basics/*"],
+		"role_win_conditions": ["basics/*"]
+	},
+	"dependencies": ["basics"]
+}

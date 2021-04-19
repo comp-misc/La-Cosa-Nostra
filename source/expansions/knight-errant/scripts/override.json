@@ -21,6 +21,7 @@
 	},
 
 	"game": {
+		"playersNeeded": 18,
 		"show-roles": true,
 
 		"mafia": {

@@ -1,24 +1,18 @@
 import fs from "fs"
 import expansions from "../expansions"
+import path from "path"
+import recursiveFileFind from "../auxils/recursiveFileFind"
 
 const ret: Record<string, Buffer> = {}
 const assets_dir = __dirname + "/../assets/"
 
 // Add expansions
-const expansion_assets = expansions.flatMap((expansion) =>
-	expansion.additions.assets.map((asset) => ({
-		name: asset,
-		directory: expansion.expansion_directory + "/assets",
-	}))
-)
+const expansion_assets = expansions.flatMap((expansion) => expansion.additions.assets.map(path.parse))
 
-const assets = fs
-	.readdirSync(assets_dir)
-	.map((x) => ({ name: x, directory: assets_dir }))
-	.concat(expansion_assets)
+const assets = [...recursiveFileFind(assets_dir).map(path.parse), ...expansion_assets]
 
 assets.forEach((asset) => {
-	ret[asset.name] = fs.readFileSync(asset.directory + asset.name)
+	ret[asset.base] = fs.readFileSync(asset.dir + "/" + asset.base)
 })
 
-export = ret
+export default ret

@@ -95,7 +95,7 @@
 		"description": "Refers to the logical fallacy based on the assumption that renowed players are likely to find anti-Town."
 	},
 	"Alignment": {
-		"description": "Refers to a players' faction. An alignment is usually Town, Mafia, neutral, or Cult."
+		"description": "Refers to a players' faction. An alignment is usually Town, Mafia, 3rd Party, or Cult."
 	},
 	"Read": {
 		"description": "Refers to the constructed profile of a said person, often to identify if they are anti-Town."

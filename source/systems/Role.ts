@@ -1,7 +1,7 @@
 import Player, { PlayerStats } from "./game_templates/Player"
 import { CommandType, RoleCommand } from "../commands/CommandType"
 
-export type Alignment = "town" | "mafia" | "neutral" | "undead" | string
+export type Alignment = "town" | "mafia" | "3p" | "undead" | string
 export type RoleClass = "unclassified" | "support" | "killing" | "investigative" | string
 export type WinConditionName = "town" | "mafia" | "serial_kiler" | string
 

@@ -8,7 +8,7 @@ const usage = `
  - '!ff on' will fast forward only this night. Use this once you've completed all night actions
  - '!ff off' will stop fast forwarding this night
  - '!ff status' shows if you are currently fast forwarding
-`.trim()
+`
 
 const getFFStatusDescription = (status: FFStatus): string => {
 	switch (status) {

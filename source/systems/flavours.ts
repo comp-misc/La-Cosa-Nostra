@@ -25,7 +25,6 @@ export interface FlavourData {
 export interface FlavourInfo extends Record<string, any> {
 	"default-display-flavour": boolean
 	"show-role-equivalent": boolean
-	"show-vanilla-banner": boolean
 	"display-role-equivalent-on-death": boolean
 	"display-role-equivalent-in-win-log": boolean
 	"investigator-sees-flavour-role": boolean

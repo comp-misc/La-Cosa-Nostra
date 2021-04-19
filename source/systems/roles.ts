@@ -88,9 +88,9 @@ for (let i = 0; i < roles.length; i++) {
 		}
 
 		// Get role card
-		if (fs.existsSync(directory + "/role_card.png")) {
+		if (fs.existsSync(directory + "/card.png")) {
 			ret[role].role_card = new Promise(function (resolve, reject) {
-				fs.readFile(directory + "/role_card.png", (err, data) => {
+				fs.readFile(directory + "/card.png", (err, data) => {
 					if (err) {
 						reject(data)
 					}

@@ -29,7 +29,7 @@ const gameAssign: GameAssignScript = (playing_config) => {
 	}
 
 	// Default setup
-	let setup: RoleSetup = ["town_neighbour", "town_neighbour", "mafia_goon", "mafia_goon"]
+	let setup: RoleSetup = ["town_mason", "town_mason", "mafia_goon", "mafia_goon"]
 
 	// Choose from role table using knight move
 	const possibilities = knightMatrix([4, 4], [2, 1])

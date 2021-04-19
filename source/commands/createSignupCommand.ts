@@ -3,7 +3,6 @@ import { LcnConfig, PermissionsConfig } from "../LcnConfig"
 import { getTextChannel } from "../MafiaBot"
 import { UnaffiliatedCommand } from "./CommandType"
 import configModifier from "../systems/game_setters/configModifier"
-import { Expansion } from "../Expansion"
 
 const createSignupCommand = (command: UnaffiliatedCommand): UnaffiliatedCommand => async (message, params, config) => {
 	const channel = getTextChannel("signup-channel")
@@ -52,16 +51,12 @@ export const removePlayer = removeRole(
 )
 
 export const getRequiredPlayers = (guild: Guild, config: LcnConfig): number | undefined => {
-	const expansions: Expansion[] = require("../expansions").default
-	const setup = expansions.find(
-		(expansion) => expansion.expansion.type === "Setup" && expansion.expansion.playersNeeded
-	)
-	if (setup) {
-		return setup.expansion.playersNeeded as number
-	} else {
-		const modifiedConfig = configModifier(config)
-		return modifiedConfig.playing.roles?.length
+	const players = config.game.playersNeeded
+	if (players) {
+		return players
 	}
+	const modifiedConfig = configModifier(config)
+	return modifiedConfig.playing.roles?.length
 }
 
 export const formatSignedUpPlayers = (guild: Guild, config: LcnConfig): string => {

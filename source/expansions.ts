@@ -5,6 +5,7 @@ import version from "./Version"
 import auxils from "./systems/auxils"
 import config_handler from "./systems/config_handler"
 import { Expansion, ExpansionInfo } from "./Expansion"
+import recursiveFileFind from "./auxils/recursiveFileFind"
 
 const config = config_handler()
 
@@ -63,11 +64,11 @@ const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expans
 		// Add information
 		ret.push({
 			expansion_directory: directory,
-			identifier: identifier,
-			expansion: expansion,
+			identifier,
+			expansion,
 			commands: readAllCommandTypes(directory + "/commands"),
 			additions: {
-				assets: attemptReaddir(directory + "/assets"),
+				assets: recursiveFileFind(directory + "/assets"),
 				roles: attemptReaddir(directory + "/roles"),
 				flavours: attemptReaddir(directory + "/flavours"),
 				role_win_conditions: attemptReaddir(directory + "/role_win_conditions"),

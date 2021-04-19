@@ -1,10 +1,31 @@
-import Discord from "discord.js"
+import Discord, { BufferResolvable } from "discord.js"
 import delay from "../../../auxils/delay"
 import Player from "../../game_templates/Player"
 import pinMessage from "../misc/pinMessage"
+import { FlavourData, FlavourRoleData } from "../../flavours"
+import { ExpandedRole } from "./getRole"
+import { loadImage } from "canvas"
+import getAsset from "../../../auxils/getAsset"
+import generateRoleCard from "./generateRoleCard"
 
 const cpl = (string: string): string => {
 	return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+const getRoleCard = async (
+	flavour_role: FlavourRoleData | undefined,
+	flavour: FlavourData | null,
+	role: ExpandedRole
+): Promise<BufferResolvable> => {
+	if (flavour_role?.banner && flavour && flavour.assets[flavour_role.banner]) {
+		return Promise.resolve(flavour.assets[flavour_role.banner])
+	} else if (role.card) {
+		return role.card
+	} else {
+		//Generate role card
+		const alignmentImage = await loadImage(getAsset(role.alignment + ".png").data)
+		return generateRoleCard(role["role-name"], alignmentImage)
+	}
 }
 
 export = async (player: Player, stagger = 400): Promise<void> => {
@@ -17,7 +38,6 @@ export = async (player: Player, stagger = 400): Promise<void> => {
 
 	const flavour_info = flavour?.info || {
 		"show-role-equivalent": false,
-		"show-vanilla-banner": true,
 		"show-role-category": true,
 	}
 
@@ -30,23 +50,11 @@ export = async (player: Player, stagger = 400): Promise<void> => {
 	}
 
 	const channel = player.getPrivateChannel()
-	if (flavour_role?.banner && flavour && flavour.assets[flavour_role.banner]) {
-		// Flavour role card available
-		const attachment = new Discord.MessageAttachment(flavour.assets[flavour_role.banner], "role_card.png")
 
-		// Post
-		const message = await channel.send(undefined, attachment)
-		await pinMessage(message)
-	}
-
-	if (role.role_card && flavour_info["show-vanilla-banner"]) {
-		// Role card available
-		const attachment = new Discord.MessageAttachment(await role.role_card, "role_card.png")
-
-		// Post
-		const message = await channel.send(undefined, attachment)
-		await pinMessage(message)
-	}
+	const card = getRoleCard(flavour_role, flavour, role)
+	const attachment = new Discord.MessageAttachment(await card, "role_card.png")
+	const attachmentMessage = await channel.send(undefined, attachment)
+	await pinMessage(attachmentMessage)
 
 	let send =
 		"**Your role:** {;role}{;true_role}\n\n**Alignment:** {;alignment}\n\n```fix\n{;description}```\n<@{;player_id}>"
@@ -61,8 +69,11 @@ export = async (player: Player, stagger = 400): Promise<void> => {
 
 	send = send.replace(
 		/{;description}/g,
-		(flavour_role ? flavour_role["secondary-description"] : undefined) || flavour_role?.description || role.description
+		(flavour_role ? flavour_role["secondary-description"] : undefined) ||
+			flavour_role?.description ||
+			role.description
 	)
+	send = send.replaceAll("${game.name}", game.config.messages.name)
 	send = send.replace(/{;player_id}/g, player.id)
 
 	if (flavour && flavour_info["show-role-equivalent"] && flavour_role?.name !== role["role-name"]) {
@@ -75,7 +86,9 @@ export = async (player: Player, stagger = 400): Promise<void> => {
 	await pinMessage(message)
 
 	const start_message = await channel.send(
-		"~~                                              ~~    **" + game.getFormattedDay() + "**         [*game start*]"
+		"~~                                              ~~    **" +
+			game.getFormattedDay() +
+			"**         [*game start*]"
 	)
 	await pinMessage(start_message)
 

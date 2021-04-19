@@ -1,0 +1,6 @@
+Welcome to ${game.name}! You are the Town Gunsmith
+
+Abilities:
+- You may each night choose to investigate a player to learn if they are a gunsmith, cop, jailkeeper, mafia, or the serial killer.
+
+Win condition: You win when all threats to town have been eliminated and there is at least one member of town left.

@@ -55,6 +55,7 @@ export interface GameConfig {
 		exceptions: string[]
 	}
 	"show-roles": boolean
+	playersNeeded?: number
 }
 
 export interface PermissionsConfig {

@@ -28,6 +28,7 @@
 	},
 	"homepage": "https://github.com/Chokyotager/La-Cosa-Nostra",
 	"dependencies": {
+		"canvas": "*",
 		"discord.js": "^12.5.1",
 		"dotenv": "^8.2.0",
 		"node-fetch": "^2.6.1",

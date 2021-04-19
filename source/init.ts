@@ -9,7 +9,7 @@ export = (): [Logger, typeof lcn] => {
 	const log_directory = directories.log
 
 	const logger = new Logger(log_directory + "/log.txt")
-	;(process as any).logger = logger
+	process.logger = logger
 
 	process.on("unhandledRejection", function (error) {
 		logger.log(4, "Unhandled promise rejection.")

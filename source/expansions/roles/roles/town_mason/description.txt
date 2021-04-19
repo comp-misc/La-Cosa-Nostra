@@ -1,0 +1,6 @@
+Welcome to ${game.name}! You are a Town Mason.
+
+Role Abilities:
+- You are given a common night chat with the other masons.
+
+Win Condition: You win when all threats to town have been eliminated and there is at least one member of town left.

@@ -2,7 +2,7 @@ import { Alignment } from "../../../../../systems/Role"
 import { RoleActionable } from "../../../../../systems/actionables"
 
 const responses: Record<Alignment, string> = {
-	neutral: ":mag_right: Your target is __Anti-Town__.",
+	"3p": "mag_right: Your target is __Anti-Town__.",
 	cult: ":mag_right: Your target is __Anti-Town__.",
 	mafia: ":mag_right: Your target is __Anti-Town__.",
 	town: ":mag_right: Your target is __Town__.",
