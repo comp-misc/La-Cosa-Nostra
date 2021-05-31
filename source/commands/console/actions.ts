@@ -10,4 +10,4 @@ const actions: ConsoleCommand = () => {
 	console.log(game.actions.actions)
 }
 
-export = actions
+export default actions

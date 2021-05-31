@@ -12,4 +12,4 @@ const checkWin: ConsoleCommand = async () => {
 	console.log("Win check complete.")
 }
 
-export = checkWin
+export default checkWin

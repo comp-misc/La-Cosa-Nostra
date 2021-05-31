@@ -7,7 +7,7 @@ const save: ConsoleCommand = async (client, config, params) => {
 		console.error(":x: No savable instance.")
 		return
 	}
-	getTimer().game.save(undefined, params[0])
+	await getTimer().game.save(params[0])
 
 	console.log(":ok: Saved the game.")
 }

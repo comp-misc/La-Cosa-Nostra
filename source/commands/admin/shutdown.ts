@@ -12,4 +12,4 @@ const shutdown: AdminCommand = async (message) => {
 	process.exit()
 }
 
-export = shutdown
+export default shutdown

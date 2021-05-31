@@ -6,7 +6,7 @@ import getLogger from "../../getLogger"
 
 const data_directory = dirs.data
 
-export = (): void => {
+export default (): void => {
 	const logger = getLogger()
 	/* The cache is actually not "deleted", but renamed.*/
 	const current_time = new Date()
@@ -24,7 +24,7 @@ export = (): void => {
 	}
 
 	if (fs.existsSync(data_directory + "/game_cache")) {
-		fs.renameSync(data_directory + "/game_cache", archive + "/game_cache_" + current_time.getTime())
+		fs.renameSync(data_directory + "/game_cache", `${archive}/game_cache_${current_time.getTime()}`)
 		logger.log(2, "Archived all caches.")
 	}
 }

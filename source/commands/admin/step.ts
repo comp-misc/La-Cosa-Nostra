@@ -8,8 +8,9 @@ const step: AdminCommand = async (message) => {
 	}
 	const timer = getTimer()
 
-	await message.channel.send(":ok: Setting a step in the Timer.")
+	await message.reply("Setting a step in the Timer...")
 	await timer.step()
+	await message.reply(":ok: Done")
 }
 
-export = step
+export default step

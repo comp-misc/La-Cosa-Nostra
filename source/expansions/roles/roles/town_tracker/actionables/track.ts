@@ -1,4 +1,5 @@
 import { RoleActionable } from "../../../../../systems/actionables"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const track: RoleActionable = async (actionable, game) => {
 	// Visit the target
@@ -7,6 +8,7 @@ const track: RoleActionable = async (actionable, game) => {
 		target: actionable.to,
 		priority: actionable.priority,
 		reason: "Tracker-track",
+		type: "track",
 	})
 
 	await game.addAction("town_tracker/gather", ["cycle"], {
@@ -14,7 +16,7 @@ const track: RoleActionable = async (actionable, game) => {
 		expiry: 1,
 		from: game.getPlayerOrThrow(actionable.from),
 		to: game.getPlayerOrThrow(actionable.to),
-		priority: 12,
+		priority: ActionPriorities.LOWEST,
 	})
 }
 

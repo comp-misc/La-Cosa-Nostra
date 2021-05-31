@@ -1,4 +1,4 @@
 // Uses semver
 import { satisfies } from "semver"
 
-export = satisfies
+export default satisfies

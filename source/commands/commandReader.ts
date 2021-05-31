@@ -32,7 +32,7 @@ export const readCommand = <T>(fileName: string): CommandProperties<T> => {
 	return {
 		name,
 		description: name,
-		command: script as T,
+		command: script,
 	}
 }
 
@@ -46,7 +46,8 @@ export const tryReadCommands = <T, S>(directory: string, type: T): CommandType<T
 	fs.existsSync(directory) ? readCommands<T, S>(directory, type) : []
 
 export const readAllCommandTypes = (directory: string): Command[] => {
-	const tryRead = <T, S>(type: T): CommandType<T, S>[] => tryReadCommands<T, S>(directory + "/" + type, type)
+	const tryRead = <T extends string, S>(type: T): CommandType<T, S>[] =>
+		tryReadCommands<T, S>(directory + "/" + type, type)
 	return [
 		...tryRead<"game", GameCommand>("game"),
 		...tryRead<"admin", AdminCommand>("admin"),

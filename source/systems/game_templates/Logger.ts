@@ -52,8 +52,15 @@ class Logger {
 	logError(error: Error | string | unknown): void {
 		console.error(error)
 		if (error instanceof Error) {
-			this.stream.write(`[${new Date().toUTCString()}; Error] ${error.name}: ${error.message}\n${error.stack}`)
+			if (error.stack) {
+				this.stream.write(
+					`[${new Date().toUTCString()}; Error] ${error.name}: ${error.message}\n${error.stack}`
+				)
+			} else {
+				this.stream.write(`[${new Date().toUTCString()}; Error] ${error.name}: ${error.message}`)
+			}
 		} else {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			this.log(4, `[Error handled by catcher]: ${error}`)
 		}
 	}
@@ -64,4 +71,4 @@ class Logger {
 	}
 }
 
-export = Logger
+export default Logger

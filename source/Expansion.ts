@@ -27,7 +27,6 @@ export interface ExpansionInfo {
 export type StartScript = (config: LcnConfig) => LcnConfig
 type GameScript = (game: Game) => void | Promise<void>
 
-export type GamePrimeScript = GameScript
 export type GameStartScript = GameScript
 export type GameSecondaryStartScript = GameScript
 export type GameAssignScript = (config: PlayingConfig) => PlayingConfig
@@ -38,9 +37,6 @@ export type InitScript = (lcn: typeof Lcn, version: Version) => void
 export interface ExpansionScripts {
 	/** Handles configuration on LOAD */
 	start?: StartScript
-
-	/** Runs script when a game is primed */
-	game_prime?: GamePrimeScript
 
 	/** Runs script when a game is started */
 	game_start?: GameStartScript

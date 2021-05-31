@@ -3,19 +3,19 @@ import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
 import texts from "./text/texts"
 
-export = (game: Game, role: Player, reason: string): string => {
+export default (game: Game, player: Player, reason: string): string => {
 	let message = texts.death_broadcast
 
-	message = message.replace(new RegExp("{;player}", "g"), role.getDisplayName())
+	message = message.replace(new RegExp("{;player}", "g"), player.getDisplayName())
 	message = message.replace(new RegExp("{;reason}", "g"), reason)
-	message = message.replace(new RegExp("{;role}", "g"), role.getDisplayRole())
+	message = message.replace(new RegExp("{;role}", "g"), player.role.getDisplayName(true))
 
-	if (game.config["game"]["last-wills"]["allow"]) {
+	if (game.config.game["last-wills"].allow) {
 		let will = "We could not find a last will."
 
-		const defined_will = role.getWill()
+		const defined_will = player.getWill()
 
-		if (!defined_will) {
+		if (defined_will) {
 			will = "We found a will next to their body:\n```fix\n" + defined_will + "```"
 		}
 

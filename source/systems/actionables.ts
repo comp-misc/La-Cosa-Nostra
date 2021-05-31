@@ -2,15 +2,15 @@
 import fs from "fs"
 import expansions from "../expansions"
 import attributes from "./attributes"
-import roles from "./roles"
-import { Actionable, ExecutionParams } from "./game_templates/Actions"
+import getRoles from "./roles"
+import { Actionable, ActionableTag, ExecutionParams } from "./game_templates/Actions"
 import Game from "./game_templates/Game"
 import recursiveFileFind from "../auxils/recursiveFileFind"
 import requireScript from "../auxils/requireScript"
 
 export interface RoleActionable<T = unknown> {
 	(actionable: Actionable<T>, game: Game, params?: ExecutionParams): void | boolean | Promise<void> | Promise<boolean>
-	TAGS?: string[]
+	TAGS?: ActionableTag[]
 }
 
 const cycle = (directory: string) => (fs.existsSync(directory) ? recursiveFileFind(directory, ["js", "ts"]) : [])
@@ -36,6 +36,7 @@ expansions.forEach((expansion) => {
 	}
 })
 
+const roles = getRoles()
 for (const role in roles) {
 	const directory = roles[role].directory + "/actionables"
 	const actions = cycle(directory)
@@ -55,5 +56,13 @@ for (const attribute in attributes) {
 		actionables[key] = requireScript(actions[i])
 	}
 }
+
+for (const key in actionables) {
+	if (typeof actionables[key] !== "function") {
+		throw new Error(`Actionable '${key}' is not a valid function`)
+	}
+}
+
+//TODO Dont include actionables from excludes roles
 
 export default actionables

@@ -1,5 +1,5 @@
 import attemptRequiring from "../auxils/attemptRequiring"
-import attemptRequiringScript from "../auxils/attemptRequringScript"
+import attemptRequiringScript from "../auxils/attemptRequiringScript"
 import binomialCoefficient from "../auxils/binomialCoefficient"
 import capitaliseFirstLetter from "../auxils/capitaliseFirstLetter"
 import choice from "../auxils/choice"
@@ -43,7 +43,7 @@ import shuffle from "../auxils/shuffle"
 import splitJaroWinklerDistance from "../auxils/splitJaroWinklerDistance"
 import vocab from "../auxils/vocab"
 
-export = {
+export default {
 	attemptRequiring,
 	attemptRequiringScript,
 	binomialCoefficient,

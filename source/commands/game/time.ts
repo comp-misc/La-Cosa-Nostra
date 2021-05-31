@@ -20,7 +20,7 @@ const time: GameCommand = async (game, message) => {
 
 	if (delta < 1000) {
 		await message.channel.send(":clock12:  Time is up.")
-		return null
+		return
 	}
 
 	const formatted = auxils.formatDate(delta)
@@ -36,4 +36,4 @@ time.ALLOW_PREGAME = true
 time.ALLOW_GAME = true
 time.ALLOW_POSTGAME = false
 
-export = time
+export default time

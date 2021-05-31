@@ -1,4 +1,5 @@
 import { PermissionObject, Snowflake } from "discord.js"
+import { ProgrammableRole, Role } from "./systems/Role"
 
 export interface GameConfig {
 	mafia: {
@@ -7,9 +8,6 @@ export interface GameConfig {
 		"night-only": boolean
 	}
 	town: {
-		"night-chat": boolean
-	}
-	int: {
 		"night-chat": boolean
 	}
 	"day-zero": boolean
@@ -35,8 +33,8 @@ export interface GameConfig {
 	}
 
 	"last-wills": {
-		allow: false
-		"character-count-limit": 800
+		allow: boolean
+		"character-count-limit": number
 	}
 
 	whispers: {
@@ -144,12 +142,13 @@ export interface SetupAttributeData {
 	tags?: Record<string, unknown>
 }
 
-export type RoleSetup = (string | SetupRoleData)[]
+export type SetupRole = Role<ProgrammableRole<any>, any>
 
 export interface PlayingConfig {
-	players: "auto" | string[]
+	players: "auto" | string[] | string
 	expansions: string[]
-	roles: RoleSetup
+	possibleRoles: SetupRole[]
+	roles: SetupRole[]
 	shuffle: boolean
 	flavour: string | null
 }
@@ -198,4 +197,6 @@ export interface LcnConfig {
 	"server-link": string
 	ticks: TicksConfig
 	time: TimeConfig
+
+	"merge-configs": string[]
 }

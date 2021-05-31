@@ -11,4 +11,4 @@ const basicDefense = <T>(actionable: Actionable<T>, game: Game): boolean => {
 	return true
 }
 
-export = basicDefense
+export default basicDefense

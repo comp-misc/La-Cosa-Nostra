@@ -1,6 +1,0 @@
-Welcome to ${game.name}! You are a Vanilla Townie.
-
-Role Abilities:
-- You have no abilities.
-
-Win Condition: You win when all threats to town have been eliminated and there is at least one member of town left.

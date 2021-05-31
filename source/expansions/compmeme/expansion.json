@@ -1,11 +1,8 @@
 {
 	"name": "CompMeme",
 	"type": "Commands",
-	"description": "Adds meme commands. Sorry Silicon Valley!",
-
+	"description": "Adds meme commands",
 	"link": null,
-
-	"authors": ["ChocoParrot", "Comp"],
-
+	"authors": ["Comp"],
 	"dependencies": []
 }

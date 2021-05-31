@@ -149,7 +149,7 @@
 // 	S: " ",
 // }
 
-// export = jaroWinklerDistance
+// export default jaroWinklerDistance
 
 const jaroWinklerDistance = (s1: string, s2: string, caseSensitive = true): number => {
 	let m = 0
@@ -227,4 +227,4 @@ const jaroWinklerDistance = (s1: string, s2: string, caseSensitive = true): numb
 	return weight
 }
 
-export = jaroWinklerDistance
+export default jaroWinklerDistance

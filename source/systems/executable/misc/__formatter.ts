@@ -34,7 +34,7 @@ const getParameters = (game: Game) => {
 	}
 }
 
-export = (game: Game, message: string): string => {
+export default (game: Game, message: string): string => {
 	// Ping roles
 
 	const config = game.config
@@ -70,7 +70,7 @@ export = (game: Game, message: string): string => {
 
 	// Vocabulary
 	let regex = new RegExp("{\\+([A-z]+)\\|(.*?)}", "g")
-	const matches = message.match(regex) || []
+	const matches = regex.exec(message) || []
 
 	for (let i = 0; i < matches.length; i++) {
 		regex = new RegExp("{\\+([A-z]+)\\|(.*?)}", "g")
@@ -81,9 +81,11 @@ export = (game: Game, message: string): string => {
 		}
 
 		const grammar = catches[1]
-		const param = (parameters as Record<string, any>)[catches[2]]
+		const key = catches[2] as keyof typeof parameters
 
-		message = message.replace(matches[i], auxils.vocab(grammar, param))
+		const param = parameters[key]
+
+		message = message.replace(matches[i], auxils.vocab(grammar, param as number))
 	}
 
 	Object.entries(config.messages).forEach(([name, msg]) => {

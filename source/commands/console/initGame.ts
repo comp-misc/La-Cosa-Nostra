@@ -25,7 +25,7 @@ const initGame: ConsoleCommand = async (client, config) => {
 	console.log("Game creation complete!")
 }
 
-export = makeCommand(initGame, {
+export default makeCommand(initGame, {
 	name: "initgame",
 	description: "Initialises a new game",
 	aliases: ["_initgame"],

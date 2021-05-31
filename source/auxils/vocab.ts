@@ -1,4 +1,4 @@
-export = (type: string, amount: number): string => {
+export default (type: string, amount: number): string => {
 	switch (type) {
 		case "s":
 			if (amount === 1) {

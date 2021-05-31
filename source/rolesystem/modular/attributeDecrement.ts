@@ -54,4 +54,4 @@ const attributeDecrement = async <T>(
 	})
 }
 
-export = attributeDecrement
+export default attributeDecrement

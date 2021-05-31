@@ -36,4 +36,4 @@ const eightBall: UnaffiliatedCommand = async (message, params, config) => {
 	// Get random index
 }
 
-export = eightBall
+export default eightBall

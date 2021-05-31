@@ -1,5 +1,6 @@
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const jail: TargetRoleCommand = async (game, message, target, from) => {
 	clearModuleActions(game, from.identifier, "ability")
@@ -15,13 +16,12 @@ const jail: TargetRoleCommand = async (game, message, target, from) => {
 		from,
 		meta: { type: "ability" },
 		to: target,
-		priority: 0.1,
+		priority: ActionPriorities.HIGHEST,
 	})
 
 	await message.reply(":european_castle: You have decided to jail **" + target.getDisplayName() + "** tonight.")
 }
 
-jail.ALLOW_NONSPECIFIC = false
 jail.PRIVATE_ONLY = true
 jail.DEAD_CANNOT_USE = true
 jail.ALIVE_CANNOT_USE = false

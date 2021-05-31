@@ -9,11 +9,11 @@ const hasModule = (player: Player, name: string, category?: string): boolean => 
 				x.attribute.modular &&
 				x.attribute.name.toLowerCase() === name.toLowerCase() &&
 				x.attribute["modular-details"] &&
-				x.attribute["modular-details"]["cluster"].toLowerCase() === category.toLowerCase()
+				x.attribute["modular-details"].cluster.toLowerCase() === category.toLowerCase()
 		)
 	} else {
 		return attributes.some((x) => x.attribute.modular && x.attribute.name.toLowerCase() === name.toLowerCase())
 	}
 }
 
-export = hasModule
+export default hasModule

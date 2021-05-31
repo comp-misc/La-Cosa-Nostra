@@ -1,3 +1,5 @@
+Error.stackTraceLimit = Infinity
+
 import Discord, {
 	APIMessageContentResolvable,
 	Client,
@@ -7,6 +9,7 @@ import Discord, {
 	MessageOptions,
 	TextChannel,
 } from "discord.js"
+import dotenv from "dotenv"
 import fs from "fs"
 import eventhandler from "./auxils/eventhandler"
 import readline from "./auxils/readline"
@@ -14,16 +17,16 @@ import round from "./auxils/round"
 import botDirectories from "./BotDirectories"
 import * as CommandExecutors from "./commands/CommandExecutors"
 import { findCommand } from "./commands/commandFinder"
+import { CommandUsageError } from "./commands/CommandType"
 import getGuild from "./getGuild"
 import { getTimer, hasTimer, setTimer } from "./getTimer"
 import init from "./init"
 import { ChannelsConfig } from "./LcnConfig"
 import MemberMessage from "./MemberMessage"
 import updatePresence from "./systems/executable/misc/updatePresence"
+import loadGame from "./systems/game_templates/loadGame"
 import Timer from "./systems/game_templates/Timer"
 import version from "./Version"
-import { CommandUsageError } from "./commands/CommandType"
-import dotenv from "dotenv"
 
 dotenv.config()
 
@@ -31,7 +34,7 @@ const client = new Discord.Client({
 	disableMentions: "everyone",
 })
 const [logger, lcn] = init()
-const { commands, config } = lcn
+const { config } = lcn
 
 const serverId = process.env["server-id"]
 if (!serverId) {
@@ -56,13 +59,12 @@ export const getTextChannel = (channel: keyof ChannelsConfig): TextChannel => {
 
 export const onWithError = <K extends keyof ClientEvents>(
 	event: K,
-	listener: (...args: ClientEvents[K]) => void
+	listener: (...args: ClientEvents[K]) => Promise<void> | void
 ): void => {
-	client.on<K>(event, async (...args) => {
-		try {
-			await listener(...args)
-		} catch (e) {
-			logger.logError(e)
+	client.on<K>(event, (...args) => {
+		const result = listener(...args)
+		if (result) {
+			result.catch((e) => logger.logError(e))
 		}
 	})
 }
@@ -78,7 +80,7 @@ onWithError("ready", async () => {
 
 	const login_time = process.uptime() * 1000
 
-	readline(client, config, commands)
+	readline(client, config)
 	eventhandler(client, config)
 
 	await setStatus(client)
@@ -97,7 +99,6 @@ onWithError("ready", async () => {
 		Object.keys(lcn.attributes).length,
 		Object.keys(lcn.flavours).length,
 		Object.keys(lcn.win_conditions).length,
-		Object.keys(lcn.commands.filter((c) => c.type === "role")).length,
 		Object.keys(lcn.assets).length,
 		round(load_time),
 		round(login_time - load_time),
@@ -107,7 +108,7 @@ onWithError("ready", async () => {
 	]
 	logger.log(
 		2,
-		'\n--- Statistics ---\n[Modules]\nLoaded %s expansion(s) [%s];\nLoaded %s role(s);\nLoaded %s attribute(s);\nLoaded %s flavour(s);\nLoaded %s unique win condition(s);\nLoaded %s command handle(s);\nLoaded %s non-flavour asset(s)\n\n[Startup]\nLoad: %sms;\nLogin: %sms;\nSave: %sms [%s];\nTotal: %sms\n-------------------\nEnter "autosetup" for auto-setup.\nEnter "help" for help.\n',
+		'\n--- Statistics ---\n[Modules]\nLoaded %s expansion(s) [%s];\nLoaded %s role(s);\nLoaded %s attribute(s);\nLoaded %s flavour(s);\nLoaded %s unique win condition(s);\nLoaded %s non-flavour asset(s)\n\n[Startup]\nLoad: %sms;\nLogin: %sms;\nSave: %sms [%s];\nTotal: %sms\n-------------------\nEnter "autosetup" for auto-setup.\nEnter "help" for help.\n',
 		...stats.map((x) => x.toString())
 	)
 })
@@ -120,7 +121,8 @@ onWithError("message", async (message) => {
 	//TODO Remove this in v13
 	//I've started to implement 'reply' to messages instead of sending a message,
 	//but unfortunately at this it only tags a player instead of inline replying
-	;(message as any).reply = (
+	const unsafeMessage = message as any as Record<string, unknown>
+	unsafeMessage.reply = (
 		content: APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions
 	): Promise<Message> => {
 		return message.channel.send(content)
@@ -155,13 +157,7 @@ onWithError("message", async (message) => {
 		return
 	}
 
-	const foundCommand = findCommand(
-		commands,
-		command,
-		message.member,
-		message.channel,
-		(cmd) => cmd.type !== "console"
-	)
+	const foundCommand = findCommand(command, message.member, message.channel, (cmd) => cmd.type !== "console")
 	if (!foundCommand) {
 		await message.reply(":x: Unknown command")
 		return
@@ -220,9 +216,9 @@ onWithError("guildMemberAdd", async (member) => {
 	}
 })
 
-onWithError("disconnect", async (close_event) => {
+onWithError("shardDisconnect", async (close_event) => {
 	if (hasTimer()) {
-		getTimer().save()
+		await getTimer().game.save()
 	}
 
 	logger.log(3, "Close event: ", close_event.reason)
@@ -263,7 +259,7 @@ async function autoload() {
 	// Load the save
 	let timer: Timer
 	try {
-		timer = await Timer.load(client, config)
+		timer = await loadGame(client, config)
 	} catch (err) {
 		logger.log(
 			4,
@@ -289,7 +285,7 @@ async function autoload() {
 client
 	.login(botToken)
 	.then(() => console.log("Successfully logged in"))
-	.catch(logger.logError)
+	.catch((e) => logger.logError(e))
 
 export const setStatus = (client: Client): Promise<void> =>
 	updatePresence(client, {

@@ -1,2 +1,2 @@
 import isolate from "./isolate"
-export = isolate
+export default isolate

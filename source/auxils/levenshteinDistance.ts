@@ -1,4 +1,4 @@
-export = (s: string, t: string): number => {
+export default (s: string, t: string): number => {
 	const d: number[][] = [] //2d matrix
 
 	// Step 1

@@ -1,15 +1,15 @@
 import Game from "../../game_templates/Game"
 
-export = async (game: Game): Promise<void> => {
-	const mafiaChannel = game.channels["mafia"]
+export default async (game: Game): Promise<void> => {
+	const mafiaChannel = game.channels.mafia
 	if (!mafiaChannel) {
 		return
 	}
 	const textChannel = game.findTextChannel(mafiaChannel.id)
-	const post_perms = game.config["base-perms"]["post"]
-	const read_perms = game.config["base-perms"]["read"]
+	const post_perms = game.config["base-perms"].post
+	const read_perms = game.config["base-perms"].read
 
-	const mafia = game.findAll((x) => x.see_mafia_chat)
+	const mafia = game.findAllPlayers((x) => x.see_mafia_chat)
 	mafia.forEach((mafia) => {
 		if (!mafia.getSpecialChannels().some((x) => x.id === mafiaChannel.id)) {
 			mafia.addSpecialChannel(textChannel)

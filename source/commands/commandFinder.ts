@@ -1,50 +1,72 @@
-import { GuildChannel, GuildMember } from "discord.js"
+import { Channel, GuildMember } from "discord.js"
+import getCommands from "."
 import { getTimer, hasTimer } from "../getTimer"
-import { Command, CommandProperties, RoleCommand } from "./CommandType"
+import { Command, CommandType, RoleCommand } from "./CommandType"
 
-export const isValidRoleCommandFor = (
-	command: CommandProperties<RoleCommand>,
-	member: GuildMember,
-	channel: GuildChannel
-): boolean => {
+export const getRoleCommandsFor = (member: GuildMember, channel: Channel): CommandType<"role", RoleCommand>[] => {
 	if (!hasTimer()) {
-		return false
+		return []
 	}
 	const game = getTimer().game
 	const player = game.getPlayerById(member.id)
 	if (!player) {
-		return false
+		return []
 	}
-	const { ALLOW_NONSPECIFIC, PRIVATE_ONLY, role, attribute } = command.command
-	if (
-		!ALLOW_NONSPECIFIC &&
-		((role !== undefined && player.role_identifier.toLowerCase() !== role.toLowerCase()) ||
-			(attribute !== undefined && !player.hasAttribute(attribute)))
-	) {
-		return false
-	}
-	if (PRIVATE_ONLY && channel.id !== player.channel?.id) {
-		return false
-	}
-	return true
+	const validCommands = player.role.role.commands.filter(({ command }) => {
+		const { PRIVATE_ONLY, attribute } = command
+		if (attribute && !player.hasAttribute(attribute)) {
+			return false
+		}
+		if (PRIVATE_ONLY && channel.id !== player.channel?.id) {
+			return false
+		}
+		return true
+	})
+	return validCommands.map((cmd) => ({
+		...cmd,
+		type: "role",
+	}))
 }
 
+export const filterAttributeCommands = (commands: Command[], member: GuildMember, channel: Channel): Command[] =>
+	commands.filter((cmd) => {
+		if (cmd.type !== "role") return true
+		if (!hasTimer()) return false
+		const game = getTimer().game
+		const player = game.getPlayerById(member.id)
+		if (!player) {
+			return false
+		}
+		if (cmd.command.PRIVATE_ONLY && channel.id !== player.channel?.id) {
+			return false
+		}
+		if (cmd.command.attribute && !player.hasAttribute(cmd.command.attribute)) {
+			return false
+		}
+		return true
+	})
+
+export const getVisibleCommands = (member: GuildMember, channel: Channel): Command[] => [
+	...getRoleCommandsFor(member, channel),
+	...filterAttributeCommands(getCommands(), member, channel),
+]
+
 export const findCommand = (
-	commands: Command[],
 	commandName: string,
 	member: GuildMember | null,
-	channel: GuildChannel | null,
+	channel: Channel | null,
 	filter?: (command: Command) => boolean
 ): Command | null => {
-	const eligibleCommands = (filter ? commands.filter(filter) : commands).filter(
-		(cmd) =>
-			!(cmd.type === "role" && (member == null || channel == null || !isValidRoleCommandFor(cmd, member, channel)))
-	)
+	const validCommands = member && channel ? getVisibleCommands(member, channel) : getCommands()
+	const eligibleCommands = filter ? validCommands.filter(filter) : validCommands
+
 	return (
 		eligibleCommands.find((cmd) => cmd.name === commandName) ||
 		eligibleCommands.find((cmd) => cmd.name.toLowerCase() === commandName.toLowerCase()) ||
 		eligibleCommands.find((cmd) => cmd.aliases?.includes(commandName)) ||
-		eligibleCommands.find((cmd) => cmd?.aliases?.map((a) => a.toLowerCase())?.includes(commandName.toLowerCase())) ||
+		eligibleCommands.find((cmd) =>
+			cmd?.aliases?.map((a) => a.toLowerCase())?.includes(commandName.toLowerCase())
+		) ||
 		null
 	)
 }

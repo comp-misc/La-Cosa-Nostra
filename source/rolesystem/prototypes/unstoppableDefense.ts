@@ -11,4 +11,4 @@ const unstoppableDefense = <T>(actionable: Actionable<T>, game: Game): boolean =
 	return true
 }
 
-export = unstoppableDefense
+export default unstoppableDefense

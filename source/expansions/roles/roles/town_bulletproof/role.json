@@ -18,7 +18,7 @@
 		"vote-magnitude": 1
 	},
 
-	"investigation": ["Town Bulletproof"],
+	"investigation": ["Bulletproof"],
 	"secondary-roles": null,
 
 	"reveal-role-on-interrogation": false,

@@ -4,7 +4,7 @@ import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
 import texts from "./text/texts"
 
-export = async (game: Game, role: Player): Promise<void> => {
+export default async (game: Game, role: Player): Promise<void> => {
 	const main_channel = game.getMainChannel()
 
 	let message = texts.getting_lynched
@@ -14,7 +14,7 @@ export = async (game: Game, role: Player): Promise<void> => {
 
 	let nolynch_info = ""
 
-	if (game.config["game"]["lynch"]["no-lynch-option"]) {
+	if (game.config.game.lynch["no-lynch-option"]) {
 		nolynch_info = " if the no-lynch vote does not preside"
 	}
 

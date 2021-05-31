@@ -1,3 +1,3 @@
 // Nolynch alias
 import nolynch from "./nolynch"
-export = nolynch
+export default nolynch

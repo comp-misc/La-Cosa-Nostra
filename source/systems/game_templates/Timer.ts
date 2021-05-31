@@ -3,33 +3,12 @@
 // this class is NOT meant to be serialised
 
 import crypto from "crypto"
-import fs from "fs"
-
-import Game from "./Game"
-import Player from "./Player"
-import Actions from "./Actions"
-
-import auxils from "../auxils"
-import jsonInfinityCensor from "../../auxils/jsonInfinityCensor"
-import botDirectories from "../../BotDirectories"
 import vocab from "../../auxils/vocab"
-import jsonReviver from "../../auxils/jsonReviver"
-import Logger from "./Logger"
-import { Client } from "discord.js"
-import { LcnConfig } from "../../LcnConfig"
 import getLogger from "../../getLogger"
-
-const data_directory = botDirectories.data
-
-const charCounter = (string: string): number => {
-	let sum = 0
-	for (let i = 0; i < string.length; i++) {
-		// Multiply by big prime number
-		// to reduce chances of collision
-		sum += string.charCodeAt(i) * 1300921
-	}
-	return sum
-}
+import auxils from "../auxils"
+import Game from "./Game"
+import Logger from "./Logger"
+import saveGame from "./saveGame"
 
 const formatDate = (epoch: number): string => {
 	// Format into d, h, m
@@ -39,14 +18,14 @@ const formatDate = (epoch: number): string => {
 
 	if (days >= 1) {
 		const ret = Math.floor(days)
-		return ret + " day" + vocab("s", ret)
+		return `${ret} day${vocab("s", ret)}`
 	} else if (hours >= 1) {
 		const ret = Math.floor(hours)
-		return ret + " hour" + vocab("s", ret)
+		return `${ret} hour${vocab("s", ret)}`
 	} else {
 		// Deliberate
 		const ret = Math.ceil(minutes)
-		return ret + " minute" + vocab("s", ret)
+		return `${ret} minute${vocab("s", ret)}`
 	}
 }
 
@@ -60,7 +39,7 @@ class Timer {
 	primed?: Date
 	tick_time?: number
 	tick_interval: NodeJS.Timeout | undefined
-	_tentativeSaveTimeout: NodeJS.Timeout | undefined
+	private tentativeSaveTimeout: NodeJS.Timeout | undefined
 
 	constructor(game: Game) {
 		this.day_night_mediator = null
@@ -133,7 +112,9 @@ class Timer {
 		this.primed = current
 
 		this.clearDayNightMediator()
-		this.day_night_mediator = setTimeout(() => this.step(), delta)
+		this.day_night_mediator = setTimeout(() => {
+			this.step().catch((e) => this.logger.logError(e))
+		}, delta)
 
 		// IMPORTANT: Substitute time for delta
 		await this.updatePresence()
@@ -174,7 +155,7 @@ class Timer {
 		// Autosave
 
 		if (this.ticks % config.ticks["autosave-ticks"] === 0) {
-			this.save()
+			await saveGame(this.game)
 		}
 
 		if (this.game.state === "pre-game" || this.game.state === "playing") {
@@ -247,11 +228,13 @@ class Timer {
 		this.clearTick()
 
 		if (time === undefined) {
-			time = config["ticks"]["time"] as number
+			time = config.ticks.time
 		}
 
 		this.tick_time = time
-		this.tick_interval = setInterval(() => this.tick(), time)
+		this.tick_interval = setInterval(() => {
+			this.tick().catch((e) => this.logger.logError(e))
+		}, time)
 	}
 
 	destroy(): void {
@@ -276,131 +259,18 @@ class Timer {
 
 	tentativeSave(silent = false, buffer_time = 500, saveFolder?: string): void {
 		// Save the game after requests stop coming in
-		if (this._tentativeSaveTimeout) {
-			clearTimeout(this._tentativeSaveTimeout)
-			delete this._tentativeSaveTimeout
+		if (this.tentativeSaveTimeout) {
+			clearTimeout(this.tentativeSaveTimeout)
+			delete this.tentativeSaveTimeout
 		}
 
-		this._tentativeSaveTimeout = setTimeout(() => {
+		this.tentativeSaveTimeout = setTimeout(() => {
 			if (!silent) {
 				this.logger.log(1, "Tentative save executed.")
 			}
-			this.save(true, saveFolder)
+			saveGame(this.game, saveFolder).catch((e) => this.logger.logError(e))
 		}, buffer_time)
 	}
-
-	save(silent = false, saveFolder = "game_cache"): void {
-		if (!fs.existsSync(data_directory + "/" + saveFolder)) {
-			fs.mkdirSync(data_directory + "/" + saveFolder)
-		}
-		if (!fs.existsSync(data_directory + "/" + saveFolder + "/players")) {
-			fs.mkdirSync(data_directory + "/" + saveFolder + "/players")
-		}
-		// Save all components
-
-		// Clone Game instance to savable
-		const savable: Record<string, any> = Object.assign({}, this.game)
-
-		/* This one line of code below here \/ cost me TWO hours of my life
-    Honestly if only Object.assign() would clone an object in its whole
-    and not do a half-***ed job I would be a happier person.
-    */
-		savable.actions = Object.assign({}, this.game.actions)
-
-		const players = savable.players
-
-		// Remove non-serialisable components
-		delete savable.client
-		delete savable.config
-		delete savable.timer
-		delete savable.logger
-		delete savable.trial_collectors
-
-		delete savable.actions.game
-
-		delete savable.players
-
-		savable.last_save_date = new Date()
-
-		// Save object
-		fs.writeFileSync(
-			data_directory + "/" + saveFolder + "/game.json",
-			JSON.stringify(savable, jsonInfinityCensor, 2)
-		)
-
-		// All of players class should be serialisable without deletions
-		for (let i = 0; i < players.length; i++) {
-			const id = players[i].identifier
-
-			// Duplication regardless
-			// For future use if required
-			const player = Object.assign({}, players[i])
-
-			// Guess what, I needed it after all
-			delete player.game
-			delete player.role
-			delete player.logger
-			delete player.client
-
-			player.last_save_date = new Date()
-
-			const string = JSON.stringify(player, jsonInfinityCensor, 2)
-
-			// Saved by Discord ID
-			fs.writeFileSync(data_directory + "/" + saveFolder + "/players/" + id + ".json", string)
-		}
-
-		if (!silent) {
-			this.logger.log(1, "Saved game.")
-		}
-	}
-
-	static load(client: Client, config: LcnConfig, saveFolder?: string): Promise<Timer> {
-		return loadGame(client, config, saveFolder)
-	}
 }
 
-const loadGame = async (client: Client, config: LcnConfig, saveFolder = "game_cache"): Promise<Timer> => {
-	// Loads
-	const save = JSON.parse(fs.readFileSync(data_directory + "/" + saveFolder + "/game.json", "utf8"), jsonReviver)
-
-	// Save is a game instance
-	let game = new Game(client, config, [])
-	game = Object.assign(game, save)
-
-	// Reload all players
-	const player_saves = fs.readdirSync(data_directory + "/" + saveFolder + "/players/")
-	const players = []
-
-	for (let i = 0; i < player_saves.length; i++) {
-		// Check for save
-		if (!player_saves[i].endsWith(".json")) {
-			continue
-		}
-
-		// Reload the save
-		const string = fs.readFileSync(data_directory + "/" + saveFolder + "/players/" + player_saves[i], "utf8")
-		const player_save = JSON.parse(string, jsonReviver)
-
-		let player = new Player(client)
-		player = Object.assign(player, player_save)
-
-		// Reinstantiation of players in Game instance
-
-		players.push(player)
-	}
-
-	const actions = new Actions(game)
-	game.actions = Object.assign(actions, game.actions)
-
-	// Sort the players array in alphabetical order
-	players.sort((a, b) => charCounter(a.alphabet) - charCounter(b.alphabet))
-
-	// Reinstantiate deleted properties
-	const timer = new Timer(game)
-	await game.reinstantiate(timer, players)
-	await timer.reinstantiate(game)
-	return timer
-}
-
-export = Timer
+export default Timer

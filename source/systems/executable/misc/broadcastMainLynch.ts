@@ -3,7 +3,7 @@ import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
 import auxils from "../../auxils"
 
-export = async function (game: Game, roles: Player[]): Promise<void> {
+export default async function (game: Game, roles: Player[]): Promise<void> {
 	const config = game.config
 	const channel = game.getMainChannel()
 

@@ -68,7 +68,7 @@ const unvote: GameCommand = async (game, message, params) => {
 
 	if (player.score < 0.7 && max_score.score < 0.7) {
 		await message.channel.send(":x:  I cannot find that player!")
-		return null
+		return
 	}
 
 	if (player.score > max_score.score) {
@@ -104,4 +104,4 @@ unvote.ALLOW_PREGAME = false
 unvote.ALLOW_GAME = true
 unvote.ALLOW_POSTGAME = false
 
-export = unvote
+export default unvote

@@ -13,7 +13,7 @@ const _deleteprivatechannels: AdminCommand = async (message, _, config): Promise
 
 	const channels = (category as CategoryChannel).children.filter((x) => x.type === "text").array()
 
-	await message.channel.send(":hourglass_flowing_sand: Deleting **" + channels.length + "** private channels.")
+	await message.channel.send(`:hourglass_flowing_sand: Deleting **${channels.length}** private channels.`)
 
 	for (let i = 0; i < channels.length; i++) {
 		await channels[i].delete()
@@ -22,4 +22,4 @@ const _deleteprivatechannels: AdminCommand = async (message, _, config): Promise
 	await message.channel.send(":ok: Deletion complete.")
 }
 
-export = _deleteprivatechannels
+export default _deleteprivatechannels

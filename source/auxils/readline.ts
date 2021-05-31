@@ -1,21 +1,21 @@
-import readline from "readline"
 import { Client } from "discord.js"
-import { LcnConfig } from "../LcnConfig"
-import { Command, CommandUsageError, ConsoleCommand } from "../commands/CommandType"
-import getLogger from "../getLogger"
+import lineReader from "readline"
 import { findCommand } from "../commands/commandFinder"
+import { CommandUsageError, ConsoleCommand } from "../commands/CommandType"
+import getLogger from "../getLogger"
+import { LcnConfig } from "../LcnConfig"
 
-const rdline = (client: Client, config: LcnConfig, commands: Command[]): void => {
-	const rl = readline.createInterface({
+const readline = (client: Client, config: LcnConfig): void => {
+	const rl = lineReader.createInterface({
 		input: process.stdin,
 		output: process.stdout,
 	})
 
-	rl.on("line", async (msg) => {
+	const onReadLine = async (msg: string) => {
 		const details = msg.split(" ")
 		const given = details[0]
 
-		const command = findCommand(commands, given, null, null, (cmd) => cmd.type === "console")
+		const command = findCommand(given, null, null, (cmd) => cmd.type === "console")
 		if (!command) {
 			console.log('Unknown command. Type "help" for help.')
 			return
@@ -33,7 +33,11 @@ const rdline = (client: Client, config: LcnConfig, commands: Command[]): void =>
 				logger.logError(e)
 			}
 		}
+	}
+
+	rl.on("line", (msg) => {
+		onReadLine(msg).catch(console.error)
 	})
 }
 
-export = rdline
+export default readline

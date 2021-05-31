@@ -46,7 +46,7 @@ const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 		await message.channel.send(
 			":x: Oi! I can't find a member with that name! Try again using a legitimate username/nickname/id!"
 		)
-		return null
+		return
 	}
 
 	members = members.filter((x) => x.score >= members[0].score - 0.02)
@@ -86,7 +86,7 @@ const memberinfo: UnaffiliatedCommand = async (message, params, config) => {
 	}
 }
 
-export = makeCommand(memberinfo, {
+export default makeCommand(memberinfo, {
 	name: "memberinfo",
 	description: "Shows information about a member",
 	usage: "memberinfo <user>",

@@ -1,4 +1,5 @@
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const watch: TargetRoleCommand = async (game, message, target, from) => {
 	const actions = game.actions
@@ -24,6 +25,7 @@ const watch: TargetRoleCommand = async (game, message, target, from) => {
 		from,
 		to: target,
 		tags: ["mafia_factional_side"],
+		priority: ActionPriorities.INVESTIGATE,
 	})
 
 	const mention = target.getDisplayName()
@@ -34,7 +36,6 @@ const watch: TargetRoleCommand = async (game, message, target, from) => {
 		.send(":telescope: **" + from.getDisplayName() + "** is watching **" + mention + "** tonight.")
 }
 
-watch.ALLOW_NONSPECIFIC = false
 watch.PRIVATE_ONLY = true
 watch.DEAD_CANNOT_USE = true
 watch.ALIVE_CANNOT_USE = false

@@ -5,4 +5,4 @@ const uptime: UnaffiliatedCommand = async (message) => {
 	await message.channel.send(":clock: Current uptime: **" + auxils.formatDate(process.uptime() * 1000) + "**.")
 }
 
-export = uptime
+export default uptime

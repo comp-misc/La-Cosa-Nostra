@@ -8,7 +8,7 @@ const getNolynchVotes = (game: Game): string => {
 	if (votes == 1) {
 		return "__1__ vote"
 	} else {
-		return "__" + votes + "__ votes"
+		return `__${votes}__ votes`
 	}
 }
 
@@ -39,7 +39,7 @@ const hammerAlert = (game: Game): string => {
 	return ""
 }
 
-export = async (game: Game, voter: Player): Promise<void> => {
+export default async (game: Game, voter: Player): Promise<void> => {
 	let message = texts.nolynching
 
 	message = message.replace(new RegExp("{;voter}", "g"), voter.getDisplayName())

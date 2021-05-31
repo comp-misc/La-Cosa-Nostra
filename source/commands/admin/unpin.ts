@@ -30,11 +30,11 @@ const unpin: AdminCommand = async (message, params) => {
 	const pinned = arr.filter((m) => m.pinned)
 
 	await message.channel.send(
-		":pushpin: Scanned **" + limit + "** message(s) and marked **" + pinned.length + "** message(s) for unpinning."
+		`:pushpin: Scanned **${limit}** message(s) and marked **${pinned.length}** message(s) for unpinning.`
 	)
 
 	await Promise.all(pinned.map((m) => m.unpin()))
 	await message.channel.send(":pushpin: Successfully unpinned the message(s)")
 }
 
-export = unpin
+export default unpin

@@ -22,9 +22,9 @@
 			"roles/town_tracker",
 			"roles/town_vanilla_townie"
 		],
-		"attributes": ["basics/*", "knight-errant/*"],
-		"role_win_conditions": ["basics/*"]
+		"attributes": ["roles/mafia_factionkill", "roles/protection", "knight-errant/*"],
+		"role_win_conditions": ["roles/mafia", "roles/serial_killer", "roles/stalemate", "roles/town"]
 	},
 
-	"dependencies": ["basics", "roles"]
+	"dependencies": ["roles"]
 }

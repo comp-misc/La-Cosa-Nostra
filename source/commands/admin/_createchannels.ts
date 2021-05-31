@@ -48,21 +48,15 @@ const _createChannel: AdminCommand = async (message, _, config): Promise<void> =
 			permissions.pre,
 		],
 		all_channels,
-		base_perms["read"]
+		base_perms.read
 	)
-	await setPerms(guild, ["@everyone"], all_channels, base_perms["deny"])
+	await setPerms(guild, ["@everyone"], all_channels, base_perms.deny)
 
 	await message.channel.send(
-		":ok: Created **" +
-			channels_created.length +
-			"** text channel" +
-			auxils.vocab("s", channels_created.length) +
-			" and **" +
-			categories_created.length +
-			"** category channel" +
-			auxils.vocab("s", categories_created.length) +
-			"."
+		`:ok: Created **${channels_created.length}** text channel${auxils.vocab("s", channels_created.length)} and **${
+			categories_created.length
+		}** category channel${auxils.vocab("s", categories_created.length)}.`
 	)
 }
 
-export = _createChannel
+export default _createChannel

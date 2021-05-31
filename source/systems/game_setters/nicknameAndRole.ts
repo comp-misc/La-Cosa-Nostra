@@ -47,4 +47,4 @@ const nicknameAndRole = async (client: Client, config: LcnConfig, roles: Player[
 	}
 }
 
-export = nicknameAndRole
+export default nicknameAndRole

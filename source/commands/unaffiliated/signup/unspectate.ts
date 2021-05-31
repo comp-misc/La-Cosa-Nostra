@@ -1,7 +1,7 @@
 import { CommandProperties, UnaffiliatedCommand } from "../../CommandType"
 import createSignupCommand, { removeSpectator } from "../../createSignupCommand"
 
-const command = createSignupCommand(async (msg, params, config) => {
+const command = createSignupCommand(async (msg, _params, config) => {
 	if (!msg.member.roles.cache.some((r) => r.name === config.permissions.spectator)) {
 		await msg.reply(`:x:  You are not already spectating the game!`)
 		return
@@ -16,4 +16,4 @@ const unspectate: CommandProperties<UnaffiliatedCommand> = {
 	command,
 }
 
-export = unspectate
+export default unspectate

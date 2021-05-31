@@ -20,8 +20,8 @@ const investigate: RoleActionable = async (actionable, game) => {
 		return
 	}
 	if (
-		["town_alignment_cop", "town_gunsmith", "town_jailkeeper", "serial_killer"].includes(target.role_identifier) ||
-		target.getRoleOrThrow().alignment === "mafia"
+		["town_alignment_cop", "town_gunsmith", "town_jailkeeper", "serial_killer"].includes(target.role.identifier) ||
+		target.role.properties.alignment === "mafia"
 	) {
 		game.addMessage(from, ":mag: You got the result of __True__.")
 	} else {

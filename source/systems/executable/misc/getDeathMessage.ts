@@ -1,24 +1,23 @@
 // Return the death broadcast
-
-import texts from "./text/texts"
 import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
+import texts from "./text/texts"
 
-export = function (game: Game, role: Player, reason: string): string {
+export default (game: Game, player: Player, reason: string): string => {
 	let message = texts.death_message
 
-	message = message.replace(new RegExp("{;player}", "g"), role.getDisplayName())
+	message = message.replace(new RegExp("{;player}", "g"), player.getDisplayName())
 	message = message.replace(new RegExp("{;reason}", "g"), reason)
-	message = message.replace(new RegExp("{;role}", "g"), role.getDisplayRole())
+	message = message.replace(new RegExp("{;role}", "g"), player.role.getDisplayName(true))
 
-	if (role.misc.time_of_death == undefined) {
-		role.misc.time_of_death = game.getPeriod() + 0.1
+	if (player.misc.time_of_death == undefined) {
+		player.misc.time_of_death = game.getPeriod() + 0.1
 	}
 
 	let will = "We could not find a last will."
 
-	if (role.will) {
-		will = "We found a will next to their body:\n```fix\n" + role.will + "```"
+	if (player.will) {
+		will = "We found a will next to their body:\n```fix\n" + player.will + "```"
 	}
 
 	message = message.replace(new RegExp("{;will_message}", "g"), will)
@@ -27,7 +26,7 @@ export = function (game: Game, role: Player, reason: string): string {
 	// eslint-disable-next-line no-control-regex
 	message = message.replace(new RegExp("[\n]*$", "g"), "")
 
-	message = message.replace(new RegExp("{@player}", "g"), "<@" + role.id + ">")
+	message = message.replace(new RegExp("{@player}", "g"), "<@" + player.id + ">")
 
 	return message
 }

@@ -1,0 +1,37 @@
+{
+	"role-name": "Motion Detector",
+
+	"alignment": "town",
+	"class": "unclassified",
+
+	"see-mafia-chat": false,
+
+	"stats": {
+		"basic-defense": 0,
+		"roleblock-immunity": 0,
+		"detection-immunity": 0,
+		"control-immunity": 0,
+		"redirection-immunity": 0,
+		"kidnap-immunity": 0,
+		"priority": 9,
+		"vote-offset": 0,
+		"vote-magnitude": 1
+	},
+
+	"investigation": ["Motion Detector"],
+	"secondary-roles": null,
+
+	"role-actions": true,
+	"factional-abilities": [],
+
+	"tags": [],
+
+	"reveal-role-on-interrogation": false,
+
+	"win-condition": "town",
+	"has-actions": true,
+
+	"thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtf3H555lDAs3Ai30ZV082xf6rEvigSiHPtmNsdG2mm6FcHR7G",
+	"abilities": ["Choose to check a player at night"],
+	"attributes": ["Will be given information about who visited that player the next day"]
+}

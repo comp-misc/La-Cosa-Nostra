@@ -2,33 +2,33 @@ import { Guild, GuildMember } from "discord.js"
 import { LcnConfig, PermissionsConfig } from "../LcnConfig"
 import { getTextChannel } from "../MafiaBot"
 import { UnaffiliatedCommand } from "./CommandType"
-import configModifier from "../systems/game_setters/configModifier"
 
-const createSignupCommand = (command: UnaffiliatedCommand): UnaffiliatedCommand => async (message, params, config) => {
-	const channel = getTextChannel("signup-channel")
-	if (message.channel.id !== channel.id) {
-		await message.reply(`:x: Please use <#${channel.id}>`)
-		return
+const createSignupCommand =
+	(command: UnaffiliatedCommand): UnaffiliatedCommand =>
+	async (message, params, config) => {
+		const channel = getTextChannel("signup-channel")
+		if (message.channel.id !== channel.id) {
+			await message.reply(`:x: Please use <#${channel.id}>`)
+			return
+		}
+		if (message.member.roles.cache.some((r) => r.name === config.permissions.alive)) {
+			await message.reply(":x:  You cannot change your role midgame!")
+			return
+		}
+		return command(message, params, config)
 	}
-	if (message.member.roles.cache.some((r) => r.name === config.permissions.alive)) {
-		await message.reply(":x:  You cannot change your role midgame!")
-		return
-	}
-	return command(message, params, config)
-}
 
-const removeRole = (
-	roleKey: keyof PermissionsConfig,
-	message: string | ((member: GuildMember, config: LcnConfig) => string)
-) => async (member: GuildMember, config: LcnConfig) => {
-	const channel = getTextChannel("signup-channel")
-	const role = member.roles.cache.find((role) => role.name === config.permissions[roleKey])
-	if (role) {
-		await member.roles.remove(role)
-		const msg = typeof message === "function" ? message(member, config) : message
-		await channel.send("**" + member.user.tag + "** " + msg)
+const removeRole =
+	(roleKey: keyof PermissionsConfig, message: string | ((member: GuildMember, config: LcnConfig) => string)) =>
+	async (member: GuildMember, config: LcnConfig) => {
+		const channel = getTextChannel("signup-channel")
+		const role = member.roles.cache.find((role) => role.name === config.permissions[roleKey])
+		if (role) {
+			await member.roles.remove(role)
+			const msg = typeof message === "function" ? message(member, config) : message
+			await channel.send("**" + member.user.tag + "** " + msg)
+		}
 	}
-}
 
 export const addRole = async (
 	roleKey: keyof PermissionsConfig,
@@ -55,8 +55,7 @@ export const getRequiredPlayers = (guild: Guild, config: LcnConfig): number | un
 	if (players) {
 		return players
 	}
-	const modifiedConfig = configModifier(config)
-	return modifiedConfig.playing.roles?.length
+	return undefined
 }
 
 export const formatSignedUpPlayers = (guild: Guild, config: LcnConfig): string => {

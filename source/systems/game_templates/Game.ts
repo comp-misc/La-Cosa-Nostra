@@ -17,20 +17,22 @@ import {
 	TextChannel,
 	User,
 } from "discord.js"
+import formatEmoji from "../../auxils/formatEmoji"
+import getUniqueArray from "../../auxils/getUniqueArray"
+import expansions from "../../expansions"
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
 import { GameConfig, LcnConfig, PermissionsConfig } from "../../LcnConfig"
 import alphabets from "../alpha_table"
 import auxils from "../auxils"
 import executable from "../executable"
-import expansions from "../../expansions"
+import { RolePermission } from "../executable/misc/createPrivateChannel"
 import flavours, { FlavourData } from "../flavours"
 import Actions, { Actionable, ActionOptions, ExecutionParams, Trigger } from "./Actions"
 import Logger from "./Logger"
-import Player, { FFStatus, PlayerProperty } from "./Player"
+import Player, { FFStatus } from "./Player"
+import saveGame from "./saveGame"
 import Timer from "./Timer"
-import { RolePermission } from "../executable/misc/createPrivateChannel"
-import formatEmoji from "../../auxils/formatEmoji"
 
 interface ChannelMeta {
 	id: Snowflake
@@ -70,7 +72,7 @@ export interface PeriodLogPin {
 	pin_time: Date
 }
 export interface DeathBroadcast {
-	role: string
+	playerId: string
 	reason: string
 	position_offset: number
 }
@@ -113,95 +115,51 @@ export interface WinLog {
 }
 
 class Game {
-	logger: Logger
 	client: Client
 	init_time: Date
 	config: LcnConfig
-	players: Player[]
-	players_tracked: number
-	voting_halted: boolean
-	game_start_message_sent: boolean
+	players: Player[] = []
+	voting_halted = false
+	game_start_message_sent = false
 	timezone: number
 	start_time: Date | undefined
 	current_time: Date | undefined
 	next_action: Date | undefined
 	actions: Actions
-	channels: Record<string, ChannelMeta>
-	intro_messages: IntroMessage[]
+	channels: Record<string, ChannelMeta> = {}
+	intro_messages: IntroMessage[] = []
 	period: number
-	steps: number
-	state: GameState
-	game_config_override: Record<string, unknown> | undefined
+	steps = 0
+	state: GameState = GameState.PRE_GAME
+	game_config_override: Record<string, unknown> = {}
 	flavour_identifier: string | null
 	timer: Timer | undefined
 	timer_identifier: string | undefined
-	trial_vote_operations: TrialVoteOperation[]
-	private period_log: Record<string, PeriodLogEntry>
-	private previously_uploaded_role_info: string[]
+	trial_vote_operations: TrialVoteOperation[] = []
+	private period_log: Record<string, PeriodLogEntry> = {}
+	private previously_uploaded_role_info: string[] = []
 	private win_log: WinLog | undefined
-	private trial_collectors: ReactionCollector[]
+	private trial_collectors: ReactionCollector[] = []
 	tampered_load_times?: Date[]
 
-	private fastForwarded: boolean
+	private fastForwarded = false
 
-	constructor(client: Client, config: LcnConfig, players: Player[]) {
-		this.logger = getLogger()
+	constructor(client: Client, config: LcnConfig) {
 		this.client = client
 		this.config = config
-		this.trial_collectors = []
 
-		this.players = players
 		this.init_time = new Date()
-
 		this.actions = new Actions(this)
-
-		this.trial_vote_operations = []
-
-		this.players_tracked = players.length
-
-		this.fastForwarded = false
-
-		this.channels = {}
-
-		this.period_log = {}
-
-		this.intro_messages = []
-		this.previously_uploaded_role_info = []
-
-		this.period = this.config["game"]["day-zero"] ? 0 : 1
-		this.steps = 0
-		this.state = GameState.PRE_GAME
-
+		this.period = this.config.game["day-zero"] ? 0 : 1
 		this.flavour_identifier = this.config.playing.flavour
-
-		this.voting_halted = false
-		this.game_start_message_sent = false
-
-		this.game_config_override = {}
 
 		// Timezone is GMT relative
 		this.timezone = this.config.time.timezone
-
-		for (let i = expansions.length - 1; i >= 0; i--) {
-			const game_init = expansions[i].scripts.game_init
-
-			if (!game_init) {
-				continue
-			}
-
-			this.game_start_message_sent = false
-
-			//Can't use async/await in a constructor, so the best I can do is log an error on promise failure
-			const result = game_init(this)
-			if (result) result.catch(this.logger.logError)
-		}
-
 		this.primeDesignatedTime()
+	}
 
-		this.players.forEach((player) => {
-			player.setGame(this)
-			player.postGameInit()
-		})
+	setPlayers(players: Player[]): void {
+		this.players = players
 	}
 
 	primeDesignatedTime(change_start = true): void {
@@ -347,7 +305,7 @@ class Game {
 				period_log.trial_vote.messages.push(messages[i].id)
 			}
 
-			this.save()
+			await this.save()
 
 			await this.instantiateTrialVoteCollector()
 
@@ -377,7 +335,9 @@ class Game {
 			const collector = message.createReactionCollector(() => true)
 			this.trial_collectors.push(collector)
 			collector.on("collect", (reaction) => {
-				reaction.users.cache.forEach((user) => this.receivedTrialVote(reaction, user))
+				reaction.users.cache.forEach((user) => {
+					this.receivedTrialVote(reaction, user).catch((e) => this.logger.logError(e))
+				})
 			})
 		})
 	}
@@ -463,7 +423,7 @@ class Game {
 
 		let voted_against: VoteTarget
 		if (alphabet === "nl") {
-			if (!this.config["game"]["lynch"]["no-lynch-option"]) {
+			if (!this.config.game.lynch["no-lynch-option"]) {
 				this.logger.log(
 					3,
 					user.id + " tried voting no-lynch using the reaction poll but no-lynches are disabled!"
@@ -541,7 +501,7 @@ class Game {
 
 			const after_votes = this.getNoLynchVoteCount()
 
-			this.checkLynchAnnouncement("nl", before_votes, after_votes)
+			await this.checkLynchAnnouncement("nl", before_votes, after_votes)
 		} else if (!special_vote) {
 			if (voted_no_lynch || voted_against === "nl") {
 				return false
@@ -579,7 +539,7 @@ class Game {
 				await executable.misc.removedLynch(this, voter, voted_against)
 			}
 
-			this.checkLynchAnnouncement(voted_against.identifier, before_votes, after_votes)
+			await this.checkLynchAnnouncement(voted_against.identifier, before_votes, after_votes)
 		} else {
 			// Special vote
 
@@ -589,7 +549,7 @@ class Game {
 				return false
 			}
 			if (!special_vote) {
-				this.logger.logError(new Error("No sepcial vote found"))
+				this.logger.logError(new Error("No special vote found"))
 				return false
 			}
 
@@ -609,6 +569,9 @@ class Game {
 			if (already_voting) {
 				// Remove special vote
 				special_vote.voters = special_vote.voters.filter((x) => x.identifier !== voter.identifier)
+				//TODO What is "voted_against" here? nl?
+
+				console.log(voted_against)
 				await this.execute("unvote", {
 					target: "s/" + voted_against,
 					voter: voter.identifier,
@@ -618,6 +581,9 @@ class Game {
 					identifier: voter.identifier,
 					magnitude: magnitude,
 				})
+				//TODO What is "voted_against" here? nl?
+
+				console.log(voted_against)
 				await this.execute("vote", {
 					target: "s/" + voted_against,
 					voter: voter.identifier,
@@ -658,7 +624,7 @@ class Game {
 		return this.players.filter((player) => player.isVotedAgainstBy(identifier))
 	}
 
-	private checkLynchAnnouncement(identifier: string, before: number, after: number): void {
+	private async checkLynchAnnouncement(identifier: string, before: number, after: number): Promise<void> {
 		const role = this.getPlayerByIdentifier(identifier)
 		if (!role) {
 			return
@@ -672,12 +638,14 @@ class Game {
 		}
 
 		// !this.config["game"]["lynch"]["top-voted-lynch"] && !this.hammerActive()
-		if (!this.hammerActive() && !this.config["game"]["lynch"]["top-voted-lynch"]) {
+		if (!this.hammerActive() && !this.config.game.lynch["top-voted-lynch"]) {
 			if (before < required && after >= required) {
 				// New lynch
-				identifier === "nl" ? executable.misc.nolynchReached(this) : executable.misc.lynchReached(this, role)
+				if (identifier === "nl") await executable.misc.nolynchReached(this)
+				else await executable.misc.lynchReached(this, role)
 			} else if (before >= required && after < required) {
-				identifier === "nl" ? executable.misc.nolynchOff(this) : executable.misc.lynchOff(this, role)
+				if (identifier === "nl") await executable.misc.nolynchOff(this)
+				else await executable.misc.lynchOff(this, role)
 			}
 		}
 	}
@@ -746,9 +714,9 @@ class Game {
 
 			if (divided === 0) {
 				// Daytime
-				time.setUTCHours(time.getUTCHours() + config["time"]["day"])
+				time.setUTCHours(time.getUTCHours() + config.time.day)
 			} else {
-				time.setUTCHours(time.getUTCHours() + config["time"]["night"])
+				time.setUTCHours(time.getUTCHours() + config.time.night)
 			}
 
 			return time
@@ -810,7 +778,7 @@ class Game {
 			await this.checkWin()
 
 			if ((this.state as GameState) === GameState.ENDED) {
-				this.save()
+				await this.save()
 				return null
 			}
 
@@ -834,7 +802,7 @@ class Game {
 		// Save
 		this.voting_halted = false
 
-		this.save()
+		await this.save()
 
 		return this.next_action || null
 	}
@@ -942,7 +910,7 @@ class Game {
 	private async createPeriodPin(message: Message): Promise<boolean> {
 		const log = this.getPeriodLog()
 
-		const result = executable.misc.pinMessage(message)
+		const result = await executable.misc.pinMessage(message)
 
 		if (result) {
 			const jx = {
@@ -1047,7 +1015,7 @@ class Game {
 	}
 
 	async lynch(role: Player): Promise<boolean> {
-		const success = executable.misc.lynch(this, role)
+		const success = await executable.misc.lynch(this, role)
 
 		// Add lynch summary
 		if (success) {
@@ -1160,13 +1128,7 @@ class Game {
 
 		registers.sort((a, b) => a.position_offset - b.position_offset)
 
-		const unique: string[] = []
-
-		for (let i = 0; i < registers.length; i++) {
-			if (!unique.includes(registers[i].role)) {
-				unique.push(registers[i].role)
-			}
-		}
+		const unique = getUniqueArray(registers.map((r) => r.playerId))
 
 		const cause_of_death_config = this.config.game["cause-of-death"]
 		const exceptions = cause_of_death_config.exceptions
@@ -1175,7 +1137,7 @@ class Game {
 		const hide_day = cause_of_death_config["hide-day"] && !this.isDay()
 		const hide_night = cause_of_death_config["hide-night"] && this.isDay()
 
-		unique.forEach((item) => {
+		for (const item of unique) {
 			const role = this.getPlayerByIdentifier(item)
 			if (!role) {
 				this.logger.logError(new Error(`No player found with identifier ${item}`))
@@ -1183,23 +1145,21 @@ class Game {
 			}
 
 			const reasons = []
-			registers
-				.filter((register) => register.role === item)
-				.forEach((register) => {
-					let exempt = false
+			for (const register of registers.filter((register) => register.playerId === item)) {
+				let exempt = false
 
-					// TODO: fix
-					for (let k = 0; k < exceptions.length; k++) {
-						if (register.reason.includes(exceptions[k])) {
-							exempt = true
-							break
-						}
+				// TODO: fix
+				for (const exception of exceptions) {
+					if (register.reason.includes(exception)) {
+						exempt = true
+						break
 					}
+				}
 
-					if (!(hide_day || hide_night) || exempt) {
-						reasons.push(register.reason)
-					}
-				})
+				if (!(hide_day || hide_night) || exempt) {
+					reasons.push(register.reason)
+				}
+			}
 
 			if (reasons.length < 1) {
 				reasons.push("found dead")
@@ -1210,28 +1170,23 @@ class Game {
 			const message = executable.misc.getDeathBroadcast(this, role, reason)
 
 			this.addBroadcastSummary(message, offset)
-		})
+		}
 
 		await this.uploadPublicRoleInformation(unique)
 	}
 
-	private async uploadPublicRoleInformation(role_identifiers: string[]): Promise<void> {
+	private async uploadPublicRoleInformation(playerIdentifiers: string[]): Promise<void> {
 		const display: Player[] = []
 
 		if (!this.previously_uploaded_role_info) {
 			this.previously_uploaded_role_info = []
 		}
 
-		for (let i = 0; i < role_identifiers.length; i++) {
-			const player = this.getPlayerByIdentifier(role_identifiers[i])
-			if (!player) {
-				this.logger.logError(new Error(`Unable to find player by identifier ${role_identifiers[i]}`))
-				continue
-			}
-
+		for (let i = 0; i < playerIdentifiers.length; i++) {
+			const player = this.getPlayerOrThrow(playerIdentifiers[i])
 			const flavour = this.getGameFlavour()
 			const exception =
-				this.previously_uploaded_role_info.includes(player.role_identifier) &&
+				this.previously_uploaded_role_info.includes(player.role.identifier) &&
 				flavour &&
 				flavour.info["do-not-repost-duplicate-cards"] === true
 
@@ -1239,19 +1194,18 @@ class Game {
 				display.push(player)
 			}
 
-			if (!this.previously_uploaded_role_info.includes(player.role_identifier)) {
-				this.previously_uploaded_role_info.push(player.role_identifier)
+			if (!this.previously_uploaded_role_info.includes(player.role.identifier)) {
+				this.previously_uploaded_role_info.push(player.role.identifier)
 			}
 		}
-
 		await executable.roles.uploadPublicRoleInformation(this, display)
 	}
 
-	private addDeathBroadcast(role: Player, reason: string, position_offset = 0) {
+	private addDeathBroadcast(player: Player, reason: string, position_offset = 0) {
 		const log = this.getPeriodLog()
 
 		log.death_broadcasts.push({
-			role: role.identifier,
+			playerId: player.identifier,
 			reason: reason,
 			position_offset: position_offset,
 		})
@@ -1355,11 +1309,13 @@ class Game {
 
 		await executable.misc.postGameStart(this)
 
-		setTimeout(() => this.createTrialVote(), 1600)
+		setTimeout(() => {
+			this.createTrialVote().catch((e) => this.logger.logError(e))
+		}, 1600)
 
 		await Promise.all(cache)
 
-		if (!this.isDay() && !this.config["game"]["town"]["night-chat"]) {
+		if (!this.isDay() && !this.config.game.town["night-chat"]) {
 			await executable.misc.lockMainChats(this)
 		} else {
 			await executable.misc.openMainChats(this)
@@ -1382,8 +1338,8 @@ class Game {
 		// only administrative junk
 
 		let trials = Math.max(
-			this.config["game"]["minimum-trials"],
-			Math.ceil(this.config["game"]["lynch-ratio-floored"] * this.getAlive())
+			this.config.game["minimum-trials"],
+			Math.ceil(this.config.game["lynch-ratio-floored"] * this.getAlive())
 		)
 
 		// Clear fast forward votes
@@ -1451,14 +1407,14 @@ class Game {
 
 		// Floored of alive
 		//return 1;
-		return Math.max(this.config["game"]["minimum-lynch-votes"], Math.floor(alive / 2) + 1)
+		return Math.max(this.config.game["minimum-lynch-votes"], Math.floor(alive / 2) + 1)
 	}
 
 	getNoLynchVotesRequired(): number {
 		const alive = this.getAlive()
 
 		// Ceiled of alive
-		return Math.max(this.config["game"]["minimum-nolynch-votes"], Math.ceil(alive / 2))
+		return Math.max(this.config.game["minimum-nolynch-votes"], Math.ceil(alive / 2))
 	}
 
 	getDiscordUser(alphabet: string): User | null {
@@ -1487,18 +1443,18 @@ class Game {
 
 			const index = step % step_names.length
 
-			return step_names[index] + " " + numeral
+			return `${step_names[index]} ${numeral}`
 		}
 
 		if (period % 2 === 0) {
-			return "Day " + numeral
+			return `Day ${numeral}`
 		} else {
-			return "Night " + numeral
+			return `Night ${numeral}`
 		}
 	}
 
-	save(silent?: boolean, saveFolder?: string): void {
-		this.timer?.save(silent, saveFolder)
+	async save(saveFolder?: string): Promise<void> {
+		await saveGame(this, saveFolder)
 	}
 
 	tentativeSave(silent?: boolean, bufferTime?: number): void {
@@ -1509,9 +1465,8 @@ class Game {
 		return executable.misc.__formatter(this, string)
 	}
 
-	async reinstantiate(timer: Timer, players: Player[]): Promise<void> {
+	async reinstantiate(timer: Timer): Promise<void> {
 		this.timer = timer
-		this.players = players
 
 		if (this.game_config_override) {
 			this.config.game = auxils.objectOverride(this.config.game, this.game_config_override)
@@ -1520,16 +1475,16 @@ class Game {
 		}
 
 		// Check role/attribute incompatibility
-		let incompatible: PlayerProperty[] = []
-		for (let i = 0; i < players.length; i++) {
-			incompatible = incompatible.concat(players[i].verifyProperties())
-		}
+		let incompatible = this.players.flatMap((player) => player.verifyProperties())
 
 		if (this.flavour_identifier && !flavours[this.flavour_identifier]) {
-			incompatible = incompatible.concat({
-				type: "flavour",
-				identifier: this.flavour_identifier,
-			})
+			incompatible = [
+				...incompatible,
+				{
+					type: "flavour",
+					identifier: this.flavour_identifier,
+				},
+			]
 		}
 
 		if (incompatible.length > 0) {
@@ -1565,16 +1520,6 @@ class Game {
 				'Stopped save reload due to role/attribute incompatibilities. Make sure expansions required for this save can be loaded (you can also check config/playing.json\'s "expansions" field). Restart the bot when ready. Key "uninstantiate" to delete saves.\n'
 			)
 		}
-
-		players.forEach((player) => player.reinstantiate(this))
-
-		if (this.players_tracked !== players.length) {
-			this.logger.log(4, "The players' save files have been removed/deleted!")
-		}
-
-		this.players_tracked = players.length
-
-		this.actions.reinstantiate(this)
 		await this.instantiateTrialVoteCollector()
 	}
 
@@ -1633,15 +1578,15 @@ class Game {
 		return { score, player }
 	}
 
-	find(condition: PlayerPredicate): Player | null {
+	findPlayer(condition: PlayerPredicate): Player | null {
 		return this.players.find(condition) || null
 	}
 
-	findAll(condition: PlayerPredicate): Player[] {
+	findAllPlayers(condition: PlayerPredicate): Player[] {
 		return this.players.filter(condition)
 	}
 
-	exists(condition: PlayerPredicate): boolean {
+	playerExists(condition: PlayerPredicate): boolean {
 		return this.players.some(condition)
 	}
 
@@ -1654,13 +1599,15 @@ class Game {
 
 		await executable.conclusion.endGame(this)
 
-		await this.getMainChannel().send(this.config["messages"]["game-over"])
+		await this.getMainChannel().send(this.config.messages["game-over"])
 
 		await this.clearTrialVoteReactions()
 
 		// End the game
 		this.state = GameState.ENDED
-		this.timer?.updatePresence()
+		if (this.timer) {
+			await this.timer.updatePresence()
+		}
 	}
 
 	getGuild(): Guild {
@@ -1680,19 +1627,19 @@ class Game {
 	}
 
 	getRolesChannel(): TextChannel {
-		return this.findTextChannel(this.config["channels"]["roles"])
+		return this.findTextChannel(this.config.channels.roles)
 	}
 
 	getLogChannel(): TextChannel {
-		return this.findTextChannel(this.config["channels"]["log"])
+		return this.findTextChannel(this.config.channels.log)
 	}
 
 	getMainChannel(): TextChannel {
-		return this.findTextChannel(this.config["channels"]["main"])
+		return this.findTextChannel(this.config.channels.main)
 	}
 
 	getWhisperLogChannel(): TextChannel {
-		return this.findTextChannel(this.config["channels"]["whisper-log"])
+		return this.findTextChannel(this.config.channels["whisper-log"])
 	}
 
 	getPeriod(): number {
@@ -1719,7 +1666,7 @@ class Game {
 	}
 
 	async createPrivateChannel(channelName: string, permissions: RolePermission[]): Promise<TextChannel> {
-		return (await executable.misc.createPrivateChannel(this, channelName, permissions)) as TextChannel
+		return executable.misc.createPrivateChannel(this, channelName, permissions)
 	}
 
 	postPrimeLog(): Promise<void> {
@@ -1813,7 +1760,7 @@ class Game {
 			return
 		}
 
-		this.addBroadcastSummary(formatEmoji(this.config.emoji["ff"]) + "  The night was **fastforwarded**.")
+		this.addBroadcastSummary(formatEmoji(this.config.emoji.ff) + "  The night was **fastforwarded**.")
 		await this.fastforward()
 	}
 
@@ -1834,24 +1781,22 @@ class Game {
 	checkRole(condition: string | PlayerPredicate): boolean {
 		if (typeof condition === "function") {
 			// Check
-			return this.exists(condition)
+			return this.playerExists(condition)
 		} else {
 			condition = condition.toLowerCase()
 
 			// Check separately
-			const cond1 = this.exists((x) => x.isAlive() && x.role_identifier === condition)
-			const cond2 = this.exists((x) => x.isAlive() && x.getRoleOrThrow().alignment === condition)
-			const cond3 = this.exists((x) => x.isAlive() && x.getRoleOrThrow().class === condition)
+			const cond1 = this.playerExists((x) => x.isAlive() && x.role.identifier === condition)
+			const cond2 = this.playerExists((x) => x.isAlive() && x.role.properties.alignment === condition)
+			const cond3 = this.playerExists((x) => x.isAlive() && x.role.properties.class === condition)
 
 			let cond4 = false
 
 			if (condition.includes("-")) {
 				const parts = condition.split("-")
-				cond4 = this.exists(
+				cond4 = this.playerExists(
 					(x) =>
-						x.isAlive() &&
-						x.getRoleOrThrow().alignment === parts[0] &&
-						x.getRoleOrThrow().class === parts[1]
+						x.isAlive() && x.role.properties.alignment === parts[0] && x.role.properties.class === parts[1]
 				)
 			}
 
@@ -1901,14 +1846,14 @@ class Game {
 	}
 
 	private async addNoLynchVote(identifier: string, magnitude: number) {
-		const no_lynch_vote = this.getPeriodLog()["no_lynch_vote"]
+		const no_lynch_vote = this.getPeriodLog().no_lynch_vote
 
 		no_lynch_vote.push({ identifier: identifier, magnitude: magnitude })
 		await this.execute("vote", { target: "nl", voter: identifier })
 	}
 
 	async clearNoLynchVotesBy(identifier: string): Promise<boolean> {
-		const no_lynch_vote = this.getPeriodLog()["no_lynch_vote"]
+		const no_lynch_vote = this.getPeriodLog().no_lynch_vote
 
 		let cleared = false
 
@@ -1927,7 +1872,7 @@ class Game {
 	}
 
 	clearNoLynchVotes(): void {
-		this.getPeriodLog()["no_lynch_vote"] = []
+		this.getPeriodLog().no_lynch_vote = []
 	}
 
 	isVotingNoLynch(identifier: string): boolean {
@@ -1937,17 +1882,17 @@ class Game {
 	hammerActive(): boolean {
 		const trials_available = this.getTrialsAvailable()
 
-		return this.config["game"]["lynch"]["allow-hammer"] && trials_available < 2
+		return this.config.game.lynch["allow-hammer"] && trials_available < 2
 	}
 
 	getTrialsAvailable(): number {
 		const period_log = this.getPeriodLog()
 		if (period_log) {
-			return period_log["trials"]
+			return period_log.trials
 		}
 		return Math.max(
-			this.config["game"]["minimum-trials"],
-			Math.ceil(this.config["game"]["lynch-ratio-floored"] * this.getAlive())
+			this.config.game["minimum-trials"],
+			Math.ceil(this.config.game["lynch-ratio-floored"] * this.getAlive())
 		)
 	}
 
@@ -1982,6 +1927,10 @@ class Game {
 		if (update_immediately) {
 			this.config.game = auxils.objectOverride(this.config.game, this.game_config_override)
 		}
+	}
+
+	get logger(): Logger {
+		return getLogger()
 	}
 }
 

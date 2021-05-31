@@ -1,4 +1,4 @@
-export = (string: string): string => {
+export default (string: string): string => {
 	if (string.length == 0) {
 		return string
 	}

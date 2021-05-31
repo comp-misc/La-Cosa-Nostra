@@ -48,4 +48,4 @@ const credits: UnaffiliatedCommand = async (message) => {
 	await message.channel.send(msg)
 }
 
-export = credits
+export default credits

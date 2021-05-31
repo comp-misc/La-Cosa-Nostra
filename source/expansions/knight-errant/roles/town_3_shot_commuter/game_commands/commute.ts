@@ -1,5 +1,6 @@
 import { RoleCommand } from "../../../../../commands/CommandType"
 import makeCommand from "../../../../../commands/makeCommand"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const commute: RoleCommand = async (game, message, params, from) => {
 	const config = game.config
@@ -31,10 +32,10 @@ const commute: RoleCommand = async (game, message, params, from) => {
 		expiry: 1,
 		from,
 		to: from,
+		priority: ActionPriorities.HIGHEST,
 	})
 }
 
-commute.ALLOW_NONSPECIFIC = false
 commute.PRIVATE_ONLY = true
 commute.DEAD_CANNOT_USE = true
 commute.ALIVE_CANNOT_USE = false

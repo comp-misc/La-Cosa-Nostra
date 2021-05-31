@@ -7,4 +7,4 @@ const versionCmd: UnaffiliatedCommand = async (message) => {
 	)
 }
 
-export = versionCmd
+export default versionCmd

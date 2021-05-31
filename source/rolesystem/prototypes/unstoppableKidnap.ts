@@ -74,4 +74,4 @@ const unstoppableKidnap = async <T>(
 
 unstoppableKidnap.reason = "away"
 
-export = unstoppableKidnap
+export default unstoppableKidnap

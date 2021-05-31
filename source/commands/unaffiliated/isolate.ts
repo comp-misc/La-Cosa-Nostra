@@ -25,7 +25,7 @@ const isolate: UnaffiliatedCommand = async (message, params, config) => {
 				config["command-prefix"] +
 				"isolate [pinpoint/cluster/context] <message ID>` instead!"
 		)
-		return null
+		return
 	}
 
 	let mode = params[0].toLowerCase()
@@ -117,4 +117,4 @@ const isolate: UnaffiliatedCommand = async (message, params, config) => {
 	await message.channel.send("**ISO for message** `" + message_id + "`:```ini\n" + sendable + "```")
 }
 
-export = isolate
+export default isolate

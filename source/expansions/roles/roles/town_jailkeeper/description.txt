@@ -1,6 +1,0 @@
-Welcome to ${game.name}! You are a Town Jailkeeper.
-
-Role Abilities:
-- Each night, you may choose to jail a player. This results in both a protection and roleblock for your target
-
-Win Condition: You win when all threats to town have been eliminated and there is at least one member of town left.

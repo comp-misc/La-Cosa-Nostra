@@ -17,4 +17,4 @@ const _unload: AdminCommand = async (message, params, config) => {
 	)
 }
 
-export = _unload
+export default _unload

@@ -11,4 +11,4 @@ const predefineLogs = (player: Player): void => {
 	}
 }
 
-export = predefineLogs
+export default predefineLogs

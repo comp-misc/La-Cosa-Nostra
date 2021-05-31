@@ -11,7 +11,12 @@ const basicCommute = async <T>(
 	const target = game.getPlayerOrThrow(actionable.to)
 
 	// Seen as visit
-	await game.execute("visit", { visitor: actionable.from, target: actionable.to, priority: actionable.priority })
+	await game.execute("visit", {
+		visitor: actionable.from,
+		target: actionable.to,
+		priority: actionable.priority,
+		type: "commute",
+	})
 
 	// Stops all actions to the target that are roleblockable
 	const actions = game.actions.findAll(
@@ -61,4 +66,4 @@ const basicCommute = async <T>(
 
 basicCommute.reason = "away"
 
-export = basicCommute
+export default basicCommute

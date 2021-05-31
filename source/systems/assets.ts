@@ -7,9 +7,9 @@ const ret: Record<string, Buffer> = {}
 const assets_dir = __dirname + "/../assets/"
 
 // Add expansions
-const expansion_assets = expansions.flatMap((expansion) => expansion.additions.assets.map(path.parse))
+const expansion_assets = expansions.flatMap((expansion) => expansion.additions.assets.map((a) => path.parse(a)))
 
-const assets = [...recursiveFileFind(assets_dir).map(path.parse), ...expansion_assets]
+const assets = [...recursiveFileFind(assets_dir).map((a) => path.parse(a)), ...expansion_assets]
 
 assets.forEach((asset) => {
 	ret[asset.base] = fs.readFileSync(asset.dir + "/" + asset.base)

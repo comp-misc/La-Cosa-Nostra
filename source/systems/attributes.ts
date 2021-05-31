@@ -1,10 +1,10 @@
 import attemptRequiring from "../auxils/attemptRequiring"
-import attemptRequiringScript from "../auxils/attemptRequringScript"
+import attemptRequiringScript from "../auxils/attemptRequiringScript"
 import expansions from "../expansions"
 import { Attribute, AttributeInfo } from "./Attribute"
-import auxils from "./auxils"
 import { tryReadCommands } from "../commands/commandReader"
 import { RoleCommand } from "../commands/CommandType"
+import ruleFilter from "../auxils/ruleFilter"
 
 let attributes: string[] = []
 let rules: string[] = []
@@ -16,7 +16,7 @@ for (let i = 0; i < expansions.length; i++) {
 	rules = rules.concat(expansions[i].expansion.overrides?.attributes || [])
 }
 
-attributes = auxils.ruleFilter(attributes, rules)
+attributes = ruleFilter(attributes, rules)
 
 const ret: Record<string, Attribute> = {}
 
@@ -52,4 +52,4 @@ for (let i = 0; i < attributes.length; i++) {
 		commands,
 	}
 }
-export = ret
+export default ret

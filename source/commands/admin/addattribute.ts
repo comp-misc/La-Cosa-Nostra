@@ -6,7 +6,7 @@ import { AdminCommand } from "../CommandType"
 const addattribute: AdminCommand = async (message, params, config) => {
 	if (!hasTimer() || !["playing"].includes(getTimer().game.state)) {
 		await message.channel.send(":x: No game in progress.")
-		return null
+		return
 	}
 
 	const logger = getLogger()
@@ -31,7 +31,7 @@ const addattribute: AdminCommand = async (message, params, config) => {
 	const attribute = attributes[params[1]]
 
 	if (!attribute) {
-		await message.channel.send(":x: Invalid attribute identifier `" + attribute + "`!")
+		await message.channel.send(":x: Invalid attribute identifier `" + params[1] + "`!")
 		return
 	}
 
@@ -47,7 +47,7 @@ const addattribute: AdminCommand = async (message, params, config) => {
 	let tags: Record<string, unknown> | undefined = undefined
 	if (json_string.length > 0) {
 		try {
-			tags = JSON.parse(json_string)
+			tags = JSON.parse(json_string) as Record<string, unknown>
 		} catch (err) {
 			logger.logError(err)
 			await message.channel.send(":x: Invalid JSON tags string.")
@@ -58,14 +58,8 @@ const addattribute: AdminCommand = async (message, params, config) => {
 	await player.addAttribute(params[1], expiry, tags)
 
 	await message.channel.send(
-		":ok: Added attribute `" +
-			params[1] +
-			"` with a cycle-expiry of `" +
-			expiry +
-			"` to **" +
-			player.getDisplayName() +
-			"**."
+		`:ok: Added attribute \`${params[1]}\` with a cycle-expiry of \`${expiry}\` to **${player.getDisplayName()}**.`
 	)
 }
 
-export = addattribute
+export default addattribute

@@ -17,11 +17,15 @@ const autosetup: ConsoleCommand = async (client, config) => {
 	const createRole = async (name: string, position?: number) => {
 		if (guild.roles.cache.some((x) => x.name === name)) {
 			logger.log(2, "Role %s already exists, not creating.", name)
-			return null
+			return
 		}
 
 		const role = await guild.roles.create({ data: { name, position } })
-		logger.log(2, `Created role ${name} (position ${position}).`)
+		if (position) {
+			logger.log(2, `Created role ${name} (position ${position}).`)
+		} else {
+			logger.log(2, `Created role ${name}.`)
+		}
 
 		return role
 	}
@@ -29,7 +33,7 @@ const autosetup: ConsoleCommand = async (client, config) => {
 	const createChannel = async (name: string, type: GuildChannelType = "text") => {
 		if (guild.channels.cache.some((x) => x.name === name && x.type === type)) {
 			logger.log(2, "Channel %s (%s) already exists, not creating.", name, type)
-			return null
+			return
 		}
 
 		const channel = await guild.channels.create(name, { type })
@@ -68,7 +72,9 @@ const autosetup: ConsoleCommand = async (client, config) => {
 		await createChannel(categories[key as keyof CategoriesConfig], "category")
 	}
 
-	return "Auto-setup complete. You may modify the roles and channels as you wish, but please do not change their names."
+	console.log(
+		"Auto-setup complete. You may modify the roles and channels as you wish, but please do not change their names."
+	)
 }
 
-export = autosetup
+export default autosetup

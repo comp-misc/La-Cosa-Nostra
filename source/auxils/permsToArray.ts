@@ -3,7 +3,7 @@ interface PermissionsArray {
 	deny: string[]
 }
 
-export = (permissions: Record<string, boolean>): PermissionsArray => {
+export default (permissions: Record<string, boolean>): PermissionsArray => {
 	const keys = Object.keys(permissions)
 
 	const ret: PermissionsArray = {

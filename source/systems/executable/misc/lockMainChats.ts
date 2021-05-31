@@ -4,7 +4,7 @@ import Game from "../../game_templates/Game"
 const setPermissions = async (channels: TextChannel[], role: Role, permissions: PermissionObject) =>
 	Promise.all(channels.map((channel) => channel.createOverwrite(role, permissions)))
 
-export = async (game: Game): Promise<void> => {
+export default async (game: Game): Promise<void> => {
 	// Open up simple chats
 	const config = game.config
 	const guild = game.getGuild()
@@ -18,7 +18,7 @@ export = async (game: Game): Promise<void> => {
 	const main_channel = game.getMainChannel()
 	const whisper_channel = game.getWhisperLogChannel()
 
-	const read_perms = config["base-perms"]["read"]
+	const read_perms = config["base-perms"].read
 
 	await setPermissions([main_channel, whisper_channel], alive, read_perms)
 }

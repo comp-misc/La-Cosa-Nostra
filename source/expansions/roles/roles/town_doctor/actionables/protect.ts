@@ -6,6 +6,7 @@ const protect: RoleActionable = async (actionable, game) => {
 		target: actionable.to,
 		priority: actionable.priority,
 		reason: "Doctor-visit",
+		type: "protect",
 	})
 
 	const target = game.getPlayerByIdentifierOrThrow(actionable.to)

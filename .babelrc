@@ -1,6 +1,10 @@
 {
 	"presets": [["latest-node", { "target": "current" }], "@babel/preset-typescript"],
-	"plugins": ["babel-plugin-replace-ts-export-assignment", "@babel/plugin-transform-typescript"],
+	"plugins": [
+		"babel-plugin-replace-ts-export-assignment",
+		"@babel/plugin-transform-typescript",
+		"dynamic-import-node-babel-7"
+	],
 	"sourceMaps": "inline",
 	"retainLines": true
 }

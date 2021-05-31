@@ -19,4 +19,4 @@ const addModule = async (player: Player, attribute_name: string, increment = 1):
 	}
 }
 
-export = addModule
+export default addModule

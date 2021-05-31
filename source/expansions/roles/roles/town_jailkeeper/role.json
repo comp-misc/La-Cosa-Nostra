@@ -18,7 +18,7 @@
 		"vote-magnitude": 1
 	},
 
-	"investigation": ["Town Jailkeeper"],
+	"investigation": ["Jailkeeper"],
 	"secondary-roles": null,
 
 	"reveal-role-on-interrogation": false,

@@ -11,10 +11,6 @@
 			"night-chat": false
 		},
 
-		"int": {
-			"night-chat": false
-		},
-
 		"day-zero": true,
 		"lynch-ratio-floored": 0,
 

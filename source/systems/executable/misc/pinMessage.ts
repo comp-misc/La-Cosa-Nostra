@@ -6,16 +6,16 @@ const pinFunction = (m: Message): boolean => {
 	return m.type === "PINS_ADD" && m.system && !m.deleted
 }
 
-export = async (message: Message): Promise<boolean> => {
+export default async (message: Message): Promise<boolean> => {
 	if (!message.pinnable || message.pinned) {
 		return false
 	}
 	try {
 		// Create collector
 		const collector = message.channel.createMessageCollector(pinFunction, { max: 3, time: 4000 })
-		collector.on("collect", async (message) => {
+		collector.on("collect", (message: Message) => {
 			if (message.type === "PINS_ADD" && message.system && !message.delete) {
-				await message.delete()
+				message.delete().catch(console.error)
 			}
 		})
 

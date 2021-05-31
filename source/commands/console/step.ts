@@ -16,4 +16,4 @@ const step: ConsoleCommand = async () => {
 	console.log("Step set.")
 }
 
-export = step
+export default step

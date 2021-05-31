@@ -1,24 +1,25 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
-const track: RoleActionable = (actionable, game, params) => {
+const track: RoleActionable = async (actionable, game, params) => {
 	// Visit the target
-	game.execute("visit", {
+	await game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
 		reason: "Modular-visit",
 	})
 
-	game.addAction("a/ability_track/gather", ["cycle"], {
+	await game.addAction("a/ability_track/gather", ["cycle"], {
 		name: "Modular-gather",
 		expiry: 1,
 		from: game.getPlayerOrThrow(actionable.from),
 		to: game.getPlayerOrThrow(actionable.to),
-		priority: 12,
+		priority: ActionPriorities.LOWEST,
 	})
 
-	attributeDecrement(actionable, game, params)
+	await attributeDecrement(actionable, game, params)
 }
 
 track.TAGS = ["roleblockable", "drivable", "visit"]

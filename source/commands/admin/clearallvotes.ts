@@ -5,7 +5,7 @@ import makeCommand from "../makeCommand"
 const clearallvotes: AdminCommand = async (message) => {
 	if (!hasTimer() || !["playing"].includes(getTimer().game.state)) {
 		await message.channel.send(":x: No game in progress.")
-		return null
+		return
 	}
 
 	const game = getTimer().game
@@ -17,7 +17,7 @@ const clearallvotes: AdminCommand = async (message) => {
 		await game.reloadTrialVoteMessage()
 	}
 
-	game.save()
+	await game.save()
 
 	await message.channel.send(":ok: All votes cleared.")
 }

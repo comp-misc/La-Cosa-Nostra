@@ -1,6 +1,5 @@
 // Main functional
-import assignRoles from "./assignRoles"
-import createGame from "./createGame"
+import createPlayers from "./createPlayers"
 import initCache from "./initCache"
 import createPrivate from "./createPrivate"
 import deletePrivate from "./deletePrivate"
@@ -14,6 +13,8 @@ import { LcnConfig } from "../../LcnConfig"
 import Timer from "../game_templates/Timer"
 import getLogger from "../../getLogger"
 import { getTimer, hasTimer, removeTimer, setTimer } from "../../getTimer"
+import Game from "../game_templates/Game"
+import expansions from "../../expansions"
 
 export class GameStartError extends Error {
 	constructor(message: string) {
@@ -39,12 +40,15 @@ const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 		logger.log(2, "Destroyed previous Timer instance.")
 	}
 
-	const new_config = configModifier(config)
+	const newConfig = configModifier(config)
+
+	const game = new Game(client, newConfig)
 
 	// assign roles first
-	const roles = await assignRoles(client, new_config)
+	const players = createPlayers(game, newConfig)
+	game.setPlayers(players)
 
-	await deletePrivate(client, new_config)
+	await deletePrivate(client, newConfig)
 
 	// Delete (or rename) previous cache
 	deleteCaches()
@@ -53,18 +57,26 @@ const initGame = async (client: Client, config: LcnConfig): Promise<Timer> => {
 	initCache()
 
 	// Create private channels
-	const mafia_channel = await createPrivate(client, new_config, roles)
+	const mafia_channel = await createPrivate(client, newConfig, players)
 
-	await nicknameAndRole(client, new_config, roles)
-	await setPermissions(new_config, roles)
-	await setRolePermissions(client, new_config)
+	if (mafia_channel) {
+		game.setChannel("mafia", mafia_channel)
+	}
 
-	const [game, timer] = await createGame(client, new_config, roles, mafia_channel)
+	await nicknameAndRole(client, newConfig, players)
+	await setPermissions(newConfig, players)
+	await setRolePermissions(client, newConfig)
 
-	// create test vote
-	//game.createVotes("development-chambers");
+	for (const gameInit of expansions.map((expansion) => expansion.scripts.game_init)) {
+		if (gameInit) {
+			await gameInit(game)
+		}
+	}
 
-	timer.save()
+	const timer = new Timer(game)
+	await timer.init()
+
+	await timer.game.save()
 
 	await game.postPrimeLog()
 

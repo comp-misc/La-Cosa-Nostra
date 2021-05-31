@@ -32,7 +32,9 @@ for (const expansion of expansions) {
 		const folderRs: Record<string, unknown> = {}
 		for (const script of fs.readdirSync(directory + "/" + folder)) {
 			if (script.toLowerCase().endsWith(".ts") || script.toLowerCase().endsWith(".js")) {
-				folderRs[script.substring(0, script.length - 3)] = requireScript(directory + "/" + folder + "/" + script)
+				folderRs[script.substring(0, script.length - 3)] = requireScript(
+					directory + "/" + folder + "/" + script
+				)
 			}
 		}
 		expansionRS[folder] = folderRs
@@ -42,4 +44,4 @@ for (const expansion of expansions) {
 	rolesystem = objectOverride(rolesystem, expansionRS)
 }
 
-export = rolesystem
+export default rolesystem

@@ -18,4 +18,4 @@ const coin: UnaffiliatedCommand = async (message) => {
 	}
 }
 
-export = coin
+export default coin

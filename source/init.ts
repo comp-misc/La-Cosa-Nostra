@@ -4,7 +4,7 @@ import lcn from "./lcn"
 import { InitScript } from "./Expansion"
 import version from "./Version"
 
-export = (): [Logger, typeof lcn] => {
+const init = (): [Logger, typeof lcn] => {
 	// Create logger
 	const log_directory = directories.log
 
@@ -34,3 +34,5 @@ export = (): [Logger, typeof lcn] => {
 
 	return [logger, lcn]
 }
+
+export default init

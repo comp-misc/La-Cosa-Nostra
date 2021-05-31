@@ -44,4 +44,4 @@ const basicHide = async <T>(
 
 basicHide.reason = "away"
 
-export = basicHide
+export default basicHide

@@ -20,4 +20,4 @@ const operations: Operations = {
 	min: Math.min,
 }
 
-export = operations
+export default operations

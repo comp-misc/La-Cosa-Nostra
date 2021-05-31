@@ -52,4 +52,4 @@ const dictionary: UnaffiliatedCommand = async (message, params, config) => {
 	await message.channel.send(embed)
 }
 
-export = dictionary
+export default dictionary

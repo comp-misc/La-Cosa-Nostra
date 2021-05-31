@@ -10,7 +10,7 @@ const _attributes: AdminCommand = async (message, params, config) => {
 
 	if (params.length < 1) {
 		await message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "_attributes <id>` instead!")
-		return null
+		return
 	}
 
 	const game = getTimer().game
@@ -19,7 +19,7 @@ const _attributes: AdminCommand = async (message, params, config) => {
 
 	if (!player) {
 		await message.channel.send(":x: Invalid player!")
-		return null
+		return
 	}
 
 	const attributes = player.attributes
@@ -28,7 +28,12 @@ const _attributes: AdminCommand = async (message, params, config) => {
 	if (attributes.length > 0) {
 		sendable = attributes.map(
 			(x, i) =>
-				"Attribute **[" + (i + 1) + "]**:\n" + "```fix\n" + JSON.stringify(x, auxils.jsonInfinityCensor) + "```"
+				"Attribute **[" +
+				(i + 1).toString() +
+				"]**:\n" +
+				"```fix\n" +
+				JSON.stringify(x, auxils.jsonInfinityCensor) +
+				"```"
 		)
 	} else {
 		sendable = [":x: No attributes found!"]
@@ -37,4 +42,4 @@ const _attributes: AdminCommand = async (message, params, config) => {
 	await message.channel.send(sendable.join("\n"), { split: { char: "\n```", prepend: "\n```" } })
 }
 
-export = _attributes
+export default _attributes

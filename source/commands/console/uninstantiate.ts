@@ -7,4 +7,4 @@ const uninstaniate: ConsoleCommand = () => {
 	deleteCaches()
 }
 
-export = uninstaniate
+export default uninstaniate

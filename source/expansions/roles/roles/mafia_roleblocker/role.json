@@ -18,7 +18,7 @@
 		"vote-magnitude": 1
 	},
 
-	"investigation": ["Mafia Roleblocker"],
+	"investigation": ["Roleblocker"],
 	"secondary-roles": null,
 
 	"tags": ["primary_mafia_killer"],

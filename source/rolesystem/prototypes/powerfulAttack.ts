@@ -54,4 +54,4 @@ const powerfulAttack: AttackPrototype = async <T>(
 powerfulAttack.reason = "killed"
 powerfulAttack.secondary_reason = undefined
 
-export = powerfulAttack
+export default powerfulAttack

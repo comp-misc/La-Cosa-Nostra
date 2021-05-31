@@ -1,29 +1,8 @@
 import { RoleActionable } from "../../../../../systems/actionables"
+import basicRoleblock from "../../../../../rolesystem/prototypes/basicRoleblock"
 
 const roleblock: RoleActionable = async (actionable, game) => {
-	const target = game.getPlayerOrThrow(actionable.to)
-
-	// Considered as visit
-	await game.execute("visit", {
-		visitor: actionable.from,
-		target: actionable.to,
-		priority: actionable.priority,
-		reason: "Town-Roleblocker-visit",
-	})
-
-	await game.execute("roleblock", {
-		roleblocker: actionable.from,
-		target: actionable.to,
-		priority: actionable.priority,
-		reason: "Town-Roleblocker-roleblock",
-	})
-
-	const immunity = target.getStat("roleblock-immunity", Math.max)
-
-	if (immunity < 1) {
-		game.actions.delete((x) => x.from === target.identifier && x.tags.includes("roleblockable"))
-		target.setStatus("roleblocked", true)
-	}
+	await basicRoleblock(actionable, game, "Town-Roleblocker")
 }
 
 roleblock.TAGS = ["drivable", "visit"]

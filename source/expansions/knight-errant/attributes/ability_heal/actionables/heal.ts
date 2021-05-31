@@ -1,8 +1,8 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
 
-const heal: RoleActionable = (actionable, game, params) => {
-	game.execute("visit", {
+const heal: RoleActionable = async (actionable, game, params) => {
+	await game.execute("visit", {
 		visitor: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,
@@ -23,9 +23,9 @@ const heal: RoleActionable = (actionable, game, params) => {
     priority: 1
   });*/
 
-	target.addAttribute("protection", 1, { amount: 1 })
+	await target.addAttribute("protection", 1, { amount: 1 })
 
-	attributeDecrement(actionable, game, params)
+	await attributeDecrement(actionable, game, params)
 }
 
 heal.TAGS = ["drivable", "roleblockable", "visit"]

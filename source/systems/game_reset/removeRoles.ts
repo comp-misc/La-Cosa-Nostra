@@ -26,4 +26,4 @@ const removeRoles = async (client: Client, config: LcnConfig): Promise<void> => 
 		await removeRole(members[i], roles)
 	}
 }
-export = removeRoles
+export default removeRoles

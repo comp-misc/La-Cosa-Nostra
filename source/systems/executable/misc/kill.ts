@@ -2,7 +2,7 @@ import getLogger from "../../../getLogger"
 import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
 
-export = async (game: Game, role: Player): Promise<void> => {
+export default async (game: Game, role: Player): Promise<void> => {
 	const config = game.config
 	const logger = getLogger()
 

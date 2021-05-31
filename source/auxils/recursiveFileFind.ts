@@ -33,4 +33,4 @@ const recursiveFileFind: RecursiveFileFind = (directory: string, option?: Option
 	return result
 }
 
-export = recursiveFileFind
+export default recursiveFileFind

@@ -22,7 +22,7 @@ const substitute: AdminCommand = async (message, params) => {
 		await game.reloadTrialVoteMessage()
 	}
 
-	game.save()
+	await game.save()
 
 	await message.channel.send(":ok: Substitution complete (" + params[0] + " → " + params[1] + ").")
 	await message.channel.send(

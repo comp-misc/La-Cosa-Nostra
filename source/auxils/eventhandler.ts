@@ -15,7 +15,7 @@ interface PingRestriction {
 
 const ping_restrictions: PingRestriction[] = []
 
-export = (client: Client, config: LcnConfig): void => {
+export default (client: Client, config: LcnConfig): void => {
 	const getChannel = (channel: keyof ChannelsConfig): TextChannel => {
 		const ch = getGuild(client).channels.cache.find((x) => x.name === config.channels[channel])
 		if (!ch) {
@@ -44,7 +44,7 @@ export = (client: Client, config: LcnConfig): void => {
 		// Ping restrictions
 		const ping_config = config["message-checks"]["alive-pings"]
 
-		if (!ping_config["restrict"]) {
+		if (!ping_config.restrict) {
 			return
 		}
 
@@ -62,8 +62,8 @@ export = (client: Client, config: LcnConfig): void => {
 			return
 		}
 
-		for (let i = 0; i < ping_config["exempt"].length; i++) {
-			const role_key: string = ping_config["exempt"][i]
+		for (let i = 0; i < ping_config.exempt.length; i++) {
+			const role_key: string = ping_config.exempt[i]
 
 			const exempt_role = guild.roles.cache.find(
 				(x) => x.name === config.permissions[role_key as keyof PermissionsConfig]
@@ -93,17 +93,14 @@ export = (client: Client, config: LcnConfig): void => {
 			}
 		}
 
-		if (count > ping_config["threshold"]) {
+		if (count > ping_config.threshold) {
 			await message.channel.send(
-				":x: <@" +
-					message.author.id +
-					">, please refrain from pinging the Alive role more than __" +
-					ping_config["threshold"] +
-					"__ time" +
-					pettyFormat(["s", ping_config.threshold.toString()]) +
-					" in the timespan of **" +
-					formatDateVerbose(ping_config["threshold-time"]) +
-					"**!"
+				`:x: <@${message.author.id}>, please refrain from pinging the Alive role more than __${
+					ping_config.threshold
+				}__ time${pettyFormat([
+					"s",
+					ping_config.threshold.toString(),
+				])} in the timespan of **${formatDateVerbose(ping_config["threshold-time"])}**!`
 			)
 		}
 	})
@@ -117,9 +114,9 @@ export = (client: Client, config: LcnConfig): void => {
 			return
 		}
 
-		const edit_config = config["message-checks"]["edits"]
+		const edit_config = config["message-checks"].edits
 
-		if (!edit_config["restrict"]) {
+		if (!edit_config.restrict) {
 			return
 		}
 
@@ -131,8 +128,8 @@ export = (client: Client, config: LcnConfig): void => {
 			return
 		}
 
-		for (let i = 0; i < edit_config["exempt"].length; i++) {
-			const role_key: string = edit_config["exempt"][i]
+		for (let i = 0; i < edit_config.exempt.length; i++) {
+			const role_key: string = edit_config.exempt[i]
 
 			const exempt_role = guild.roles.cache.find(
 				(x) => x.name === config.permissions[role_key as keyof PermissionsConfig]
@@ -159,28 +156,20 @@ export = (client: Client, config: LcnConfig): void => {
 			const edit_delta = new Date().getTime() - (old_message.editedAt || old_message.createdAt).getTime()
 
 			await new_message.channel.send(
-				":x: <@" +
-					new_message.author.id +
-					">, you edited message " +
-					new_message.id +
-					" [__" +
-					old_message.content.length +
-					"__ character" +
-					pettyFormat(["s", old_message.content.length.toString()]) +
-					" → __" +
-					new_message.content.length +
-					"__ character" +
-					pettyFormat(["s", new_message.content.length.toString()]) +
-					"] by __" +
-					Math.round((delta * 100) / old_message.content.length) +
-					"%__ in the timespan of **" +
-					formatDateVerbose(edit_delta) +
-					"**. Please do not change the context of messages if they pertain to the game!"
+				`:x: <@${new_message.author.id}>, you edited message ${new_message.id} [__${
+					old_message.content.length
+				}__ character${pettyFormat(["s", old_message.content.length.toString()])} → __${
+					new_message.content.length
+				}__ character${pettyFormat(["s", new_message.content.length.toString()])}] by __${Math.round(
+					(delta * 100) / old_message.content.length
+				)}%__ in the timespan of **${formatDateVerbose(
+					edit_delta
+				)}**. Please do not change the context of messages if they pertain to the game!`
 			)
 		}
 	})
 
-	client.on("messageDelete", async (message) => {
+	onWithError("messageDelete", async (message) => {
 		if (!hasTimer() || getTimer().game.state !== "playing" || !message.member) {
 			return
 		}
@@ -190,9 +179,9 @@ export = (client: Client, config: LcnConfig): void => {
 		}
 
 		// Ping restrictions
-		const deletion_config = config["message-checks"]["deletion"]
+		const deletion_config = config["message-checks"].deletion
 
-		if (!deletion_config["restrict"]) {
+		if (!deletion_config.restrict) {
 			return
 		}
 
@@ -222,17 +211,12 @@ export = (client: Client, config: LcnConfig): void => {
 
 		if (length >= deletion_config["minimum-character-count"]) {
 			await message.channel.send(
-				":x: <@" +
-					message.author.id +
-					">, you deleted message " +
-					message.id +
-					" [" +
-					length +
-					" character" +
-					pettyFormat(["s", length.toString()]) +
-					"] posted on **" +
-					formatUTCDate(message.createdAt) +
-					"**. Please do not delete messages if they pertain to the game!"
+				`:x: <@${message.author.id}>, you deleted message ${message.id} [${length} character${pettyFormat([
+					"s",
+					length.toString(),
+				])}] posted on **${formatUTCDate(
+					message.createdAt
+				)}**. Please do not delete messages if they pertain to the game!`
 			)
 		}
 	})

@@ -18,7 +18,7 @@ const setPermissions = async (config: LcnConfig, roles: Player[]): Promise<void>
 	const logger = getLogger()
 	logger.log(2, "Setting permissions.")
 
-	const post_perms = config["base-perms"]["post"]
+	const post_perms = config["base-perms"].post
 
 	for (const player of roles) {
 		const channel = player.getPrivateChannel()
@@ -26,4 +26,4 @@ const setPermissions = async (config: LcnConfig, roles: Player[]): Promise<void>
 	}
 }
 
-export = setPermissions
+export default setPermissions

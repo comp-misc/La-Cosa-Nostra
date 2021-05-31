@@ -1,14 +1,17 @@
 import fs from "fs"
-import attemptRequiringScript from "./auxils/attemptRequringScript"
+import attemptRequiringScript from "./auxils/attemptRequiringScript"
+import recursiveFileFind from "./auxils/recursiveFileFind"
 import { readAllCommandTypes } from "./commands/commandReader"
-import version from "./Version"
+import { Expansion, ExpansionInfo } from "./Expansion"
+import lazyGet from "./lazyGet"
 import auxils from "./systems/auxils"
 import config_handler from "./systems/config_handler"
-import { Expansion, ExpansionInfo } from "./Expansion"
-import recursiveFileFind from "./auxils/recursiveFileFind"
+import version from "./Version"
 
 const config = config_handler()
 
+const attemptReaddirDirectories = (directory: string): string[] =>
+	attemptReaddir(directory).filter((f) => fs.lstatSync(directory + "/" + f).isDirectory())
 const attemptReaddir = (directory: string): string[] => (fs.existsSync(directory) ? fs.readdirSync(directory) : [])
 
 const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expansion[] => {
@@ -47,6 +50,7 @@ const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expans
 		const scriptsDirectory = directory + "/scripts"
 
 		// Read information JSON
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const expansion = require(`${directory}/expansion.json`) as ExpansionInfo
 
 		ret = ret.concat(getExpansions(expansion.dependencies || [], ret))
@@ -61,6 +65,33 @@ const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expans
 			}
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const lazyScript = <T extends (...args: any[]) => any>(
+			directory: string,
+			scriptName: string
+		): ((...funcArgs: Parameters<T>) => ReturnType<T>) | undefined => {
+			let exists = false
+			for (const extension of ["ts", "js"]) {
+				if (fs.existsSync(directory + "/" + scriptName + "." + extension)) {
+					exists = true
+					break
+				}
+			}
+			if (!exists) {
+				return undefined
+			}
+
+			const scriptLazy = lazyGet(() => attemptRequiringScript<T>(directory, scriptName))
+
+			return (...args: Parameters<T>): ReturnType<T> => {
+				const script = scriptLazy()
+				if (script) {
+					return script(...args)
+				}
+				throw new Error("Undefined script")
+			}
+		}
+
 		// Add information
 		ret.push({
 			expansion_directory: directory,
@@ -69,20 +100,19 @@ const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expans
 			commands: readAllCommandTypes(directory + "/commands"),
 			additions: {
 				assets: recursiveFileFind(directory + "/assets"),
-				roles: attemptReaddir(directory + "/roles"),
-				flavours: attemptReaddir(directory + "/flavours"),
+				roles: attemptReaddirDirectories(directory + "/roles"),
+				flavours: attemptReaddirDirectories(directory + "/flavours"),
 				role_win_conditions: attemptReaddir(directory + "/role_win_conditions"),
-				attributes: attemptReaddir(directory + "/attributes"),
+				attributes: attemptReaddirDirectories(directory + "/attributes"),
 			},
 			scripts: {
-				start: attemptRequiringScript(scriptsDirectory, "start"),
-				game_prime: attemptRequiringScript(scriptsDirectory, "game_primed"),
-				game_start: attemptRequiringScript(scriptsDirectory, "game_start"),
-				game_secondary_start: attemptRequiringScript(scriptsDirectory, "game_secondary_start"),
-				game_assign: attemptRequiringScript(scriptsDirectory, "game_assign"),
-				game_init: attemptRequiringScript(scriptsDirectory, "game_init"),
-				cycle: attemptRequiringScript(scriptsDirectory, "cycle"),
-				init: attemptRequiringScript(scriptsDirectory, "init"),
+				start: lazyScript(scriptsDirectory, "start"),
+				game_start: lazyScript(scriptsDirectory, "game_start"),
+				game_secondary_start: lazyScript(scriptsDirectory, "game_secondary_start"),
+				game_assign: lazyScript(scriptsDirectory, "game_assign"),
+				game_init: lazyScript(scriptsDirectory, "game_init"),
+				cycle: lazyScript(scriptsDirectory, "cycle"),
+				init: lazyScript(scriptsDirectory, "init"),
 			},
 		})
 	}

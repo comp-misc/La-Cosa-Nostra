@@ -8,8 +8,6 @@ export interface FlavourRoleData {
 	/** File location of banner */
 	banner: string
 	description: string
-	role: string
-	"secondary-description"?: string
 }
 export interface AssetSwap {
 	from: string
@@ -30,7 +28,6 @@ export interface FlavourInfo extends Record<string, any> {
 	"investigator-sees-flavour-role": boolean
 	"show-role-category": boolean
 	"post-role-card-and-description-on-death": boolean
-	"display-standard-role-details": boolean
 	"step-names": string[] | null
 }
 
@@ -86,6 +83,8 @@ for (let i = 0; i < flavours.length; i++) {
 		continue
 	}
 
+	/* eslint-disable @typescript-eslint/no-var-requires */
+
 	// Scan the system
 	const info = require(`${directory}/info.json`) as FlavourInfo
 	const roles = require(`${directory}/roles.json`) as Record<string, FlavourRoleData[]>
@@ -112,10 +111,7 @@ for (let i = 0; i < flavours.length; i++) {
 
 	keys.forEach((key) => {
 		const available = roles[key]
-		available.forEach((role) => {
-			all_flavours[role.name] = role
-			role.role = key
-		})
+		available.forEach((role) => (all_flavours[role.name] = role))
 	})
 
 	ret[flavour] = {

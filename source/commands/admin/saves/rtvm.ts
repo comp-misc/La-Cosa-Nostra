@@ -18,4 +18,4 @@ const rtvm: AdminCommand = async (message) => {
 	await message.channel.send(":ok: Reloaded the trial vote message.")
 }
 
-export = rtvm
+export default rtvm

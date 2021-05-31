@@ -47,10 +47,8 @@ const _actions: AdminCommand = async (message, params) => {
 	if (actions.length > 0) {
 		sendable = actions.map(
 			(x) =>
-				"Index **[" +
-				x.index +
-				"]**:\n" +
-				"```json\n" +
+				`Index **[${x.index}]**:` +
+				"\n```json\n" +
 				JSON.stringify(x.action, auxils.jsonInfinityCensor, 2) +
 				"```"
 		)
@@ -63,4 +61,4 @@ const _actions: AdminCommand = async (message, params) => {
 	})
 }
 
-export = _actions
+export default _actions

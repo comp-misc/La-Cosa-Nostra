@@ -14,12 +14,12 @@ const setPerms = async (guild: Guild, roles: string[], channels: GuildChannel[],
 const _archive: AdminCommand = async (message, params, config) => {
 	if (!hasTimer() && ["pre-game", "playing"].includes(getTimer().game.state)) {
 		await message.channel.send(":x: You may not archive a game when one is running or primed.")
-		return null
+		return
 	}
 
 	if (params.length < 1) {
 		await message.channel.send(":x: Wrong syntax! Use `" + config["command-prefix"] + "_archive <name>` instead!")
-		return null
+		return
 	}
 
 	const permissions = config.permissions
@@ -55,11 +55,11 @@ const _archive: AdminCommand = async (message, params, config) => {
 		guild,
 		[permissions.admin, permissions.spectator, permissions.aftermath, "@everyone"],
 		all_channels,
-		base_perms["read"]
+		base_perms.read
 	)
-	await setPerms(guild, [permissions.alive, permissions.dead, permissions.pre], all_channels, base_perms["deny"])
+	await setPerms(guild, [permissions.alive, permissions.dead, permissions.pre], all_channels, base_perms.deny)
 
-	await message.channel.send(":ok: Archived **" + channels.length + "** channels.")
+	await message.channel.send(`:ok: Archived **${channels.length}** channels.`)
 }
 
-export = _archive
+export default _archive

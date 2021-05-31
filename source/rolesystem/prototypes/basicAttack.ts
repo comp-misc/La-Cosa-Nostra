@@ -30,6 +30,7 @@ const basicAttack: AttackPrototype = async <T>(
 			priority: actionable.priority,
 			reason: basicAttack.reason,
 			secondary_reason: basicAttack.secondary_reason,
+			type: "kill",
 		})
 	}
 
@@ -48,4 +49,4 @@ const basicAttack: AttackPrototype = async <T>(
 basicAttack.reason = "killed"
 basicAttack.secondary_reason = undefined
 
-export = basicAttack
+export default basicAttack

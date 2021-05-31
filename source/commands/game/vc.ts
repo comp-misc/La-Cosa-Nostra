@@ -1,3 +1,3 @@
 // Votecount alias
 import votecount from "./votecount"
-export = votecount
+export default votecount

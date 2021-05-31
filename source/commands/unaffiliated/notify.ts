@@ -4,7 +4,9 @@ const notify: UnaffiliatedCommand = async (message, params, config) => {
 	const member = message.member
 
 	if (params.length < 1) {
-		await message.channel.send(":x: Wrong syntax! Try using `" + config["command-prefix"] + "notify <on/off>` instead!")
+		await message.channel.send(
+			":x: Wrong syntax! Try using `" + config["command-prefix"] + "notify <on/off>` instead!"
+		)
 		return
 	}
 
@@ -52,4 +54,4 @@ const notify: UnaffiliatedCommand = async (message, params, config) => {
 	}
 }
 
-export = notify
+export default notify

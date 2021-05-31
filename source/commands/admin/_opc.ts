@@ -48,22 +48,22 @@ const _opc: AdminCommand = async (message, params, config) => {
 	switch (operator) {
 		case "read":
 			// Set read perms
-			await setPerms(role, channels, config["base-perms"]["read"])
+			await setPerms(role, channels, config["base-perms"].read)
 			break
 
 		case "write":
-			await setPerms(role, channels, config["base-perms"]["post"])
+			await setPerms(role, channels, config["base-perms"].post)
 			break
 
 		case "deny":
-			await setPerms(role, channels, config["base-perms"]["deny"])
+			await setPerms(role, channels, config["base-perms"].deny)
 			break
 
 		case "manage":
-			await setPerms(role, channels, config["base-perms"]["manage"])
+			await setPerms(role, channels, config["base-perms"].manage)
 	}
 
 	await message.channel.send(":ok: Assigned permissions.")
 }
 
-export = _opc
+export default _opc

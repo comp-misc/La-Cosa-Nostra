@@ -1,0 +1,23 @@
+{
+	"name": "Test",
+	"type": "Setup",
+	"description": "A semi-open setup uses a chess knight move in a matrix to determine the setup.",
+
+	"link": "https://wiki.mafiascum.net/index.php?title=Knight-Errant",
+
+	"authors": ["Alduskkel"],
+
+	"overrides": {
+		"roles": [
+			"roles/mafia_roleblocker",
+			"roles/town_roleblocker",
+			"roles/town_doctor",
+			"roles/town_vanilla_townie",
+			"roles/town_voyeur"
+		],
+		"attributes": ["roles/mafia_factionkill"],
+		"role_win_conditions": ["roles/town", "roles/stalemate", "roles/town"]
+	},
+
+	"dependencies": ["roles"]
+}

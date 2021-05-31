@@ -1,7 +1,7 @@
 import Player from "../../game_templates/Player"
 import auxils from "../../auxils"
 
-export = async (player: Player, successes: Player[]): Promise<void> => {
+export default async (player: Player, successes: Player[]): Promise<void> => {
 	const successesNames = successes.map((x) => "**" + x.getDisplayName() + "**")
 
 	await player

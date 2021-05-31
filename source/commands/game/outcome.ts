@@ -32,7 +32,7 @@ const outcome: GameCommand = async (game, message) => {
 	const config = game.config
 	const roles = game.players
 
-	const lynch_config = config["game"]["lynch"]
+	const lynch_config = config.game.lynch
 
 	const no_lynch_votes = game.getNoLynchVoteCount()
 

@@ -21,4 +21,4 @@ const backup: CommandProperties<UnaffiliatedCommand> = {
 	command,
 }
 
-export = backup
+export default backup

@@ -24,4 +24,4 @@ const openMainChats = async (game: Game): Promise<void> => {
 	await setPermissions([main_channel, whisper_channel], alive, post_perms)
 }
 
-export = openMainChats
+export default openMainChats

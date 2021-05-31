@@ -1,5 +1,6 @@
 // Executes BEFORE introduction
 
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 import { RoleStart } from "../../../../../systems/Role"
 
 const start: RoleStart = async (player) => {
@@ -8,6 +9,7 @@ const start: RoleStart = async (player) => {
 		to: player,
 		expiry: Infinity,
 		tags: ["permanent"],
+		priority: ActionPriorities.HIGH,
 	})
 
 	await player.addAttribute("mafia_factionkill")

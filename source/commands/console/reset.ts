@@ -3,4 +3,4 @@ import { ConsoleCommand } from "../CommandType"
 
 const reset: ConsoleCommand = resetGame
 
-export = reset
+export default reset

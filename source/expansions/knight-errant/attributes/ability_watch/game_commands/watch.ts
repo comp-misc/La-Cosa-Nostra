@@ -1,5 +1,6 @@
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const watch: TargetRoleCommand = async (game, message, target, from) => {
 	// Run checks, etc
@@ -17,13 +18,12 @@ const watch: TargetRoleCommand = async (game, message, target, from) => {
 		from,
 		to: target,
 		meta: { type: "ability" },
-		priority: 9,
+		priority: ActionPriorities.INVESTIGATE,
 	})
 
 	await message.reply(":mag: You have decided to watch **" + target.getDisplayName() + "** tonight.")
 }
 
-watch.ALLOW_NONSPECIFIC = false
 watch.PRIVATE_ONLY = true
 watch.DEAD_CANNOT_USE = true
 watch.ALIVE_CANNOT_USE = false

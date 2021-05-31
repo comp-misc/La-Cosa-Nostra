@@ -1,5 +1,6 @@
 // Executes BEFORE introduction
 import { AttributeStart } from "../../../../../systems/Attribute"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const start: AttributeStart = async (player) => {
 	if (
@@ -15,6 +16,7 @@ const start: AttributeStart = async (player) => {
 		to: player,
 		expiry: Infinity,
 		tags: ["permanent"],
+		priority: ActionPriorities.HIGH,
 	})
 }
 

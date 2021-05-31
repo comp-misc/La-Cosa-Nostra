@@ -8,4 +8,4 @@ const directories: BotDirectories = {
 	data: __dirname + "/../data/",
 }
 
-export = directories
+export default directories

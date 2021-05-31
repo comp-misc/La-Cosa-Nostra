@@ -1,5 +1,6 @@
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const gunsmith: TargetRoleCommand = async (game, message, target, from) => {
 	clearModuleActions(game, from.identifier, "ability")
@@ -8,19 +9,18 @@ const gunsmith: TargetRoleCommand = async (game, message, target, from) => {
 		await message.reply(":mag: You have decided not to gunsmith investigate anyone tonight.")
 		return
 	}
-	game.addAction("a/ability_gunsmith/investigate", ["cycle"], {
+	await game.addAction("a/ability_gunsmith/investigate", ["cycle"], {
 		name: "Modular-gunsmith-investigate",
 		expiry: 1,
 		from,
 		to: target,
 		meta: { type: "ability" },
-		priority: 4,
+		priority: ActionPriorities.INVESTIGATE,
 	})
 
 	await message.reply(":mag: You have decided to gunsmith investigate **" + target.getDisplayName() + "** tonight.")
 }
 
-gunsmith.ALLOW_NONSPECIFIC = false
 gunsmith.PRIVATE_ONLY = true
 gunsmith.DEAD_CANNOT_USE = true
 gunsmith.ALIVE_CANNOT_USE = false

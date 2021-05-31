@@ -1,17 +1,16 @@
-import crypto from "crypto"
 import { Client, Guild, GuildMember, Snowflake, TextChannel, User } from "discord.js"
+import operations from "../../auxils/operations"
+import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
 import alpha_table from "../alpha_table"
+import { Attribute } from "../Attribute"
 import attributes from "../attributes"
-import auxils from "../auxils"
 import executable from "../executable"
-import { RoleRoutine } from "../Role"
+import { createRoutines, Role, RoleRoutine } from "../Role"
+import win_conditions from "../win_conditions"
 import Game, { VoteMeta } from "./Game"
 import Logger from "./Logger"
-import { ExpandedRole } from "../executable/roles/getRole"
-import getGuild from "../../getGuild"
-import win_conditions from "../win_conditions"
-import { Attribute } from "../Attribute"
+import PlayerRole from "./PlayerRole"
 
 type StatModifier = ((a: number, b: number) => number) | "set" | undefined
 
@@ -51,7 +50,6 @@ export interface PlayerStats {
 	"control-immunity": number
 	"redirection-immunity": number
 	"kidnap-immunity": number
-	priority: number
 	"vote-offset": number
 	"vote-magnitude": number
 }
@@ -66,31 +64,37 @@ export type PlayerIdentifier = string
 
 class Player {
 	private readonly client: Client
-	readonly status: PlayerStatus
+	private readonly game: Game
+
+	readonly status: PlayerStatus = {
+		alive: true,
+		lynchProof: false,
+
+		roleblocked: false,
+		controlled: false,
+		silenced: false,
+		kidnapped: false,
+		voteBlocked: false,
+
+		won: false,
+		canWin: true,
+	}
 	id: string
+	readonly identifier: string
 	alphabet: keyof typeof alpha_table
-	identifier: PlayerIdentifier
-	role_identifier: string
-	game: Game | undefined
-	votes: VoteMeta[]
-	initial_role_identifier: string[]
+	votes: VoteMeta[] = []
 	permanent_stats: PlayerStats
 	game_stats: PlayerStats
-	pre_emptive: string[]
-	will?: string
-	precedent_will?: string
-	readonly logger: Logger
-	intro_messages: string[]
-	display_role: string | null | undefined
-	channel: ChannelMeta | undefined
-	base_flavour_identifier?: string
-	special_channels: ChannelMeta[]
+	pre_emptive: string[] = []
+	will: string | null = null
+	precedent_will: string | null = null
+	intro_messages: string[] = []
+	channel: ChannelMeta | undefined = undefined
+	special_channels: ChannelMeta[] = []
 	see_mafia_chat: boolean
-	flavour_role: string | null
-	display_secondary: string | undefined
-	attributes: PlayerAttribute[]
-	misc: Record<string, any>
-	role: ExpandedRole | undefined
+	attributes: PlayerAttribute[] = []
+	misc: Record<string, any> = {}
+	role: PlayerRole
 	tampered_load_times?: Date[]
 
 	modular_log?: string[]
@@ -98,75 +102,25 @@ class Player {
 
 	ffstatus: FFStatus
 
-	constructor(client: Client) {
-		this.client = client
-		this.logger = getLogger()
-		this.status = {
-			alive: true,
-			lynchProof: false,
+	previousRoles: PlayerRole[] = []
 
-			roleblocked: false,
-			controlled: false,
-			silenced: false,
-			kidnapped: false,
-			voteBlocked: false,
-
-			won: false,
-			canWin: true,
-		}
-		this.id = ""
-		this.votes = []
-		this.identifier = ""
-		this.alphabet = "nl"
-		this.role_identifier = ""
-		this.initial_role_identifier = []
-		this.ffstatus = FFStatus.OFF
-
-		this.channel = undefined
-		this.see_mafia_chat = false
-		this.special_channels = []
-		this.pre_emptive = []
-		this.votes = []
-		this.intro_messages = []
-
-		// 3x stats - game_stats, permanent_stats, role.stats
-		this.misc = {}
-		this.will = undefined
-		this.display_role = undefined
-		this.display_secondary = undefined
-		this.base_flavour_identifier = undefined
-		this.flavour_role = null
-		this.permanent_stats = {
-			"basic-defense": 0,
-			"roleblock-immunity": 0,
-			"detection-immunity": 0,
-			"control-immunity": 0,
-			"redirection-immunity": 0,
-			"kidnap-immunity": 0,
-			priority: 0,
-			"vote-offset": 0,
-			"vote-magnitude": 0,
-		}
-		this.game_stats = this.permanent_stats
-		this.attributes = []
-	}
-
-	init(id: string, alphabet: keyof typeof alpha_table, role_identifier: string): this {
+	constructor(game: Game, id: string, identifier: string, alphabet: keyof typeof alpha_table, role: Role) {
+		this.game = game
+		this.client = game.client
 		this.id = id
+		this.identifier = identifier
 		this.alphabet = alphabet
-		this.role_identifier = role_identifier
-		this.initial_role_identifier = [role_identifier]
+		this.role = new PlayerRole(role, this)
 
-		this.identifier = crypto.randomBytes(8).toString("hex")
-
-		const role = this.instantiateRole()
-		if (role["has-actions"] || role["has-actions"] === undefined) {
+		const roleProperties = this.role.properties
+		if (roleProperties["has-actions"] || roleProperties["has-actions"] === undefined) {
 			this.ffstatus = FFStatus.OFF
 		} else {
 			this.ffstatus = FFStatus.AUTO
 		}
 
-		this.see_mafia_chat = role["see-mafia-chat"]
+		this.see_mafia_chat = roleProperties["see-mafia-chat"]
+
 		this.permanent_stats = {
 			"basic-defense": 0,
 			"roleblock-immunity": 0,
@@ -174,28 +128,17 @@ class Player {
 			"control-immunity": 0,
 			"redirection-immunity": 0,
 			"kidnap-immunity": 0,
-			priority: 0,
 			"vote-offset": 0,
-			"vote-magnitude": role.stats["vote-magnitude"],
+			"vote-magnitude": roleProperties.stats["vote-magnitude"],
 		}
+		this.game_stats = this.permanent_stats
 
-		// Initialise stats
-		// A more than value will cause
-		// the action to fire
-		this.game_stats = {
-			"basic-defense": 0,
-			"roleblock-immunity": 0,
-			"detection-immunity": 0,
-			"control-immunity": 0,
-			"redirection-immunity": 0,
-			"kidnap-immunity": 0,
-			priority: 0,
-			"vote-offset": 0,
-			"vote-magnitude": this.permanent_stats["vote-magnitude"],
+		const winCon = win_conditions[this.role.properties["win-condition"]]
+		if (!winCon) {
+			throw new Error(
+				`Unknown win condition '${this.role.properties["win-condition"]}' found for role ${role.identifier}`
+			)
 		}
-		this.attributes = []
-		// Attributes
-		return this
 	}
 
 	isVotedAgainstBy(identifier: string): boolean {
@@ -245,15 +188,11 @@ class Player {
 	}
 
 	countVotes(): number {
-		return auxils.operations.addition(...this.votes.map((v) => v.magnitude))
+		return operations.addition(...this.votes.map((v) => v.magnitude))
 	}
 
 	getVoteOffset(): number {
 		return this.getStat("vote-offset", (a, b) => a + b)
-	}
-
-	postGameInit(): void {
-		this.instantiateFlavour()
 	}
 
 	addPreemptiveVote(identifier: string): void {
@@ -291,7 +230,6 @@ class Player {
 			"control-immunity": 0,
 			"redirection-immunity": 0,
 			"kidnap-immunity": 0,
-			priority: 0,
 			"vote-offset": 0,
 			"vote-magnitude": this.permanent_stats["vote-magnitude"],
 		}
@@ -309,7 +247,7 @@ class Player {
 		}
 
 		if (modifier === undefined) {
-			modifier = auxils.operations.addition
+			modifier = operations.addition
 		}
 
 		const final = modifier(this.game_stats[key], amount)
@@ -351,11 +289,11 @@ class Player {
 		if (!(channel instanceof TextChannel)) {
 			throw new Error(`Private channel for ${this.getDisplayName()} is not a text channel`)
 		}
-		return channel as TextChannel
+		return channel
 	}
 
 	getRoleStats(): PlayerStats {
-		return this.getRoleOrThrow().stats
+		return this.role.stats
 	}
 
 	getPermanentStats(): PlayerStats {
@@ -378,7 +316,7 @@ class Player {
 
 		const a = this.game_stats[key]
 		const b = this.permanent_stats[key]
-		const c = this.getRoleOrThrow().stats[key]
+		const c = this.role.stats[key]
 
 		return modifier(modifier(a, b), c)
 	}
@@ -391,25 +329,25 @@ class Player {
 		this.status[key] = value
 	}
 
-	setWill(will: string | undefined): void {
+	setWill(will: string | null): void {
 		this.will = will
 	}
 
-	setPrecedentWill(will: string | undefined): void {
+	setPrecedentWill(will: string | null): void {
 		this.precedent_will = will
 	}
 
-	getWill(): string | undefined {
+	getWill(): string | null {
 		const will = this.precedent_will
 
 		if (will === null) {
-			return undefined
+			return null
 		}
 
 		return this.precedent_will || this.will
 	}
 
-	getTrueWill(): string | undefined {
+	getTrueWill(): string | null {
 		// Gets the vanilla will
 		return this.will
 	}
@@ -442,20 +380,18 @@ class Player {
 	}
 
 	async start(): Promise<void> {
-		const role = this.getRoleOrThrow()
-		if (role.start) {
-			try {
-				await role.start(this)
-			} catch (err) {
-				this.logger.log(
-					4,
-					"Role start script error with player %s (%s) [%s]",
-					this.identifier,
-					this.getDisplayName(),
-					this.role_identifier
-				)
-				this.logger.logError(err)
-			}
+		const role = this.role
+		try {
+			await role.role.onStart(this)
+		} catch (err) {
+			this.logger.log(
+				4,
+				"Role start script error with player %s (%s) [%s]",
+				this.identifier,
+				this.getDisplayName(),
+				this.role.identifier
+			)
+			this.logger.logError(err)
 		}
 
 		// Start attributes
@@ -492,63 +428,11 @@ class Player {
 		await executable.roles.postRoleIntroduction(this)
 	}
 
-	getDisplayRole(append_true_role = true): string {
-		// Show display role first
-
-		return this.display_role || this.getTrueFlavourRole(append_true_role)
-	}
-
-	getTrueFlavourRole(append_true_role = true): string {
-		// Show display role first
-
-		let flavour_role = this.flavour_role
-
-		const flavour = this.getGame().getGameFlavour()
-		const role = this.getRoleOrThrow()
-
-		if (flavour && flavour_role) {
-			const display_extra = flavour.info["display-role-equivalent-on-death"]
-
-			if (display_extra && flavour_role !== role["role-name"] && append_true_role) {
-				flavour_role += " (" + (this.display_secondary || role["role-name"]) + ")"
-			}
+	get initialRole(): PlayerRole {
+		if (this.previousRoles.length === 0) {
+			return this.role
 		}
-
-		return flavour_role || role["role-name"]
-	}
-
-	setDisplayRole(role_name: string): void {
-		this.display_role = role_name
-	}
-
-	clearDisplayRole(): void {
-		this.display_role = null
-	}
-
-	getRole(): string {
-		// Give true role
-		return this.display_secondary || this.getRoleOrThrow()["role-name"]
-	}
-
-	getInitialRole(append_true_role = true): string {
-		let flavour_role = this.flavour_role
-
-		const flavour = this.getGame().getGameFlavour()
-
-		const initialRole = executable.roles.getRole(this.initial_role_identifier[0])
-		if (!initialRole) {
-			throw new Error(`No initial role found with id ${this.initial_role_identifier[0]}`)
-		}
-
-		const initial = initialRole["role-name"]
-
-		if (flavour && flavour_role) {
-			if (flavour_role !== initial && append_true_role) {
-				flavour_role += " (" + (this.display_secondary || initial) + ")"
-			}
-		}
-
-		return flavour_role || initial || this.getRoleOrThrow()["role-name"]
+		return this.previousRoles[0]
 	}
 
 	assignChannel(channel: TextChannel): void {
@@ -580,19 +464,8 @@ class Player {
 		return this.special_channels
 	}
 
-	reinstantiate(game: Game): void {
-		this.setGame(game)
-		this.instantiateRole()
-	}
-
 	verifyProperties(): PlayerProperty[] {
 		const incompatible = []
-
-		const role = executable.roles.getRole(this.role_identifier, true)
-
-		if (!role) {
-			incompatible.push({ type: "role", identifier: this.role_identifier })
-		}
 
 		for (let i = 0; i < this.attributes.length; i++) {
 			const identifier = this.attributes[i].identifier
@@ -605,79 +478,24 @@ class Player {
 		return incompatible
 	}
 
-	setGame(game: Game): void {
-		this.game = game
-	}
-
 	isAlive(): boolean {
 		return this.getStatus("alive")
 	}
 
-	changeRole(role_identifier: string, change_vote_magnitude_stat = false, rerun_start = true): void {
-		this.role_identifier = role_identifier
-		this.initial_role_identifier.push(role_identifier)
+	async changeRole(newRole: Role, change_vote_magnitude_stat = false, rerun_start = true): Promise<void> {
+		this.previousRoles.push(this.role)
+		this.role = new PlayerRole(newRole, this)
 
-		this.instantiateRole()
-
-		this.see_mafia_chat = this.see_mafia_chat || this.getRoleOrThrow()["see-mafia-chat"]
+		this.see_mafia_chat = this.see_mafia_chat || this.role.properties["see-mafia-chat"]
 
 		if (change_vote_magnitude_stat) {
-			const current_magnitude = this.getRoleStats()["vote-magnitude"]
+			const current_magnitude = this.role.stats["vote-magnitude"]
 			this.setPermanentStat("vote-magnitude", current_magnitude, "set")
 		}
 
-		const role = this.getRoleOrThrow()
-		if (rerun_start && role.start) {
-			role.start(this)
+		if (rerun_start) {
+			await this.role.role.onStart(this)
 		}
-	}
-
-	instantiateRole(): ExpandedRole {
-		const role = executable.roles.getRole(this.role_identifier)
-		if (!role) {
-			throw new Error(`No role found by id ${this.role_identifier}`)
-		}
-		const winCon = win_conditions[role["win-condition"]]
-		if (!winCon) {
-			throw new Error("No win condition found for role " + this.role_identifier)
-		}
-
-		this.role = role
-
-		if (!this.role.tags) {
-			this.role.tags = []
-		}
-		return role
-	}
-
-	instantiateFlavour(): void {
-		const flavour = this.getGame().getGameFlavour()
-
-		if (!flavour) {
-			return
-		}
-
-		// Base flavour identifier to override
-		const identifier = this.base_flavour_identifier || this.role_identifier
-
-		// Open identifier
-		const current = flavour.roles[identifier]
-
-		if (!current) {
-			// Flavour role not defined
-			this.flavour_role = null
-			return
-		}
-
-		const assigned = this.getGame().findAll((x) => x.role_identifier === identifier && !x.flavour_role)
-
-		const index = assigned.length % current.length
-
-		// Roles is an array
-		// Count number of roles assigned before
-		this.flavour_role = current[index].name
-
-		this.logger.log(1, "Flavour: %s, Role: %s", this.flavour_role, this.role_identifier)
 	}
 
 	isSame(player: Player): boolean {
@@ -690,13 +508,12 @@ class Player {
 
 		this.checkAttributeExpires()
 
-		const role = this.getRoleOrThrow()
-		if (role.routine) {
-			try {
-				await this.executeRoutine(role.routine)
-			} catch (e) {
-				this.logger.logError(e)
-			}
+		try {
+			await this.executeRoutine(
+				createRoutines((p) => this.role.role.onRoutines(p), this.role.role.routineProperties)
+			)
+		} catch (e) {
+			this.logger.logError(e)
 		}
 
 		for (let i = 0; i < this.attributes.length; i++) {
@@ -745,7 +562,7 @@ class Player {
 	}
 
 	canWin(): boolean {
-		return this.status["canWin"]
+		return this.status.canWin
 	}
 
 	addIntroMessage(message: string): void {
@@ -830,14 +647,6 @@ class Player {
 		return this.client.users.cache.get(this.id) || null
 	}
 
-	setBaseFlavourIdentifier(identifier: string): void {
-		this.base_flavour_identifier = identifier
-	}
-
-	setDisplaySecondary(identifier: string): void {
-		this.display_secondary = identifier
-	}
-
 	getGame(): Game {
 		const game = this.game
 		if (!game) {
@@ -846,16 +655,12 @@ class Player {
 		return game
 	}
 
-	getRoleOrThrow(): ExpandedRole {
-		const role = this.role
-		if (!role) {
-			throw new Error("No role defined")
-		}
-		return role
-	}
-
 	getGuild(): Guild {
 		return getGuild(this.client)
+	}
+
+	private get logger(): Logger {
+		return getLogger()
 	}
 
 	async sendFFStatusMessage(): Promise<void> {

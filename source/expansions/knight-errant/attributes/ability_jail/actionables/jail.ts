@@ -1,10 +1,9 @@
 import { RoleActionable } from "../../../../../systems/actionables"
-import basicKidnap from "../../../../../rolesystem/prototypes/basicKidnap"
+import basicJail from "../../../../../rolesystem/prototypes/basicJail"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
 
 const jail: RoleActionable = async (actionable, game, params) => {
-	basicKidnap.reason = "abducted"
-	await basicKidnap(actionable, game, params)
+	await basicJail(actionable, game, "Ability")
 	await attributeDecrement(actionable, game, params)
 }
 

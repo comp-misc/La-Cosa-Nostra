@@ -1,6 +1,6 @@
 // Format arrays into gramatically correct ones
 
-export = (array: string[]): string => {
+export default (array: string[]): string => {
 	// Clone array
 	const cloned = Array.from(array)
 

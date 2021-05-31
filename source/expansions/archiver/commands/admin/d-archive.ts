@@ -2,10 +2,10 @@ import { CategoryChannel, Client, Message, Snowflake, SnowflakeUtil, TextChannel
 import fs from "fs"
 import fetch from "node-fetch"
 import zlib from "zlib"
+import formatDate from "../../../../auxils/formatDate"
 import { AdminCommand } from "../../../../commands/CommandType"
 import makeCommand from "../../../../commands/makeCommand"
 import getLogger from "../../../../getLogger"
-import { auxils } from "../../../../lcn"
 
 const download = async (uri: string): Promise<Buffer | null> => {
 	try {
@@ -157,7 +157,11 @@ const serialiseChannel = async (channel: TextChannel, truncate_time: number): Pr
 			for (let j = 0; j < attachments.length; j++) {
 				const attachment = attachments[j]
 
-				console.log(`Downloading attachment ${attachment.name}, ${attachment.id} [${attachment.size} bytes]`)
+				console.log(
+					`Downloading attachment ${attachment.name || "Attachment"}, ${attachment.id} [${
+						attachment.size
+					} bytes]`
+				)
 
 				const data = await download(attachment.url)
 				pushable.attachments.push({
@@ -220,11 +224,9 @@ const serialise = async (
 		// Log
 		console.log("\x1b[1mSerialising %s/%s channels.\x1b[0m", i + 1, channels.length)
 		await status_message.edit(
-			":hourglass_flowing_sand: Archiving the channels into a file. Please be patient. [**" +
-				(i + 1) +
-				"/" +
-				channels.length +
-				"**]"
+			`:hourglass_flowing_sand: Archiving the channels into a file. Please be patient. [**${i + 1}/${
+				channels.length
+			}**]`
 		)
 		const output = await serialiseChannel(channel, truncate_time)
 
@@ -304,12 +306,12 @@ const archive: AdminCommand = async (message, params, config) => {
 				config["command-prefix"] +
 				"d-archive <save file name> <truncate unix timestamp> <text/category channel ID> [<text/category channel ID>...]` instead!"
 		)
-		return null
+		return
 	}
 
 	if (!params[0].endsWith(".dsave")) {
 		await message.channel.send(":x: The name of the save directory should end with `.dsave`!")
-		return null
+		return
 	}
 
 	const truncate_time = parseInt(params[1]) * 1000
@@ -340,17 +342,14 @@ const archive: AdminCommand = async (message, params, config) => {
 	logger.log(2, `[Archiver] Saved file to ${save_directory} [%s ${file_size}]`)
 
 	await message.channel.send(
-		":exclamation: Complete! - Save file is **" +
-			Math.floor(file_size * 1000) / 1000 +
-			"**MB! Took **" +
-			auxils.formatDate(new Date().getTime() - start_time.getTime()) +
-			"**."
+		`:exclamation: Complete! - Save file is **${Math.floor(file_size * 1000) / 1000}**MB! Took **${formatDate(
+			new Date().getTime() - start_time.getTime()
+		)}**.`
 	)
 }
 
-export = makeCommand(archive, {
+export default makeCommand(archive, {
 	name: "d-archive",
 	description: "Creates a full archive of all guild information",
-	usage:
-		"d-archive <save file name> <truncate unix timestamp> <text/category channel ID> [<text/category channel ID>...]",
+	usage: "d-archive <save file name> <truncate unix timestamp> <text/category channel ID> [<text/category channel ID>...]",
 })

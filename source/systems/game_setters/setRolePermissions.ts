@@ -51,4 +51,4 @@ const setRolePermissions = async (client: Client, config: LcnConfig): Promise<vo
 	}
 }
 
-export = setRolePermissions
+export default setRolePermissions

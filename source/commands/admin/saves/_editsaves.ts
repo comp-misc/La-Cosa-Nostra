@@ -1,9 +1,10 @@
 import util from "util"
 import jsonReviver from "../../../auxils/jsonReviver"
 import { getTimer, hasTimer } from "../../../getTimer"
+import Game from "../../../systems/game_templates/Game"
 import { AdminCommand } from "../../CommandType"
 
-const setLocantValue = (json: any, reg: string[], value: string) => {
+const setLocantValue = (json: unknown, reg: string[], value: string) => {
 	const region = Array.from(reg)
 
 	// Recursive
@@ -14,13 +15,12 @@ const setLocantValue = (json: any, reg: string[], value: string) => {
 		} else {
 			json = value
 		}
-		//console.log(json);
 		return json
 	}
 
 	const key = region.splice(0, 1)
-
-	json[key[0]] = setLocantValue(json[key[0]], region, value)
+	const jsonAsRecord = json as Record<string, unknown>
+	jsonAsRecord[key[0]] = setLocantValue(jsonAsRecord[key[0]], region, value)
 	return json
 }
 
@@ -40,25 +40,25 @@ const _editsaves: AdminCommand = async (message, params, config) => {
 	}
 
 	const timer = getTimer()
-	let locant: any = timer.game
+	let locant: unknown = timer.game
 
 	const region = params[0].replace("%space%", " ").split(".")
 	for (let i = 0; i < region.length; i++) {
 		const key = region[i]
 
-		if (!locant[key] && i < region.length - 1) {
+		if (!(locant as Record<string, unknown>)[key] && i < region.length - 1) {
 			await message.channel.send(":x: `" + region.join(".") + "` is not a valid field.")
-			return null
+			return
 		}
 
 		const locant_descriptor = Object.getOwnPropertyDescriptor(locant, key)
 
 		if (locant_descriptor && (!locant_descriptor.writable || !locant_descriptor.enumerable)) {
 			await message.channel.send(":x: That property is not writable.")
-			return null
+			return
 		}
 
-		locant = locant[key]
+		locant = (locant as Record<string, unknown>)[key]
 	}
 
 	let value: string
@@ -68,15 +68,15 @@ const _editsaves: AdminCommand = async (message, params, config) => {
 		if (value.toLowerCase() === "delete") {
 			value = "____delete@@"
 		} else {
-			value = JSON.parse(value, jsonReviver)
+			value = JSON.parse(value, jsonReviver) as string
 		}
 	} catch (err) {
-		await message.channel.send(":x: Invalid property.\n```fix\n" + err.message + "```")
+		await message.channel.send(":x: Invalid property.\n```fix\n" + (err as Error).message + "```")
 		return
 	}
 
-	timer.game = setLocantValue(timer.game, region, value)
-	timer.save()
+	timer.game = setLocantValue(timer.game, region, value) as Game
+	await timer.game.save()
 
 	let output: string
 	if (value === "____delete@@") {
@@ -99,4 +99,4 @@ const _editsaves: AdminCommand = async (message, params, config) => {
 	}
 }
 
-export = _editsaves
+export default _editsaves

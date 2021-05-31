@@ -22,4 +22,4 @@ const spectate: CommandProperties<UnaffiliatedCommand> = {
 	command,
 }
 
-export = spectate
+export default spectate

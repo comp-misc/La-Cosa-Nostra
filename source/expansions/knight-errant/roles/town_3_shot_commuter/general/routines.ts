@@ -15,8 +15,7 @@ const routines: RoleRoutine = async (player) => {
 			.getGame()
 			.sendPeriodPin(
 				channel,
-				":camping:  You may commute **" +
-					player.misc.commutes_left +
+				`:camping:  You may commute **${player.misc.commutes_left as number}` +
 					"** more time" +
 					vocab("s", player.misc.commutes_left) +
 					".\n\nUse `" +

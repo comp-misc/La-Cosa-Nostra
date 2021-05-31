@@ -17,4 +17,4 @@ const _stalemate: AdminCommand = async (message) => {
 	await message.channel.send(":ok: Forced a game stalemate.")
 }
 
-export = _stalemate
+export default _stalemate

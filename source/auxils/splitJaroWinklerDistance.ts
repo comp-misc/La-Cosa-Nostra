@@ -1,6 +1,6 @@
 import jaroWinklerDistance from "./jaroWinklerDistance"
 
-export = (a: string, b: string): number => {
+export default (a: string, b: string): number => {
 	a = a.toLowerCase()
 	b = b.toLowerCase()
 

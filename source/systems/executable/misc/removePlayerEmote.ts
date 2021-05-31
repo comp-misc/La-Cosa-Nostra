@@ -4,7 +4,7 @@
 import alphabets from "../../alpha_table"
 import Game from "../../game_templates/Game"
 
-export = async (game: Game, identifier: string): Promise<void> => {
+export default async (game: Game, identifier: string): Promise<void> => {
 	const role = game.getPlayerByIdentifier(identifier)
 	if (!role) {
 		throw new Error(`No player found with identifier ${identifier}`)

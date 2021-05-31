@@ -43,7 +43,7 @@ const getDayOrNight = (game: Game): string => {
 	}
 }
 
-export = async (game: Game): Promise<void> => {
+export default async (game: Game): Promise<void> => {
 	const config = game.config
 
 	const log = game.getLogChannel()
@@ -76,9 +76,9 @@ export = async (game: Game): Promise<void> => {
 	)
 
 	if (game.period % 2 === 0) {
-		await main.send(format(game, config["messages"]["daytime-quote"]))
+		await main.send(format(game, config.messages["daytime-quote"]))
 	} else {
-		await main.send(format(game, config["messages"]["nighttime-quote"]))
+		await main.send(format(game, config.messages["nighttime-quote"]))
 	}
 
 	await pinMessage(intro)
@@ -90,10 +90,10 @@ export = async (game: Game): Promise<void> => {
 	if (game.channels.mafia !== undefined) {
 		const mafia_channel = game.getChannel("mafia")
 
-		const mafia = game.exists((x) => x.getRoleOrThrow()["see-mafia-chat"] === true && x.isAlive())
+		const mafia = game.playerExists((x) => x.role.properties["see-mafia-chat"] === true && x.isAlive())
 
 		if (mafia) {
-			const mafia_pinnable = await mafia_channel.send(config["messages"]["mafia"])
+			const mafia_pinnable = await mafia_channel.send(config.messages.mafia)
 			await pinMessage(mafia_pinnable)
 		}
 	}

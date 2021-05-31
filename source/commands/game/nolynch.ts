@@ -3,7 +3,7 @@ import { GameCommand } from "../CommandType"
 const nolynch: GameCommand = async (game, message) => {
 	const config = game.config
 
-	if (!config["game"]["lynch"]["no-lynch-option"]) {
+	if (!config.game.lynch["no-lynch-option"]) {
 		await message.channel.send(":x:  The no-lynch vote is disabled.")
 		return
 	}
@@ -36,4 +36,4 @@ nolynch.ALLOW_PREGAME = false
 nolynch.ALLOW_GAME = true
 nolynch.ALLOW_POSTGAME = false
 
-export = nolynch
+export default nolynch

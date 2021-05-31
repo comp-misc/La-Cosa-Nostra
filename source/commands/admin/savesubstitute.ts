@@ -16,7 +16,7 @@ const savesubstitute: AdminCommand = async (message, params) => {
 	}
 
 	await game.substitute(params[0], params[1], false)
-	game.save()
+	await game.save()
 
 	await message.channel.send(":ok: Save substitution complete (" + params[0] + " → " + params[1] + ").")
 
@@ -25,4 +25,4 @@ const savesubstitute: AdminCommand = async (message, params) => {
 	)
 }
 
-export = savesubstitute
+export default savesubstitute

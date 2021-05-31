@@ -24,16 +24,10 @@ const alive: GameCommand = async (game, message) => {
 		} else {
 			grammar = "are"
 		}
+
+		const aliveStr = `There ${grammar} __${players_alive}__ player${auxils.vocab("s", players_alive)} alive:`
 		await message.channel.send(
-			"There " +
-				grammar +
-				" __" +
-				players_alive +
-				"__ player" +
-				auxils.vocab("s", players_alive) +
-				" alive:\n```" +
-				display_message.substring(0, display_message.length - 2) +
-				"```"
+			aliveStr + "\n```" + display_message.substring(0, display_message.length - 2) + "```"
 		)
 	}
 }

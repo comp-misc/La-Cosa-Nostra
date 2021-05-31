@@ -1,11 +1,13 @@
+import getCommands from ".."
 import { findCommand } from "../commandFinder"
-import { Command, CommandProperties, ConsoleCommand } from "../CommandType"
+import { ConsoleCommand } from "../CommandType"
+import makeCommand from "../makeCommand"
 
 const command: ConsoleCommand = (_client, _config, params) => {
-	const allCommands = require("../index") as Command[]
+	const allCommands = getCommands()
 
 	if (params.length > 0) {
-		const command = findCommand(allCommands, params[0], null, null, (cmd) => cmd.type === "console")
+		const command = findCommand(params[0], null, null, (cmd) => cmd.type === "console")
 		if (!command) {
 			console.log("Unknown command. Type 'help' for a list")
 			return
@@ -24,11 +26,8 @@ const command: ConsoleCommand = (_client, _config, params) => {
 	console.log("Available commands: " + commandNames.join(", "))
 }
 
-const help: CommandProperties<ConsoleCommand> = {
+export default makeCommand(command, {
 	name: "help",
-	command,
 	description: "Shows help",
 	usage: "help [command]",
-}
-
-export = help
+})

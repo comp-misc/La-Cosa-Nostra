@@ -6,15 +6,15 @@ const getSummary = (game: Game) => {
 	const players = game.players
 	let display_message = "```\nGame Summary\n̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅\n"
 
-	const information_list = []
+	const information_list: [number, string][] = []
 	let survivors_display = ""
 
 	for (const player of players) {
 		if (!player.status.alive) {
 			let alignment: string
-			if (player.getRoleOrThrow().alignment === "town") {
+			if (player.role.properties.alignment === "town") {
 				alignment = "🏡"
-			} else if (["mafia", "mafia_team_1", "mafia_team_2"].includes(player.getRoleOrThrow().alignment)) {
+			} else if (["mafia", "mafia_team_1", "mafia_team_2"].includes(player.role.properties.alignment)) {
 				alignment = "👨‍⚖️"
 			} else {
 				alignment = "🌒"
@@ -51,8 +51,7 @@ const getSummary = (game: Game) => {
 
 		for (let j = 0; j < sorted_list.length; j++) {
 			if (Math.floor(information_list[j][0]) == i) {
-				display_message =
-					display_message +
+				display_message +=
 					returnDayNight(information_list[j][0]) +
 					": " +
 					sorted_list[j][1] +
@@ -81,9 +80,9 @@ const returnDayNight = (number: number): string => {
 		Math.round((number % 2) * 10) / 10 == 1.1 ||
 		Math.round((number % 2) * 100) / 100 == 1.05
 	) {
-		return "N" + (Math.floor(number) + 1) / 2
+		return `N${(Math.floor(number) + 1) / 2}`
 	} else {
-		return "D" + Math.floor(number) / 2
+		return `D${Math.floor(number) / 2}`
 	}
 }
 
@@ -124,7 +123,7 @@ const postWinLog = async (game: Game, faction: string, description: string): Pro
 		const player = players[i]
 		const display_name = player.getDisplayName()
 
-		let text = "**" + display_name + "**: " + player.getInitialRole(display_role_equivalent)
+		let text = "**" + display_name + "**: " + player.initialRole.getName(display_role_equivalent)
 
 		if (player.getStatus("won") === true) {
 			// Add a star

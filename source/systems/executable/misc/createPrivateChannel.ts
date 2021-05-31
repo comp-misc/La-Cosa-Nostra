@@ -34,7 +34,7 @@ export default async (game: Game, channel_name: string, permissions: RolePermiss
 		],
 		parent: cat_channel,
 		position: 0,
-	})) as TextChannel
+	}))
 
 	// {target, permissions}
 	for (let i = 0; i < permissions.length; i++) {

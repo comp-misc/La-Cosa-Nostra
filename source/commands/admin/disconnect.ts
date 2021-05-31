@@ -8,4 +8,4 @@ const disconnect: AdminCommand = async (message) => {
 	message.client.destroy()
 }
 
-export = disconnect
+export default disconnect

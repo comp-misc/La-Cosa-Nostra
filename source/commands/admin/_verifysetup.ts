@@ -31,7 +31,7 @@ const computeHash = (config: LcnConfig): string => {
 	return hash.digest("hex")
 }
 
-const _verifysetup: AdminCommand = async (message, params, config) => {
+const _verifysetup: AdminCommand = async (message, _params, config) => {
 	config = configModifier(config)
 
 	const players = config.playing.players
@@ -41,7 +41,7 @@ const _verifysetup: AdminCommand = async (message, params, config) => {
 		await message.channel.send(
 			":x: The guild has been wrongly configured. Please change this in the config before initialising."
 		)
-		return null
+		return
 	}
 
 	let names: string[] = []
@@ -89,13 +89,13 @@ const _verifysetup: AdminCommand = async (message, params, config) => {
 	// Registered players
 	await message.channel.send(
 		"_ _\n**:spy: Registered Players (" +
-			names.length +
+			names.length.toString() +
 			"/" +
-			(config.playing.roles?.length || 0) +
+			(config.playing.roles?.length || 0).toString() +
 			") :spy:**\n```fix\n" +
-			names.map((x, i) => i + 1 + ". " + x).join("\n") +
+			names.map((x, i) => `${i + 1}. ${x}`).join("\n") +
 			"\n\nShuffle roles on assign: " +
-			config.playing.shuffle +
+			config.playing.shuffle.toString() +
 			"```"
 	)
 
@@ -110,11 +110,11 @@ const _verifysetup: AdminCommand = async (message, params, config) => {
 	const timezone = config.time
 	await message.channel.send(
 		"_ _\n**:clock11: Timezone and Cycles :clock11:**\n```fix\nTimezone: UTC+" +
-			timezone.timezone +
+			timezone.timezone.toString() +
 			"\nGame cycles: " +
-			timezone.day +
+			timezone.day.toString() +
 			" hours / " +
-			timezone.night +
+			timezone.night.toString() +
 			" hours\n```"
 	)
 
@@ -126,4 +126,4 @@ const _verifysetup: AdminCommand = async (message, params, config) => {
 	)
 }
 
-export = _verifysetup
+export default _verifysetup

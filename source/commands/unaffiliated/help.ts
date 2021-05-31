@@ -1,5 +1,5 @@
-import Discord, { ColorResolvable, GuildChannel } from "discord.js"
-import { findCommand, isValidRoleCommandFor } from "../commandFinder"
+import Discord, { ColorResolvable } from "discord.js"
+import { findCommand, getVisibleCommands } from "../commandFinder"
 import { Command, CommandProperties, UnaffiliatedCommand } from "../CommandType"
 
 const getColor = (type: string): ColorResolvable => {
@@ -18,22 +18,18 @@ const getColor = (type: string): ColorResolvable => {
 }
 
 const command: UnaffiliatedCommand = async (message, params, config) => {
-	const allCommands = require("../index") as Command[]
-	const filteredCommands = allCommands.filter((cmd) => {
+	const commandFilter: (command: Command) => boolean = (cmd) => {
 		if (cmd.type === "console") {
 			return false
 		}
-		if (!message.member.roles.cache.some((r) => r.name === config.permissions.admin) && cmd.type === "admin") {
-			return false
-		}
-		if (cmd.type === "role" && !isValidRoleCommandFor(cmd, message.member, message.channel as GuildChannel)) {
+		if (cmd.type === "admin" && !message.member.roles.cache.some((r) => r.name === config.permissions.admin)) {
 			return false
 		}
 		return true
-	})
+	}
 
 	if (params.length > 0) {
-		const command = findCommand(filteredCommands, params[0], message.member, message.channel as GuildChannel)
+		const command = findCommand(params[0], message.member, message.channel, commandFilter)
 		if (!command) {
 			await message.reply(`:x: Unknown command. Type '${config["command-prefix"]}help' for a list`)
 			return
@@ -53,7 +49,8 @@ const command: UnaffiliatedCommand = async (message, params, config) => {
 	}
 
 	const byType: Record<string, CommandProperties<unknown>[]> = {}
-	filteredCommands.forEach((cmd) => {
+	const validCommands = getVisibleCommands(message.member, message.channel).filter(commandFilter)
+	validCommands.forEach((cmd) => {
 		if (!byType[cmd.type]) {
 			byType[cmd.type] = []
 		}
@@ -79,4 +76,4 @@ const help: CommandProperties<UnaffiliatedCommand> = {
 	usage: "help [command]",
 }
 
-export = help
+export default help

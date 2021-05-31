@@ -28,7 +28,6 @@ const deselect: RoleCommand = async (game, message, params, from) => {
 	await message.reply(":camping: You have decided not to commute tonight.")
 }
 
-deselect.ALLOW_NONSPECIFIC = false
 deselect.PRIVATE_ONLY = true
 deselect.DEAD_CANNOT_USE = true
 deselect.ALIVE_CANNOT_USE = false

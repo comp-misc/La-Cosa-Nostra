@@ -11,10 +11,11 @@ import commands from "./commands"
 import flavours from "./systems/flavours"
 import win_conditions from "./systems/win_conditions"
 import actionables from "./systems/actionables"
-import roles from "./systems/roles"
+import getRoles from "./systems/roles"
 import assets from "./systems/assets"
 import { LcnConfig } from "./LcnConfig"
 import { Expansion } from "./Expansion"
+import { ProgrammableRole, RoleMetadata } from "./systems/Role"
 
 interface Lcn {
 	auxils: typeof auxils
@@ -26,43 +27,18 @@ interface Lcn {
 	flavours: typeof flavours
 	win_conditions: typeof win_conditions
 	actionables: typeof actionables
-	roles: typeof roles
+	roles: Record<string, RoleMetadata<ProgrammableRole<unknown>, unknown>>
 	assets: typeof assets
 	config: LcnConfig
 }
 
-let config = config_handler() as LcnConfig
-const default_config = config
+let config = config_handler()
 
 expansions.forEach((expansion) => {
 	const script = expansion.scripts.start
 	if (script) {
 		config = script(config) || config
 	}
-})
-
-// Enforce defaults on parameters
-const enforce_default = [
-	"command-prefix",
-	"automatically-load-saves",
-	"encode-cache",
-	"merge-configs",
-	"playing",
-	"console-log-level",
-	"file-log-level",
-	"allow-config-override-subprocess",
-]
-
-const copyDefault = <K extends keyof LcnConfig>(key: K) => {
-	config[key] = default_config[key]
-}
-
-enforce_default.forEach((key) => {
-	copyDefault<any>(key)
-
-	Object.defineProperty(config, key, {
-		writable: false,
-	})
 })
 
 const lcn: Lcn = {
@@ -75,9 +51,9 @@ const lcn: Lcn = {
 	flavours,
 	win_conditions,
 	actionables,
-	roles,
+	roles: getRoles(),
 	assets,
 	config,
 }
 
-export = lcn
+export default lcn

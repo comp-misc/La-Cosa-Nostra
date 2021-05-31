@@ -18,4 +18,4 @@ const resetNicks = async (client: Client): Promise<void> => {
 	}
 }
 
-export = resetNicks
+export default resetNicks

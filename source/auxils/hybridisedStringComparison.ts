@@ -1,7 +1,7 @@
 import splitJaroWinklerDistance from "./splitJaroWinklerDistance"
 import levenshteinDistance from "./levenshteinDistance"
 
-export = (a: string, b: string, beta_1 = 0.8, beta_2 = 0.2, alpha = 1.0): number => {
+export default (a: string, b: string, beta_1 = 0.8, beta_2 = 0.2, alpha = 1.0): number => {
 	if (beta_1 + beta_2 !== 1) {
 		throw new Error("Beta1 + beta2 should equal 1")
 	}

@@ -10,11 +10,20 @@
 			"name": "Debug JS",
 			"skipFiles": ["<node_internals>/**"],
 			"program": "${workspaceFolder}/source/MafiaBot.ts",
-			// "console": "integratedTerminal",
-			"runtimeExecutable": "${workspaceFolder}/node_modules/.bin/babel-node",
-			"runtimeArgs": ["--nolazy", "--extensions", ".ts,.js"],
-			// "console": "integratedTerminal",
-			"resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
+			"console": "integratedTerminal",
+			"runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
+			"runtimeArgs": [
+				"--ignore",
+				"data/",
+				"--exec",
+				"ts-node",
+				"--files",
+				"source/MafiaBot.ts",
+				"--resolveJsonModule",
+				"--trace-warnings"
+			]
+			// "runtimeArgs": ["--nolazy", "--extensions", ".ts,.js"]
+			// "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
 		}
 	]
 }

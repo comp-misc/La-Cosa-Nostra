@@ -8,4 +8,4 @@ const sendAndPin = async (channel: TextChannel, message: string): Promise<Messag
 	return pinnable
 }
 
-export = sendAndPin
+export default sendAndPin

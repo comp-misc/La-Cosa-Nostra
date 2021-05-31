@@ -1,4 +1,4 @@
-export = (object: Record<string, string>): Record<string, string> => {
+export default (object: Record<string, string>): Record<string, string> => {
 	const entries = Object.entries(object)
 	const ret: Record<string, string> = {}
 

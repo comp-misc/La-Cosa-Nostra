@@ -5,7 +5,7 @@ import Player from "../../game_templates/Player"
 import Game from "../../game_templates/Game"
 
 const getVoteList = (game: Game, roles: Player[]): string => {
-	const no_lynch_option = game.config.game["lynch"]["no-lynch-option"]
+	const no_lynch_option = game.config.game.lynch["no-lynch-option"]
 	const players_alive = roles.filter((player) => player.status.alive).length
 	const players_voting: string[] = []
 
@@ -50,7 +50,7 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 			names = auxils.pettyFormat(concat)
 			names = voting_against.length > 0 ? ": " + names : ""
 
-			displays.push("<@" + role.id + "> (" + role.countVotes() + "/" + lynch_votes + ")" + names)
+			displays.push(`<@${role.id}> (${role.countVotes()}/${lynch_votes})${names}`)
 		} else if (role.misc.time_of_death == undefined && game.getPeriod() % 2 == 0) {
 			if (role.getStatus("lynchProof")) {
 				displays.push("<@" + role.id + "> (\\✖)")
@@ -96,7 +96,7 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 		names = auxils.pettyFormat(concat)
 		names = voters.length > 0 ? ": " + names : ""
 
-		displays.push("No-lynch (" + vote_count + "/" + nolynch_votes + ")" + names)
+		displays.push(`No-lynch (${vote_count}/${nolynch_votes})${names}`)
 	}
 
 	const special_vote_types = game.getPeriodLog().special_vote_types
@@ -110,17 +110,19 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 			players_voting.push(player.identifier)
 		}
 
-		names = auxils.pettyFormat(voters.map((x) => game.getPlayerByIdentifier(x.identifier)?.getDisplayName() || "???"))
+		names = auxils.pettyFormat(
+			voters.map((x) => game.getPlayerByIdentifier(x.identifier)?.getDisplayName() || "???")
+		)
 		names = voters.length > 0 ? ": " + names : ""
 
-		displays.push("**" + special_vote_types[i].name + "** (" + vote_count + ")" + names)
+		displays.push(`**${special_vote_types[i].name}** (${vote_count})${names}`)
 	}
 
 	const voters = roles
 		.filter((role) => role.status.alive && !players_voting.includes(role.identifier))
 		.map((role) => role.identifier)
 
-	displays.push("\nNot voting (" + voters.length + "/" + players_alive + ")")
+	displays.push("\n" + `Not voting (${voters.length}/${players_alive})`)
 
 	return displays.join("\n")
 }
@@ -143,10 +145,10 @@ const getVoteInfo = (roles: Player[]): string => {
 		lynch_votes = (players_alive + 2) / 2
 		nolynch_votes = players_alive / 2
 	}
-	return "There are required **" + lynch_votes + "** votes to lynch, and **" + nolynch_votes + "** votes to no-lynch."
+	return `There are required **${lynch_votes}** votes to lynch, and **${nolynch_votes}** votes to no-lynch.`
 }
 
-export = async (game: Game, ended = false): Promise<void> => {
+export default async (game: Game, ended = false): Promise<void> => {
 	const roles = game.players
 	const log = game.getPeriodLog()
 	if (!log || !log.trial_vote) {

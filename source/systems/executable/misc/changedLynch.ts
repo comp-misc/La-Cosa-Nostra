@@ -3,7 +3,7 @@ import getLogger from "../../../getLogger"
 import Game from "../../game_templates/Game"
 import texts from "./text/texts"
 
-export = async (game: Game, from: Snowflake, to: Snowflake): Promise<void> => {
+export default async (game: Game, from: Snowflake, to: Snowflake): Promise<void> => {
 	const logger = getLogger()
 	const main = game.getMainChannel()
 

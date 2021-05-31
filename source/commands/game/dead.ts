@@ -8,9 +8,9 @@ const returnDayNight = (number: number): string => {
 		(Math.round((number % 2) * 10) / 10) % 2 == 1.1 ||
 		(Math.round((number % 2) * 100) / 100) % 2 == 1.05
 	) {
-		return "N" + (Math.floor(number) + 1) / 2
+		return `N${(Math.floor(number) + 1) / 2}`
 	} else {
-		return "D" + Math.floor(number) / 2
+		return `D${Math.floor(number) / 2}`
 	}
 }
 
@@ -58,21 +58,12 @@ const dead: GameCommand = async (game, message) => {
 				": " +
 				sorted_list[i][1].getDisplayName() +
 				" - " +
-				sorted_list[i][1].getDisplayRole(false) +
+				sorted_list[i][1].role.getDisplayName() +
 				"\n"
 		}
 
-		await message.channel.send(
-			"There " +
-				grammar +
-				" __" +
-				players_dead +
-				"__ dead player" +
-				auxils.vocab("s", players_dead) +
-				":\n```" +
-				display_message +
-				"```"
-		)
+		const deadPlayersStr = `There ${grammar} __${players_dead}__ dead player${auxils.vocab("s", players_dead)}:`
+		await message.channel.send(deadPlayersStr + "\n```" + display_message + "```")
 	}
 }
 
@@ -80,4 +71,4 @@ dead.ALLOW_PREGAME = false
 dead.ALLOW_GAME = true
 dead.ALLOW_POSTGAME = false
 
-export = dead
+export default dead

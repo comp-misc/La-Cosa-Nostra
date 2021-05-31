@@ -1,5 +1,6 @@
 import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const watch: RoleActionable = async (actionable, game, params) => {
 	// Visit the target
@@ -15,7 +16,7 @@ const watch: RoleActionable = async (actionable, game, params) => {
 		expiry: 1,
 		from: game.getPlayerOrThrow(actionable.from),
 		to: game.getPlayerOrThrow(actionable.to),
-		priority: 12,
+		priority: ActionPriorities.LOWEST,
 	})
 
 	await attributeDecrement(actionable, game, params)

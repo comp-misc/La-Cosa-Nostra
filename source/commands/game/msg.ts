@@ -1,3 +1,3 @@
 // Whisper alias
 import whisper from "./whisper"
-export = whisper
+export default whisper

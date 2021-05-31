@@ -7,4 +7,4 @@ const updatePresence = async (client: Client, presence: PresenceData): Promise<v
 	}
 	await user.setPresence(presence)
 }
-export = updatePresence
+export default updatePresence

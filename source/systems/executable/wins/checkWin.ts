@@ -5,7 +5,7 @@ export default async (game: Game): Promise<void> => {
 	const win_conditions: string[] = []
 
 	game.players.forEach((player) => {
-		const winCondition = player.getRoleOrThrow()["win-condition"]
+		const winCondition = player.role.properties["win-condition"]
 		if (!winCondition) {
 			throw new Error("Every role should have a win condition!")
 		}

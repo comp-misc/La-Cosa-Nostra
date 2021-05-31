@@ -14,4 +14,4 @@ const unload: ConsoleCommand = async (client) => {
 	})
 }
 
-export = unload
+export default unload

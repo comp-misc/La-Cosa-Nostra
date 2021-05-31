@@ -30,6 +30,7 @@ const unstoppableAttack: AttackPrototype = async <T>(
 			priority: actionable.priority,
 			reason: unstoppableAttack.reason,
 			secondary_reason: unstoppableAttack.secondary_reason,
+			type: "Unstoppable attack",
 		})
 	}
 
@@ -54,4 +55,4 @@ const unstoppableAttack: AttackPrototype = async <T>(
 unstoppableAttack.reason = "killed"
 unstoppableAttack.secondary_reason = undefined
 
-export = unstoppableAttack
+export default unstoppableAttack

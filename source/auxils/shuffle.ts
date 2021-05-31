@@ -1,4 +1,4 @@
-export = <T>(x: T[]): T[] => {
+export default <T>(x: T[]): T[] => {
 	// Using standard modern Fisher-Yates (Durstenfeld) shuffling
 	// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 

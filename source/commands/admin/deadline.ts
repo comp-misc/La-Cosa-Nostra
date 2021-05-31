@@ -5,7 +5,7 @@ import { AdminCommand } from "../CommandType"
 const deadline: AdminCommand = async (message, params, config) => {
 	if (!hasTimer() || !["pre-game", "playing"].includes(getTimer().game.state)) {
 		await message.channel.send(":x: No game in progress.")
-		return null
+		return
 	}
 
 	const game = getTimer().game
@@ -61,7 +61,7 @@ const deadline: AdminCommand = async (message, params, config) => {
 	const difference = date.getTime() - new Date().getTime()
 
 	if (difference > max) {
-		await message.channel.send(":x: You may not increase the deadline by more than " + max / 1000 + " seconds!")
+		await message.channel.send(`:x: You may not increase the deadline by more than ${max / 1000} seconds!`)
 		return
 	}
 
@@ -78,9 +78,9 @@ const deadline: AdminCommand = async (message, params, config) => {
 
 	// Reprime the timer and save
 	await getTimer().prime()
-	game.save()
+	await game.save()
 
 	await message.channel.send(":ok: Set new deadline to **" + auxils.formatUTCDate(game.next_action) + "**.")
 }
 
-export = deadline
+export default deadline

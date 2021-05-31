@@ -7,9 +7,9 @@ const attackedExport = async <T>(actionable: Actionable<T>, game: Game, params: 
 		throw new Error(`No player found with identifier '${actionable.from}'`)
 	}
 
-	const strength = params.strength
+	const strength = params.strength as number
 
-	const defense = Math.max(attacked.getRoleStats()["basic-defense"], attacked.getPermanentStats()["basic-defense"])
+	const defense = Math.max(attacked.role.stats["basic-defense"], attacked.getPermanentStats()["basic-defense"])
 	const temp_defense = attacked.getTemporaryStats()["basic-defense"]
 
 	const cond1 = strength <= defense
@@ -35,4 +35,4 @@ attackedExport.NIGHT_MESSAGE = "attacked last night"
 
 attackedExport.INSTANT_FOR_DAY = true
 
-export = attackedExport
+export default attackedExport

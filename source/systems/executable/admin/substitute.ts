@@ -3,7 +3,7 @@ import removeRole from "../../../auxils/removeRole"
 import getLogger from "../../../getLogger"
 import Game from "../../game_templates/Game"
 
-export = async (game: Game, id1: string, id2: string, detailed_substitution = true): Promise<void> => {
+export default async (game: Game, id1: string, id2: string, detailed_substitution = true): Promise<void> => {
 	const logger = getLogger()
 	const config = game.config
 

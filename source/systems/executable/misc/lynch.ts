@@ -1,7 +1,7 @@
 import Game from "../../game_templates/Game"
 import Player from "../../game_templates/Player"
 
-export = async (game: Game, role: Player): Promise<boolean> => {
+export default async (game: Game, role: Player): Promise<boolean> => {
 	const lynchable = role.lynchable()
 
 	if (!lynchable) {

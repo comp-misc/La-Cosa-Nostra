@@ -1,4 +1,4 @@
-export = <T>(array: T[]): T[] => {
+export default <T>(array: T[]): T[] => {
 	const ret: T[] = []
 
 	for (let i = 0; i < array.length; i++) {

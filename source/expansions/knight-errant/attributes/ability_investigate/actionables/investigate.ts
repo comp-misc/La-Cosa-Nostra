@@ -24,20 +24,20 @@ const investigate: RoleActionable = async (actionable, game, params) => {
 
 	// Check roles
 	const immunity = target.getStat("detection-immunity", Math.max)
-	const targetRole = target.getRoleOrThrow()
+	const targetRole = target.role
 
 	// Not immune
 	if (immunity < 1) {
-		if (targetRole["reveal-role-on-interrogation"]) {
-			const response = responses["role"].replace(new RegExp("{;role}", "g"), targetRole["role-name"])
+		if (targetRole.properties["reveal-role-on-interrogation"]) {
+			const response = responses.role.replace(new RegExp("{;role}", "g"), targetRole.getDisplayName())
 			game.addMessage(from, response)
 		} else {
-			const response = responses[targetRole.alignment]
-			game.addMessage(from, response ? response : responses["town"])
+			const response = responses[targetRole.properties.alignment]
+			game.addMessage(from, response ? response : responses.town)
 		}
 	} else {
 		// Show Town
-		game.addMessage(from, responses["town"])
+		game.addMessage(from, responses.town)
 	}
 
 	await attributeDecrement(actionable, game, params)

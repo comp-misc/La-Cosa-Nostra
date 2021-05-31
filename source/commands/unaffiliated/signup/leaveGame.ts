@@ -16,4 +16,4 @@ const unspectate: CommandProperties<UnaffiliatedCommand> = {
 	command,
 }
 
-export = unspectate
+export default unspectate

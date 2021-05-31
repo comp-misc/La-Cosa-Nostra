@@ -7,4 +7,4 @@ const current: UnaffiliatedCommand = async (message) => {
 	await message.channel.send(":clock12: Current time is **" + auxils.formatUTCDate(current) + "**.")
 }
 
-export = current
+export default current

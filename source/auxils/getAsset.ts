@@ -14,7 +14,7 @@ export default (asset_name: string): FileAsset => {
 		const flavour = getTimer().game.getGameFlavour()
 
 		if (flavour) {
-			const swaps = flavour["asset_swaps"]
+			const swaps = flavour.asset_swaps
 			for (let i = 0; i < swaps.length; i++) {
 				if (swaps[i].from === asset_name) {
 					if (!flavour.assets[swaps[i].to]) {

@@ -94,7 +94,7 @@ const vote: GameCommand = async (game, message, params) => {
 	}
 	// reverts the vote and passes the vote onto the other player
 	const voted = game.getVotesBy(self.identifier)
-	voted.forEach((voter) => game.toggleVote(self, voter))
+	await Promise.all(voted.map((voter) => game.toggleVote(self, voter)))
 
 	if (game.isVotingNoLynch(self.identifier)) {
 		await game.toggleVote(self, "nl")
@@ -123,4 +123,4 @@ vote.ALLOW_PREGAME = false
 vote.ALLOW_GAME = true
 vote.ALLOW_POSTGAME = false
 
-export = vote
+export default vote

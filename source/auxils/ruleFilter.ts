@@ -11,7 +11,7 @@ const wildcard = (str: string): RegExp => {
 	return new RegExp(reg, "gi")
 }
 
-export = (sample: string[], rules: string[]): string[] => {
+export default (sample: string[], rules: string[]): string[] => {
 	if (!sample || !rules) {
 		return sample
 	}
@@ -31,17 +31,17 @@ export = (sample: string[], rules: string[]): string[] => {
 		switch (true) {
 			case rule.startsWith("-"):
 				// Scan through current sample and exclude
-				final = final.filter((x) => !x.match(catchable))
+				final = final.filter((x) => !catchable.exec(x))
 				break
 
 			case rule.startsWith("+"):
 				// Scan through current sample and except
-				final = final.filter((x) => x.match(catchable))
+				final = final.filter((x) => catchable.exec(x))
 				break
 
 			default: {
 				// Scan through first sample and include
-				const include = sample.filter((x) => x.match(catchable))
+				const include = sample.filter((x) => catchable.exec(x))
 				for (let j = 0; j < include.length; j++) {
 					if (final.some((x) => x === include[j])) {
 						continue

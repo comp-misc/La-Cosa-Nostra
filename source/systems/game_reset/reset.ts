@@ -16,4 +16,4 @@ const reset = async (client: Client, config: LcnConfig): Promise<void> => {
 	await setStatus(client)
 }
 
-export = reset
+export default reset

@@ -19,4 +19,4 @@ const logSuccess = async <T>(actionable: Actionable<T>, game: Game): Promise<voi
 	await game.execute("miscellaneous", { target: player.identifier, event: "modular_log_success", module: identifier })
 }
 
-export = logSuccess
+export default logSuccess

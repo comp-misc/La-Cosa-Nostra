@@ -1,5 +1,6 @@
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const roleblock: TargetRoleCommand = async (game, message, target, from) => {
 	clearModuleActions(game, from.identifier, "ability")
@@ -15,13 +16,12 @@ const roleblock: TargetRoleCommand = async (game, message, target, from) => {
 		from,
 		meta: { type: "ability" },
 		to: target,
-		priority: 1,
+		priority: ActionPriorities.ROLEBLOCK,
 	})
 
 	await message.reply(":no_entry_sign: You have decided to roleblock **" + target.getDisplayName() + "** tonight.")
 }
 
-roleblock.ALLOW_NONSPECIFIC = false
 roleblock.PRIVATE_ONLY = true
 roleblock.DEAD_CANNOT_USE = true
 roleblock.ALIVE_CANNOT_USE = false

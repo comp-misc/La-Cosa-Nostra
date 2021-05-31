@@ -62,4 +62,4 @@ const hashcheck: AdminCommand = async (message, params) => {
 	)
 }
 
-export = hashcheck
+export default hashcheck

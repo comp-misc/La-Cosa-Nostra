@@ -75,16 +75,6 @@ export const executeRoleCommand = async (
 		default: boolean
 	}[] = [
 		{
-			property: "ALLOW_NONSPECIFIC",
-			message: "You cannot use this command",
-			condition: (value) =>
-				!value &&
-				((command.command.role !== undefined &&
-					player.role_identifier.toLowerCase() !== command.command.role.toLowerCase()) ||
-					(command.command.attribute !== undefined && !player.hasAttribute(command.command.attribute))),
-			default: false,
-		},
-		{
 			property: "PRIVATE_ONLY",
 			message: "You cannot use this command here",
 			condition: (value) => value && message.channel.id !== player.channel?.id,

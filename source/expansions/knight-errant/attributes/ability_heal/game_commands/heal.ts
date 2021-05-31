@@ -1,5 +1,6 @@
 import { TargetRoleCommand, createTargetCommand } from "../../../../../commands/createTargetCommand"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const heal: TargetRoleCommand = async (game, message, target, from) => {
 	clearModuleActions(game, from.identifier, "ability")
@@ -9,19 +10,18 @@ const heal: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	game.addAction("a/ability_heal/heal", ["cycle"], {
+	await game.addAction("a/ability_heal/heal", ["cycle"], {
 		name: "Modular-heal",
 		expiry: 1,
 		from,
 		to: target,
 		meta: { type: "ability" },
-		priority: 3,
+		priority: ActionPriorities.DEFAULT,
 	})
 
 	await message.reply(":shield: You have decided to heal **" + target.getDisplayName() + "** tonight.")
 }
 
-heal.ALLOW_NONSPECIFIC = false
 heal.PRIVATE_ONLY = true
 heal.DEAD_CANNOT_USE = true
 heal.ALIVE_CANNOT_USE = false

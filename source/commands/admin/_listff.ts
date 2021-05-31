@@ -4,7 +4,7 @@ import makeCommand from "../makeCommand"
 import Player, { FFStatus } from "../../systems/game_templates/Player"
 
 const formatList = (title: string, players: Player[]): string => {
-	let result = title + " (" + players.length + ")"
+	let result = `${title} (${players.length})`
 	if (players.length > 0) {
 		result += ":```"
 		players.forEach((player, i) => {

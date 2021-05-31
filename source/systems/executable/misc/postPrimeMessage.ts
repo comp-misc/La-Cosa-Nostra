@@ -4,12 +4,10 @@ import Game from "../../game_templates/Game"
 import formatUTCDate from "../../../auxils/formatUTCDate"
 
 const getSetupSettings = (game: Game) => {
-	let message =
-		"**Game Settings**\nDay lengths: " +
-		game.config["time"]["day"] +
-		" hours\nNight lengths: " +
-		game.config["time"]["night"] +
-		" hours\n\nThe game starts with __"
+	const dayLengths = `Day lengths: ${game.config.time.day} hours`
+	const nightLengths = `Night lengths: ${game.config.time.night} hours`
+
+	let message = "**Game Settings**\n" + dayLengths + "\n" + nightLengths + "\n\nThe game starts with __"
 
 	if (game.config.game["day-zero"]) {
 		message = message + "daytime__.\n\n"
@@ -35,8 +33,7 @@ const getSetupSettings = (game: Game) => {
 		message = message + "__top-voted-lynch__"
 
 		if (game.config.game.lynch["top-voted-lynch-minimum-votes"] > 1) {
-			message =
-				message + " (minimum " + game.config.game.lynch["top-voted-lynch-minimum-votes"] + " votes required)"
+			message = `${message} (minimum ${game.config.game.lynch["top-voted-lynch-minimum-votes"]} votes required)`
 		}
 	} else {
 		message = message + "__majority-vote__"

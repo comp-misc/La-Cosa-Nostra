@@ -29,4 +29,4 @@ const setRoles = async (game: Game): Promise<void> => {
 	}
 }
 
-export = setRoles
+export default setRoles

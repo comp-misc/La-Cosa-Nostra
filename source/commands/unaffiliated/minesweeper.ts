@@ -7,29 +7,26 @@ const minesweeper: UnaffiliatedCommand = async (message, params, config) => {
 
 	if (isNaN(width) || isNaN(height) || isNaN(bombs)) {
 		await message.channel.send(
-			":x: Wrong syntax! Please use `" + config["command-prefix"] + "minesweeper [width] [height] [bombs]` instead!"
+			":x: Wrong syntax! Please use `" +
+				config["command-prefix"] +
+				"minesweeper [width] [height] [bombs]` instead!"
 		)
-		return null
+		return
 	}
 
 	const area = width * height
 
 	if (area > 300) {
 		await message.channel.send(":x: That's too big an area!")
-		return null
+		return
 	}
 
 	if (bombs >= area) {
 		await message.channel.send(":x: You cannot have more bombs than the total area!")
-		return null
+		return
 	}
 
-	const array = new Array(width)
-
-	// Form the array
-	for (let i = 0; i < array.length; i++) {
-		array[i] = new Array(height).fill(0)
-	}
+	const array = Array.from({ length: width }, () => new Array<number | string>(height).fill(0))
 
 	// Distribute the bombs
 	while (bombs > 0) {
@@ -53,14 +50,14 @@ const minesweeper: UnaffiliatedCommand = async (message, params, config) => {
 						continue
 					}
 
-					array[x + i][y + j]++
+					array[x + i][y + j] = (array[x + i][y + j] as number) + 1
 				}
 			}
 		}
 	}
 
 	// Post minesweeper
-	const emotes: Record<string, any> = {
+	const emotes: Record<string, string> = {
 		"-1": ":bomb:",
 		0: ":zero:",
 		1: ":one:",
@@ -83,10 +80,10 @@ const minesweeper: UnaffiliatedCommand = async (message, params, config) => {
 
 	if (sendable.length >= 2000) {
 		await message.channel.send(":x: That's too big an area!")
-		return null
+		return
 	}
 
 	await message.channel.send(sendable)
 }
 
-export = minesweeper
+export default minesweeper

@@ -2,7 +2,7 @@ import { CategoryChannel, Client } from "discord.js"
 import { LcnConfig } from "../../LcnConfig"
 import getGuild from "../../getGuild"
 
-export = async (client: Client, config: LcnConfig): Promise<void> => {
+export default async (client: Client, config: LcnConfig): Promise<void> => {
 	const category = config.categories.private
 	const guild = getGuild(client)
 

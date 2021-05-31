@@ -4,14 +4,16 @@ import { AdminCommand } from "../CommandType"
 const resurrect: AdminCommand = async (message, params) => {
 	if (!hasTimer() || !["pre-game", "playing"].includes(getTimer().game.state)) {
 		await message.channel.send(":x: No game in progress.")
-		return null
+		return
 	}
 
 	const game = getTimer().game
 	const config = game.config
 
 	if (params.length !== 1) {
-		await message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "resurrect <id>` instead!")
+		await message.channel.send(
+			":x: Wrong syntax! Please use `" + config["command-prefix"] + "resurrect <id>` instead!"
+		)
 		return
 	}
 
@@ -42,11 +44,11 @@ const resurrect: AdminCommand = async (message, params) => {
 
 	player.status.alive = true
 
-	game.save()
+	await game.save()
 
 	await message.channel.send(
 		":ok: Revived player. Please manually ensure that they have access to the private channels."
 	)
 }
 
-export = resurrect
+export default resurrect

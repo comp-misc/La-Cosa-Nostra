@@ -1,4 +1,4 @@
-export = (milliseconds: number): string => {
+export default (milliseconds: number): string => {
 	const ms = milliseconds % 1000
 	const seconds = Math.floor(milliseconds / 1000) % 60
 	const minutes = Math.floor(milliseconds / (1000 * 60)) % 60
@@ -6,32 +6,16 @@ export = (milliseconds: number): string => {
 	const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24)) % 7
 	const weeks = Math.floor(milliseconds / (1000 * 60 * 60 * 24 * 7))
 
-	// Calculate
-	let concat = String()
-
-	if (weeks >= 1) {
-		concat += weeks + "w "
+	const items = {
+		w: weeks,
+		d: days,
+		h: hours,
+		min: minutes,
+		s: seconds,
+		ms: ms,
 	}
-
-	if (days >= 1) {
-		concat += days + "d "
-	}
-
-	if (hours >= 1) {
-		concat += hours + "h "
-	}
-
-	if (minutes >= 1) {
-		concat += minutes + "min "
-	}
-
-	if (seconds >= 1) {
-		concat += seconds + "s "
-	}
-
-	if (ms >= 1) {
-		concat += ms + "ms"
-	}
-
-	return concat.trim()
+	return Object.entries(items)
+		.filter(([, value]) => value >= 1)
+		.map(([name, value]) => `${value}${name}`)
+		.join(" ")
 }

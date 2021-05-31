@@ -1,6 +1,7 @@
 import { RoleCommand } from "../../../../../commands/CommandType"
 import clearModuleActions from "../../../../../rolesystem/modular/clearModuleActions"
 import makeCommand from "../../../../../commands/makeCommand"
+import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
 const commute: RoleCommand = async (game, message, params, from) => {
 	const actions = game.actions
@@ -34,11 +35,10 @@ const commute: RoleCommand = async (game, message, params, from) => {
 		meta: { type: "ability" },
 		from,
 		to: from,
-		priority: 0.01,
+		priority: ActionPriorities.HIGHEST,
 	})
 }
 
-commute.ALLOW_NONSPECIFIC = false
 commute.PRIVATE_ONLY = true
 commute.DEAD_CANNOT_USE = true
 commute.ALIVE_CANNOT_USE = false

@@ -6,4 +6,4 @@ const removeRole = async (member: GuildMember, roles: Role[]): Promise<void> => 
 	)
 }
 
-export = removeRole
+export default removeRole

@@ -9,4 +9,4 @@ const _reset: AdminCommand = async (message, params, config) => {
 	await message.channel.send(":ok: Game reset.")
 }
 
-export = _reset
+export default _reset

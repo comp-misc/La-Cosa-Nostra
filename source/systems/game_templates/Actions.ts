@@ -37,20 +37,24 @@ interface SharedActionOptions<T> {
 	meta?: T
 }
 
+export type ActionableTag = "roleblockable" | "drivable" | "visit" | "system" | "permanent" | string
+
 export interface ActionOptions<T> extends SharedActionOptions<T> {
 	from: Player
 	to: Player
-	tags?: string[]
+	tags?: ActionableTag[]
 	/** Number of "hits" before execution */
 	execution?: number
 	target?: Player
 	attack?: Player
-	priority?: number
+	/** Lower the priority, the sooner the action will execute */
+	priority: number
 }
+
 export interface Actionable<T> extends SharedActionOptions<T> {
 	from: PlayerIdentifier
 	to: PlayerIdentifier
-	tags: string[]
+	tags: ActionableTag[]
 	/** Number of "hits" before execution */
 	execution: number
 	target?: PlayerIdentifier
@@ -66,6 +70,7 @@ export interface Actionable<T> extends SharedActionOptions<T> {
 export interface ExecutionParams extends Record<string, any> {
 	priority?: number
 	reason?: string
+	type?: string
 	visitor?: PlayerIdentifier
 	visited?: PlayerIdentifier
 	target?: PlayerIdentifier
@@ -115,28 +120,21 @@ export default class Actions {
 				}
 			})
 		}
-		const mapIdentifier = (player: Player): string => {
-			if (typeof player === "string") {
-				getLogger().logError("Id passed to action instead of player")
-				return this.game.getPlayerOrThrow(player).identifier
-			}
-			return player.identifier
-		}
 
 		const actionable: StoredActionable<T> = {
 			name: options.name,
-			from: mapIdentifier(options.from),
-			to: mapIdentifier(options.to),
+			from: options.from.identifier,
+			to: options.to.identifier,
 			meta: options.meta,
-			target: options.target ? mapIdentifier(options.target) : undefined,
-			attack: options.attack ? mapIdentifier(options.attack) : undefined,
+			target: options.target?.identifier,
+			attack: options.attack?.identifier,
 
 			id: crypto.randomBytes(4).toString("hex"),
 			identifier,
 			triggers,
 			tags: options.tags || [],
 			expiry: options.expiry || 0,
-			priority: options.priority || 0,
+			priority: options.priority,
 			execution: options.execution || 0,
 			cycles: 0,
 			_scan: [],
@@ -147,11 +145,9 @@ export default class Actions {
 			actionable.to = "*"
 		}
 
-		let implicit_priority = 0
 		if (actionable.from !== "*") {
 			const from = this.game.getPlayer(actionable.from)
 			if (from) {
-				implicit_priority = from.getStat("priority", Math.max)
 				actionable.from = from.identifier
 			}
 		}
@@ -162,8 +158,6 @@ export default class Actions {
 				actionable.to = to.identifier
 			}
 		}
-
-		actionable.priority = actionable.priority || implicit_priority
 
 		// Append new tags to array
 		const runnable = actionables[actionable.identifier]
@@ -192,12 +186,18 @@ export default class Actions {
 			this.actions = auxils.shuffle(this.actions)
 		}
 
-		this.actions.sort(function (a, b) {
-			if (!a || !b) {
-				return -1
+		this.actions.sort((a, b) => {
+			if (a.priority !== b.priority) {
+				return a.priority - b.priority
 			}
 
-			return a.priority - b.priority
+			//Move all roleblockable actions to the end so that any roleblocking takes place first if priorities are the same
+			const aRB = a.tags.includes("roleblockable")
+			const bRB = b.tags.includes("roleblockable")
+			if (aRB === bRB) {
+				return 0
+			}
+			return aRB ? 1 : -1
 		})
 	}
 
@@ -236,13 +236,7 @@ export default class Actions {
 		await this.execute("cycle")
 	}
 
-	// "params" is optional
 	async execute(type: Trigger, params?: ExecutionParams, check_expiries = true): Promise<void> {
-		// Actions: [from, to, game]
-		// Returns: boolean
-		// If true for chat, lynch, arbitrary types, subtract one
-		// from expiration
-
 		// Create loop identifier
 		const loop_id = crypto.randomBytes(8).toString("hex")
 

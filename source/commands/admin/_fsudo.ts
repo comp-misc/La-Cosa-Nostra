@@ -33,4 +33,4 @@ const _fsudo: AdminCommand = async (message, params) => {
 	client.emit("message", clone)
 }
 
-export = _fsudo
+export default _fsudo

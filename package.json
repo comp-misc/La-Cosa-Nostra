@@ -5,9 +5,9 @@
 	"version": "4.2.0",
 	"main": "source/MafiaBot.ts",
 	"scripts": {
-		"start": "babel-node source/MafiaBot.ts --extensions \".ts,.js\" --resolveJsonModule --trace-warnings",
-		"build": "babel ./source --out-dir ./dist --source-maps --copy-files --extensions \".ts,.js\"",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "nodemon --ignore data/ --exec ts-node --files source/MafiaBot.ts --resolveJsonModule --trace-warnings",
+		"production": "ts-node --files source/MafiaBot.ts --resolveJsonModule --trace-warnings",
+		"build": "babel ./source --out-dir ./dist --source-maps --copy-files --extensions \".ts,.js\""
 	},
 	"repository": {
 		"type": "git",
@@ -33,7 +33,8 @@
 		"dotenv": "^8.2.0",
 		"node-fetch": "^2.6.1",
 		"semver": "^7.1.3",
-		"typescript": "^4.2.2"
+		"ts-node": "^10.0.0",
+		"typescript": "^4.2.4"
 	},
 	"engines": {
 		"node": ">=10.15.0"
@@ -50,12 +51,15 @@
 		"@types/node": "^14.14.31",
 		"@types/node-fetch": "^2.5.8",
 		"@types/semver": "^7.3.4",
-		"@typescript-eslint/eslint-plugin": "^4.15.2",
-		"@typescript-eslint/parser": "^4.15.2",
+		"@typescript-eslint/eslint-plugin": "^4.23.0",
+		"@typescript-eslint/parser": "^4.23.0",
+		"babel-plugin-dynamic-import-node-babel-7": "^2.0.7",
 		"babel-plugin-replace-ts-export-assignment": "^0.0.2",
 		"babel-preset-latest-node": "^5.4.0",
 		"babel-watch": "^7.4.0",
-		"eslint": "^7.21.0",
-		"prettier": "^2.2.1"
+		"eslint": "^7.26.0",
+		"eslint-plugin-promise": "^5.1.0",
+		"nodemon": "^2.0.7",
+		"prettier": "^2.3.0"
 	}
 }

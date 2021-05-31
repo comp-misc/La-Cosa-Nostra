@@ -1,4 +1,5 @@
 import { Message } from "discord.js"
+import { LcnConfig } from "../LcnConfig"
 import Game from "../systems/game_templates/Game"
 import Player from "../systems/game_templates/Player"
 import { CommandProperties, CommandUsageError, RoleCommand, RoleCommandAttributes } from "./CommandType"
@@ -14,10 +15,11 @@ interface TargetCommandData extends Omit<CommandProperties<RoleCommand>, "comman
 	preValidation?: (game: Game, message: Message, params: string[], player: Player) => boolean | Promise<boolean>
 }
 
-export const createTargetCommand = (
-	command: TargetRoleCommand,
-	data: TargetCommandData
-): CommandProperties<RoleCommand> => {
+export interface TargetCommand extends CommandProperties<RoleCommand> {
+	formatUsageDescription: (config: LcnConfig) => string
+}
+
+export const createTargetCommand = (command: TargetRoleCommand, data: TargetCommandData): TargetCommand => {
 	const { canPerformOnSelf = false, canPerformOnDeadPlayers = false, threshold = 0.7, preValidation } = data
 
 	const rc: RoleCommand = async (game, message, params, player) => {
@@ -48,10 +50,8 @@ export const createTargetCommand = (
 		}
 		await command(game, message, to, player)
 	}
-	rc.role = command.role
 	rc.attribute = command.attribute
 	rc.ALIVE_CANNOT_USE = command.ALIVE_CANNOT_USE
-	rc.ALLOW_NONSPECIFIC = command.ALLOW_NONSPECIFIC
 	rc.DEAD_CANNOT_USE = command.DEAD_CANNOT_USE
 	rc.DISALLOW_DAY = command.DISALLOW_DAY
 	rc.DISALLOW_NIGHT = command.DISALLOW_NIGHT
@@ -61,6 +61,8 @@ export const createTargetCommand = (
 		...data,
 		usage: data.usage || data.name + " <player | nobody>",
 		command: rc,
+		formatUsageDescription: (config) =>
+			"Use `" + config["command-prefix"] + data.name + " <player | nobody>` to select your target.",
 	}
 }
 

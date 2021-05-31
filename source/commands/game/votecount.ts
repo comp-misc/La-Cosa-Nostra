@@ -9,10 +9,10 @@ const votecount: GameCommand = async (game, message) => {
 
 	if (!game.isDay()) {
 		await message.channel.send(":x:  There is no trial during the night!")
-		return null
+		return
 	}
 
-	const no_lynch_option = game.config["game"]["lynch"]["no-lynch-option"]
+	const no_lynch_option = game.config.game.lynch["no-lynch-option"]
 
 	let sendable = texts.public_votecount
 
@@ -58,9 +58,7 @@ const votecount: GameCommand = async (game, message) => {
 				let names = auxils.pettyFormat(concat)
 				names = voting_against.length > 0 ? ": " + names : ""
 
-				displays.push(
-					"**" + roles[i].getDisplayName() + "** (" + roles[i].countVotes() + "/" + lynch_votes + ")" + names
-				)
+				displays.push(`**${roles[i].getDisplayName()}** (${roles[i].countVotes()}/${lynch_votes})${names}`)
 			}
 		}
 
@@ -81,7 +79,7 @@ const votecount: GameCommand = async (game, message) => {
 			let names = auxils.pettyFormat(concat)
 			names = voters.length > 0 ? ": " + names : ""
 
-			displays.push("**No-lynch** (" + vote_count + "/" + nolynch_votes + ")" + names)
+			displays.push(`**No-lynch** (${vote_count}/${nolynch_votes})${names}`)
 		}
 
 		const special_vote_types = game.getPeriodLog().special_vote_types
@@ -98,7 +96,7 @@ const votecount: GameCommand = async (game, message) => {
 
 			names = voters.length > 0 ? ": " + names : ""
 
-			displays.push("**" + special_vote_types[i].name + "** (" + vote_count + ")" + names)
+			displays.push(`**${special_vote_types[i].name}** (${vote_count})${names}`)
 		}
 
 		const voters = []
@@ -111,7 +109,7 @@ const votecount: GameCommand = async (game, message) => {
 			}
 		}
 
-		displays.push("\nNot voting (" + voters.length + "/" + players_alive + ")")
+		displays.push("\n" + `Not voting (${voters.length}/${players_alive})`)
 
 		return displays.join("\n")
 	}
@@ -121,4 +119,4 @@ votecount.ALLOW_PREGAME = false
 votecount.ALLOW_GAME = true
 votecount.ALLOW_POSTGAME = false
 
-export = votecount
+export default votecount

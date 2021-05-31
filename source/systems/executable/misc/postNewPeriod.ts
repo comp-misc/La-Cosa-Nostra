@@ -6,9 +6,9 @@ import Game from "../../game_templates/Game"
 
 const getDayNightTime = (game: Game): string => {
 	if ((game.period - 1) % 2 === 0) {
-		return "Day " + (game.getPeriod() - 1) / 2
+		return `Day ${(game.getPeriod() - 1) / 2}`
 	} else {
-		return "Night " + game.getPeriod() / 2
+		return `Night ${game.getPeriod() / 2}`
 	}
 }
 
@@ -36,7 +36,7 @@ const getAliveTag = (game: Game): string => {
 	}
 }
 
-export = async (game: Game, broadcast?: string): Promise<void> => {
+export default async (game: Game, broadcast?: string): Promise<void> => {
 	// Post periodic log
 	const log = game.getLogChannel()
 	const main = game.getMainChannel()
@@ -74,8 +74,8 @@ export = async (game: Game, broadcast?: string): Promise<void> => {
 	await pinMessage(post_pinnable)
 
 	if (game.getPeriod() % 2 === 0) {
-		await main.send(format(game, game.config["messages"]["daytime-quote"]))
+		await main.send(format(game, game.config.messages["daytime-quote"]))
 	} else {
-		await main.send(format(game, game.config["messages"]["nighttime-quote"]))
+		await main.send(format(game, game.config.messages["nighttime-quote"]))
 	}
 }

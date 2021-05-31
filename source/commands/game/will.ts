@@ -8,41 +8,41 @@ const will: GameCommand = async (game, message, params) => {
 	// Check existent
 	if (player === null) {
 		await message.channel.send(":x: You are not in the game!")
-		return null
+		return
 	}
 
-	if (!config["game"]["last-wills"]["allow"]) {
+	if (!config.game["last-wills"].allow) {
 		await message.channel.send(":x: Last wills are disabled in this game!")
-		return null
+		return
 	}
 
 	if (!player.status.alive) {
 		await message.channel.send(":x: Dead people cannot write wills!")
-		return null
+		return
 	}
 
 	// Check private channel
 	if (player.channel?.id !== message.channel.id) {
 		await message.channel.send(":x: You cannot use that command here!")
-		return null
+		return
 	}
 
 	if (params.length < 1) {
 		await message.channel.send(
 			":x: Wrong syntax! Use `" + config["command-prefix"] + "will <view/write/clear> [will]` instead!"
 		)
-		return null
+		return
 	}
 
 	const action = params[0]
-	let will: string | undefined = params.splice(1, Infinity).join(" ")
+	let will: string | null = params.splice(1, Infinity).join(" ")
 
 	switch (action) {
 		case "view": {
 			will = player.getTrueWill()
 
 			let send: string
-			if (will !== undefined) {
+			if (will) {
 				send =
 					":pen_fountain: Your current last will:\n```fix\n" +
 					will +
@@ -62,22 +62,21 @@ const will: GameCommand = async (game, message, params) => {
 		case "write": {
 			if (/`/g.test(will)) {
 				await message.channel.send(":x: Please do not use code formatting in last wills!")
-				return null
+				return
 			}
 
 			will = will.trim().replace(/^\s+|\s+$/g, "")
 
-			const char_limit: number = config["game"]["last-wills"]["character-count-limit"]
+			const char_limit: number = config.game["last-wills"]["character-count-limit"]
 
 			if (will.length > char_limit) {
-				await message.channel.send(":x: Last wills cannot exceed " + char_limit + " characters!")
-				return null
+				await message.channel.send(`:x: Last wills cannot exceed ${char_limit} characters!`)
+				return
 			}
 
 			if (will.length === 0) {
 				// Unset
-
-				player.setWill(undefined)
+				player.setWill(null)
 
 				await message.channel.send(":pen_ballpoint: You have removed your last will.")
 			} else {
@@ -94,7 +93,7 @@ const will: GameCommand = async (game, message, params) => {
 		case "clear": {
 			// Unset
 
-			player.setWill(undefined)
+			player.setWill(null)
 
 			await message.channel.send(":pen_ballpoint: You have removed your last will.")
 			break
@@ -106,11 +105,11 @@ const will: GameCommand = async (game, message, params) => {
 			break
 	}
 
-	game.save()
+	await game.save()
 }
 
 will.ALLOW_PREGAME = false
 will.ALLOW_GAME = true
 will.ALLOW_POSTGAME = false
 
-export = will
+export default will

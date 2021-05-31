@@ -41,7 +41,7 @@ const createPrivate = async (client: Client, config: LcnConfig, roles: Player[])
 			await assignPermissionsAsync()
 		}
 
-		return channel as TextChannel
+		return channel
 	}
 	const assignChannel = async (role: Player) => {
 		const channel = await createPrivateChannel(role.alphabet)
@@ -67,4 +67,4 @@ const createPrivate = async (client: Client, config: LcnConfig, roles: Player[])
 	return mafia
 }
 
-export = createPrivate
+export default createPrivate

@@ -41,4 +41,4 @@ const configModifier = (config: LcnConfig): LcnConfig => {
 	return new_config
 }
 
-export = configModifier
+export default configModifier

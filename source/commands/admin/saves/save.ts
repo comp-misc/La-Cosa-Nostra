@@ -7,9 +7,9 @@ const save: AdminCommand = async (message, params) => {
 		return
 	}
 
-	getTimer().game.save(undefined, params[0])
+	await getTimer().game.save(params[0])
 
 	await message.channel.send(":ok: Saved the game.")
 }
 
-export = save
+export default save

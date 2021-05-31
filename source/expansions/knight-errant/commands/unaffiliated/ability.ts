@@ -1,6 +1,6 @@
 import { UnaffiliatedCommand } from "../../../../commands/CommandType"
-import { Attribute, AttributeInfo, DisplayField, ModularDetails } from "../../../../systems/Attribute"
 import makeCommand from "../../../../commands/makeCommand"
+import { AttributeInfo, DisplayField, ModularDetails } from "../../../../systems/Attribute"
 
 interface FieldedModularDetails extends ModularDetails {
 	"display-field": DisplayField[]
@@ -12,7 +12,7 @@ interface ModularAttribute extends AttributeInfo {
 
 const ability: UnaffiliatedCommand = async (message, params, config) => {
 	//Delay import to avoid circular references
-	const attributes: Record<string, Attribute> = require("../../../../systems/attributes")
+	const { default: attributes } = await import("../../../../systems/attributes")
 	const powers = Object.values(attributes)
 		.map((attribute) => attribute.attribute)
 		.filter(

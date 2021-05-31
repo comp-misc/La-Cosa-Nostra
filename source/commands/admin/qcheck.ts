@@ -6,7 +6,7 @@ import { getTimer, hasTimer } from "../../getTimer"
 const qcheck: AdminCommand = async (message) => {
 	if (!hasTimer() || !["playing"].includes(getTimer().game.state)) {
 		await message.channel.send(":x: No game in progress.")
-		return null
+		return
 	}
 
 	const game = getTimer().game
@@ -66,11 +66,11 @@ const qcheck: AdminCommand = async (message) => {
 
 				const embed = new Discord.MessageEmbed()
 					.setColor(0xff0000)
-					.setDescription(`\n\n **${"<@" + roles[i].id + ">** - __" + roles[i].getDisplayRole(false)}__`)
-				alwchannel.send(embed)
+					.setDescription(`\n\n **${"<@" + roles[i].id + ">** - __" + roles[i].role.getDisplayName()}__`)
+				await alwchannel.send(embed)
 			}
 		}
 	}
 }
 
-export = qcheck
+export default qcheck

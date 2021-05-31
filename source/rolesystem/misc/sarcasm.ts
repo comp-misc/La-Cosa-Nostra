@@ -17,4 +17,4 @@ const sarcasm = (prepend_space = false): string => {
 	return prepend_space ? " " + remarks[index] : remarks[index]
 }
 
-export = sarcasm
+export default sarcasm

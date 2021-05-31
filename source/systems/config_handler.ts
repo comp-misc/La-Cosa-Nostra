@@ -4,16 +4,21 @@ import { LcnConfig } from "../LcnConfig"
   merge other configurations and return
   one JSON object*/
 const config_handlers = (file_dir = "configuration.json", allow_parent_override = true): LcnConfig => {
-	const base_config = require(`${__dirname}/../../configs/${file_dir}`)
+	/* eslint-disable @typescript-eslint/no-var-requires */
+	/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+	const base_config = require(`${__dirname}/../../configs/${file_dir}`) as LcnConfig
 	const config_pieces = base_config["merge-configs"]
 
-	const combination = config_pieces.map((piece: string) => require(`${__dirname}/../../configs/${piece}`))
+	const combination = config_pieces.map(
+		(piece: string) => require(`${__dirname}/../../configs/${piece}`) as Record<string, unknown>
+	)
 
 	if (allow_parent_override) {
-		return Object.assign(base_config, ...combination)
+		return Object.assign(base_config, ...combination) as LcnConfig
 	}
 
-	return Object.assign(base_config, ...combination)
+	return Object.assign(base_config, ...combination) as LcnConfig
 }
 
-export = config_handlers
+export default config_handlers

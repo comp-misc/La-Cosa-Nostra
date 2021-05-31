@@ -29,4 +29,4 @@ const join: CommandProperties<UnaffiliatedCommand> = {
 	command,
 }
 
-export = join
+export default join

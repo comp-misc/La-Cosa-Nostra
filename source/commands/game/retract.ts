@@ -1,3 +1,3 @@
 // Unvote alias
 import unvote from "./unvote"
-export = unvote
+export default unvote

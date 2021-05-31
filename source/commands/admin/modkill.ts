@@ -10,7 +10,9 @@ const modkill: AdminCommand = async (message, params) => {
 	const config = game.config
 
 	if (params.length !== 1) {
-		await message.channel.send(":x: Wrong syntax! Please use `" + config["command-prefix"] + "modkill <id>` instead!")
+		await message.channel.send(
+			":x: Wrong syntax! Please use `" + config["command-prefix"] + "modkill <id>` instead!"
+		)
 		return
 	}
 
@@ -33,4 +35,4 @@ const modkill: AdminCommand = async (message, params) => {
 	}
 }
 
-export = modkill
+export default modkill

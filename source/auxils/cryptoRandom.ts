@@ -1,6 +1,6 @@
 import crypto from "crypto"
 
-export = (bytes = 24, extend = 6): number => {
+export default (bytes = 24, extend = 6): number => {
 	if (extend > bytes) {
 		throw new Error("Extend cannot be more than bytes!")
 	}

@@ -6,7 +6,7 @@ import { Message } from "discord.js"
 import Player from "../../game_templates/Player"
 
 const getVoteList = (game: Game, roles: Player[]): string => {
-	const no_lynch_option = game.config.game["lynch"]["no-lynch-option"]
+	const no_lynch_option = game.config.game.lynch["no-lynch-option"]
 	const players_voting: Player[] = []
 	const players_alive = roles.filter((player) => player.status.alive).length
 
@@ -52,7 +52,7 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 		names = auxils.pettyFormat(concat)
 		names = voting_against.length > 0 ? ": " + names : ""
 
-		displays.push("<@" + role.id + "> (" + role.countVotes() + "/" + lynch_votes + ")" + names)
+		displays.push(`<@${role.id}> (${role.countVotes()}/${lynch_votes})${names}`)
 	})
 
 	if (no_lynch_option) {
@@ -66,7 +66,7 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 		names = auxils.pettyFormat(concat)
 		names = voters.length > 0 ? ": " + names : ""
 
-		displays.push("No-lynch (" + vote_count + "/" + nolynch_votes + ")" + names)
+		displays.push(`No-lynch (${vote_count}/${nolynch_votes})${names}`)
 	}
 
 	const special_vote_types = game.getPeriodLog().special_vote_types
@@ -80,17 +80,19 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 			players_voting.push(player)
 		}
 
-		names = auxils.pettyFormat(voters.map((x) => game.getPlayerByIdentifier(x.identifier)?.getDisplayName() || "???"))
+		names = auxils.pettyFormat(
+			voters.map((x) => game.getPlayerByIdentifier(x.identifier)?.getDisplayName() || "???")
+		)
 		names = voters.length > 0 ? ": " + names : ""
 
-		displays.push("**" + special_vote_types[i].name + "** (" + vote_count + ")" + names)
+		displays.push(`**${special_vote_types[i].name}** (${vote_count})${names}`)
 	}
 
 	const voters = roles
 		.filter((role) => role.status.alive && !players_voting.includes(role))
 		.map((role) => role.identifier)
 
-	displays.push("\nNot voting (" + voters.length + "/" + players_alive + ")")
+	displays.push("\n" + `Not voting (${voters.length}/${players_alive})`)
 
 	return displays.join("\n")
 }
@@ -113,7 +115,7 @@ const getVoteInfo = (roles: Player[]): string => {
 		lynch_votes = (players_alive + 2) / 2
 		nolynch_votes = players_alive / 2
 	}
-	return "There are required **" + lynch_votes + "** votes to lynch, and **" + nolynch_votes + "** votes to no-lynch."
+	return `There are required **${lynch_votes}** votes to lynch, and **${nolynch_votes}** votes to no-lynch.`
 }
 
 const createTrialVote = async (game: Game): Promise<Message[] | null> => {
@@ -133,9 +135,9 @@ const createTrialVote = async (game: Game): Promise<Message[] | null> => {
 	message = message.replace("{;public_votes}", getVoteList(game, roles))
 
 	const sentMessage = await vote.send(format(game, message))
-	game.save()
+	await game.save()
 
 	return [sentMessage]
 }
 
-export = createTrialVote
+export default createTrialVote

@@ -5,13 +5,13 @@ import { AdminCommand } from "../../CommandType"
 const integritycheck: AdminCommand = async (message) => {
 	if (!hasTimer()) {
 		await message.channel.send(":x: No savable instance to check.")
-		return null
+		return
 	}
 	const timer = getTimer()
 
 	const game = timer.game
 
-	const tampers: Record<string, any> = {}
+	const tampers: Record<string, Date[]> = {}
 	let total_tampers = 0
 
 	if (game.tampered_load_times && game.tampered_load_times.length > 0) {
@@ -30,21 +30,16 @@ const integritycheck: AdminCommand = async (message) => {
 
 	if (total_tampers < 1) {
 		await message.channel.send(
-			":ok: The game saves have been tampered with **" +
-				total_tampers +
-				"** time" +
-				auxils.vocab("s", total_tampers) +
-				"."
+			`:ok: The game saves have been tampered with **${total_tampers}** time${auxils.vocab("s", total_tampers)}.`
 		)
 	} else {
 		const tamper_log = []
 		for (const key in tampers) {
-			tamper_log.push(key + " - " + tampers[key].length)
+			tamper_log.push(`${key} - ${tampers[key].length}`)
 		}
 
 		await message.channel.send(
-			":ok: The game saves have been tampered with **" +
-				total_tampers +
+			`:ok: The game saves have been tampered with **${total_tampers}` +
 				"** time" +
 				auxils.vocab("s", total_tampers) +
 				":\n```fix\n" +
@@ -54,4 +49,4 @@ const integritycheck: AdminCommand = async (message) => {
 	}
 }
 
-export = integritycheck
+export default integritycheck

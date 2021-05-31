@@ -11,4 +11,4 @@ const deleteTimer = (): void => {
 	}
 }
 
-export = deleteTimer
+export default deleteTimer
