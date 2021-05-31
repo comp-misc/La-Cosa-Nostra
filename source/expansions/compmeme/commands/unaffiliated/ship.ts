@@ -14,8 +14,8 @@ const ship: UnaffiliatedCommand = async (message, params) => {
 			":heart: %sender% thinks %other1% and %other2% are a cute couple ",
 		],
 		{
-			sender1: params[0],
-			sender2: params[1],
+			other1: params[0],
+			other2: params[1],
 		}
 	)
 	await message.channel.send(msg)

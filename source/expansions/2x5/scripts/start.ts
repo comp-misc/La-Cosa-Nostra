@@ -8,7 +8,6 @@ const start: StartScript = (config) => {
 		...override,
 	}
 	newConfig.playing.possibleRoles = Object.values(possibleRoles)
-	newConfig.playing.shuffle = false
 	return newConfig
 }
 

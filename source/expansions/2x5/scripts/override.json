@@ -23,7 +23,7 @@
 	},
 
 	"game": {
-		"playersNeeded": 18,
+		"playersNeeded": 17,
 		"show-roles": true,
 
 		"mafia": {
