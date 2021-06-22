@@ -12,6 +12,7 @@ const basicAttack: AttackPrototype = async <T>(
 	const attacked = game.getPlayerOrThrow(actionable.to)
 
 	const attack_parameters: KillCircumstances = {
+		target: actionable.target || actionable.to,
 		attacker: actionable.from,
 		priority: actionable.priority,
 		strength: 1,

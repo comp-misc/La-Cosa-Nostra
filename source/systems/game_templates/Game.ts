@@ -83,6 +83,7 @@ export interface DeathMessage {
 }
 export interface KillCircumstances {
 	attacker?: PlayerIdentifier
+	target?: PlayerIdentifier
 	strength?: number
 	priority?: number
 	type?: string

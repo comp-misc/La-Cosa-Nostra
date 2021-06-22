@@ -2,7 +2,7 @@ import { RoleActionable } from "../../../../../systems/actionables"
 
 const attacked: RoleActionable = (actionable, game) => {
 	const player = game.getPlayerOrThrow(actionable.from)
-	const attributes = [...player.attributes]
+	const attributes = player.attributes
 
 	if (!player.attributes.some((x) => x.identifier === "protection")) {
 		// Remove protection
@@ -14,20 +14,19 @@ const attacked: RoleActionable = (actionable, game) => {
 	}
 
 	attributes.sort((a, b) => a.expiry - b.expiry)
-
 	for (let i = 0; i < attributes.length; i++) {
-		if (attributes[i].identifier !== "protection") {
+		const attribute = attributes[i]
+		if (attribute.identifier !== "protection") {
 			continue
 		}
 
-		if (typeof attributes[i].tags.amount === "number") {
-			attributes[i].tags.amount--
-		}
-
-		if (attributes[i].tags.amount < 1) {
-			// Remove
-			attributes.splice(i, 1)
-			break
+		if (typeof attribute.tags.amount === "number") {
+			attribute.tags.amount--
+			if (attribute.tags.amount < 1) {
+				// Remove
+				attributes.splice(i, 1)
+				break
+			}
 		}
 	}
 }

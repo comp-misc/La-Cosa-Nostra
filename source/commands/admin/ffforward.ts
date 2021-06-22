@@ -10,8 +10,9 @@ const forceFastForward: AdminCommand = async (message) => {
 
 	const game = getTimer().game
 
-	await message.channel.send(":ok: Forcing fastforward.")
+	await message.channel.send("Force fastforwarding...")
 	await game.fastforward()
+	await message.channel.send(":ok: Force fastforwarding completed")
 }
 
 export default makeCommand(forceFastForward, {
