@@ -24,8 +24,6 @@ const serial_killer: WinCondition = async (game) => {
 serial_killer.STOP_GAME = true
 serial_killer.STOP_CHECKS = false
 
-serial_killer.FACTIONAL = false
-
 serial_killer.PRIORITY = 2
 serial_killer.CHECK_ONLY_WHEN_GAME_ENDS = false
 

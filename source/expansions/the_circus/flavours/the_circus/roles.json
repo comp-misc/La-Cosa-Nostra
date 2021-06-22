@@ -1,0 +1,8 @@
+{
+	"jester": [
+		{
+			"name": "clown",
+			"description": "Welcome to ${game.name}! You are the Clown.\n\nRole Abilities:\n - You have no abilities.\n\nWin Condition: You can win if you are successfully lynched during the day."
+		}
+	]
+}

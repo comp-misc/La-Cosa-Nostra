@@ -14,8 +14,6 @@ const town: WinCondition = async (game) => {
 town.STOP_GAME = true
 town.STOP_CHECKS = false
 
-town.FACTIONAL = true
-
 town.PRIORITY = 3
 town.CHECK_ONLY_WHEN_GAME_ENDS = false
 

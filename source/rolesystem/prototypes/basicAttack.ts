@@ -1,5 +1,5 @@
 import { Actionable, ExecutionParams } from "../../systems/game_templates/Actions"
-import Game from "../../systems/game_templates/Game"
+import Game, { KillCircumstances } from "../../systems/game_templates/Game"
 import AttackPrototype from "./AttackPrototype"
 
 const basicAttack: AttackPrototype = async <T>(
@@ -11,14 +11,10 @@ const basicAttack: AttackPrototype = async <T>(
 ) => {
 	const attacked = game.getPlayerOrThrow(actionable.to)
 
-	const attack_parameters: Record<string, any> = {
+	const attack_parameters: KillCircumstances = {
 		attacker: actionable.from,
-		target: actionable.to,
 		priority: actionable.priority,
 		strength: 1,
-		astral: astral,
-		reason: basicAttack.reason,
-		secondary_reason: basicAttack.secondary_reason,
 	}
 
 	await game.execute("attacked", attack_parameters)

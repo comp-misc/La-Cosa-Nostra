@@ -30,7 +30,7 @@ import { RolePermission } from "../executable/misc/createPrivateChannel"
 import flavours, { FlavourData } from "../flavours"
 import Actions, { Actionable, ActionOptions, ExecutionParams, Trigger } from "./Actions"
 import Logger from "./Logger"
-import Player, { FFStatus } from "./Player"
+import Player, { FFStatus, PlayerIdentifier } from "./Player"
 import saveGame from "./saveGame"
 import Timer from "./Timer"
 
@@ -75,10 +75,17 @@ export interface DeathBroadcast {
 	playerId: string
 	reason: string
 	position_offset: number
+	circumstances: KillCircumstances
 }
 export interface DeathMessage {
 	role: string
 	reason: string
+}
+export interface KillCircumstances {
+	attacker?: PlayerIdentifier
+	strength?: number
+	priority?: number
+	type?: string
 }
 export interface SummaryEntry {
 	message: string
@@ -594,7 +601,7 @@ class Game {
 		await this.reloadTrialVoteMessage()
 
 		// Save file
-		this.save()
+		await this.save()
 
 		if (this.hammerActive() && !this.voting_halted) {
 			await this.checkLynchHammer()
@@ -1029,7 +1036,7 @@ class Game {
 		reason: string,
 		secondary_reason?: string,
 		broadcast_position_offset = 0,
-		circumstances: Record<string, any> = {}
+		circumstances: KillCircumstances = {}
 	): Promise<void> {
 		// Secondary reason is what the player sees
 		// Can be used to mask death but show true
@@ -1048,7 +1055,7 @@ class Game {
 		reason: string,
 		secondary_reason?: string,
 		broadcast_position_offset = 0,
-		circumstances: Record<string, any> = {}
+		circumstances: KillCircumstances = {}
 	): Promise<void> {
 		// Work in progress, should remove emote
 		/*
@@ -1065,7 +1072,7 @@ class Game {
 			circumstances: circumstances,
 		})
 		await executable.misc.kill(this, role)
-		this.primeDeathMessages(role, reason, secondary_reason, broadcast_position_offset)
+		this.primeDeathMessages(role, reason, secondary_reason, broadcast_position_offset, circumstances)
 	}
 
 	async modkill(player: Player): Promise<boolean> {
@@ -1077,8 +1084,14 @@ class Game {
 		return true
 	}
 
-	primeDeathMessages(role: Player, reason: string, secondary?: string, broadcast_position_offset = 0): void {
-		this.addDeathBroadcast(role, reason, broadcast_position_offset)
+	primeDeathMessages(
+		role: Player,
+		reason: string,
+		secondary?: string,
+		broadcast_position_offset = 0,
+		circumstances: KillCircumstances = {}
+	): void {
+		this.addDeathBroadcast(role, reason, broadcast_position_offset, circumstances)
 
 		if (secondary) {
 			this.addDeathMessage(role, secondary)
@@ -1201,13 +1214,14 @@ class Game {
 		await executable.roles.uploadPublicRoleInformation(this, display)
 	}
 
-	private addDeathBroadcast(player: Player, reason: string, position_offset = 0) {
+	private addDeathBroadcast(player: Player, reason: string, position_offset = 0, circumstances: KillCircumstances) {
 		const log = this.getPeriodLog()
 
 		log.death_broadcasts.push({
 			playerId: player.identifier,
-			reason: reason,
-			position_offset: position_offset,
+			reason,
+			position_offset,
+			circumstances,
 		})
 	}
 
@@ -1400,6 +1414,10 @@ class Game {
 
 	getPeriodLog(offset = 0): PeriodLogEntry {
 		return this.period_log[(this.period + offset).toString()]
+	}
+
+	getAllPeriodLogEntries(): PeriodLogEntry[] {
+		return Object.values(this.period_log)
 	}
 
 	getVotesRequired(): number {
@@ -1778,7 +1796,7 @@ class Game {
 		throw new Error(`No role found with name '${name}'`)
 	}
 
-	checkRole(condition: string | PlayerPredicate): boolean {
+	doesPlayerExist(condition: string | PlayerPredicate): boolean {
 		if (typeof condition === "function") {
 			// Check
 			return this.playerExists(condition)
@@ -1808,7 +1826,7 @@ class Game {
 		let ret = false
 
 		for (let i = 0; i < conditions.length; i++) {
-			ret = ret || this.checkRole(conditions[i])
+			ret = ret || this.doesPlayerExist(conditions[i])
 		}
 
 		return ret

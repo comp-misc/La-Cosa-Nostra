@@ -7,7 +7,7 @@ import investigateCmd from "./commands/investigate"
 import roleProperties from "./role.json"
 
 const DESCRIPTION = `
-Welcome to \${game.name} You are a Mafia Role Cop.
+Welcome to \${game.name}! You are a Mafia Role Cop.
 
 Role Abilities:
 - You may each night choose to check what role a player has. You will receive the report next morning.

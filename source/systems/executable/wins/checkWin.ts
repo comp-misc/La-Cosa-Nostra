@@ -41,33 +41,9 @@ export default async (game: Game): Promise<void> => {
 
 		// Check all the nitty gritty configurations of the condition
 
-		let eliminated = true
-		for (let j = 0; j < (condition.ELIMINATED || []).length; j++) {
-			// Check if all dead
-			const query = condition.ELIMINATED[j]
-			const out = game.checkRole(query)
-
-			if (out) {
-				eliminated = false
-				break
-			}
-		}
-
-		let surviving = false
-		for (let j = 0; j < (condition.SURVIVING || []).length; j++) {
-			// Check if all dead
-			const query = condition.SURVIVING[j]
-			const out = game.checkRole(query)
-
-			if (out) {
-				surviving = true
-				break
-			}
-		}
-
-		if (condition.SURVIVING.length < 1 || !condition.SURVIVING) {
-			surviving = true
-		}
+		const eliminated = condition.ELIMINATED.every((query) => !game.doesPlayerExist(query))
+		const surviving =
+			condition.SURVIVING.length === 0 || condition.SURVIVING.some((query) => game.doesPlayerExist(query))
 
 		if (eliminated && surviving) {
 			// Run the condition

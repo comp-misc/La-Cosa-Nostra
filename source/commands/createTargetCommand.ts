@@ -34,7 +34,7 @@ export const createTargetCommand = (command: TargetRoleCommand, data: TargetComm
 			await command(game, message, "nobody", player)
 			return
 		}
-		const playerMatch = game.getPlayerMatch(params[0])
+		const playerMatch = game.getPlayerMatch(playerName)
 		if (playerMatch.score < threshold) {
 			await message.reply(":x: Unknown player")
 			return

@@ -6,13 +6,25 @@ import Player from "./game_templates/Player"
 
 export interface WinCondition {
 	(game: Game): boolean | Promise<boolean>
+
+	/** Should the game end after they win? */
 	STOP_GAME: boolean
+
+	/** No other roles will be checked, equates to a solo win condition */
 	STOP_CHECKS: boolean
-	FACTIONAL: boolean
+
+	/** Priority of the win condition. Lower values will be checked first */
 	PRIORITY: number
+
+	/** List of players/alignments/classes which must be eliminated to win */
 	ELIMINATED: string[]
+
+	/** List of players/alignments/classes which can survive to win */
 	SURVIVING: (string | ((player: Player) => boolean))[]
+
+	/** List of roles which cannot win if this win condition succeeds */
 	PREVENT_CHECK_ON_WIN: string[]
+
 	DESCRIPTION: string
 	CHECK_ONLY_WHEN_GAME_ENDS?: boolean
 }

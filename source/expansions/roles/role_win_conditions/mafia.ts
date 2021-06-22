@@ -28,8 +28,6 @@ const mafia: WinCondition = async (game) => {
 mafia.STOP_GAME = true
 mafia.STOP_CHECKS = false
 
-mafia.FACTIONAL = true
-
 mafia.PRIORITY = 3
 mafia.CHECK_ONLY_WHEN_GAME_ENDS = false
 

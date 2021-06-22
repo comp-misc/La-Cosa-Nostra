@@ -100,7 +100,7 @@ class Player {
 	modular_log?: string[]
 	modular_success_log?: string[]
 
-	ffstatus: FFStatus
+	ffstatus: FFStatus = FFStatus.OFF
 
 	previousRoles: PlayerRole[] = []
 
@@ -113,11 +113,6 @@ class Player {
 		this.role = new PlayerRole(role, this)
 
 		const roleProperties = this.role.properties
-		if (roleProperties["has-actions"] || roleProperties["has-actions"] === undefined) {
-			this.ffstatus = FFStatus.OFF
-		} else {
-			this.ffstatus = FFStatus.AUTO
-		}
 
 		this.see_mafia_chat = roleProperties["see-mafia-chat"]
 
@@ -426,6 +421,10 @@ class Player {
 	private async postIntro() {
 		// Post intro
 		await executable.roles.postRoleIntroduction(this)
+		const postInfo = this.role.role.postAdditionalRoleInformation
+		if (postInfo) {
+			await postInfo(this)
+		}
 	}
 
 	get initialRole(): PlayerRole {
@@ -674,7 +673,8 @@ class Player {
 			)
 		} else if (this.ffstatus === FFStatus.OFF) {
 			await channel.send(
-				"Please use `!ff on` once you have used all your night actions and are ready to skip the night"
+				"Please use `!ff on` once you have used all your night actions and are ready to skip the night.\n" +
+					"To enable automatic fast forwarding from now on, use `!ff auto`"
 			)
 		}
 	}

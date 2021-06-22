@@ -14,7 +14,7 @@ Factional Abilities:
 - You are given a common mafia night chat with the other mafias.
 - You may each night use the mafia factional kill on a player.
 
-Win Condition: You win when mafia gains majority and all other threats are eliminated."
+Win Condition: You win when mafia gains majority and all other threats are eliminated.
 `.trim()
 
 export default class MafiaBulletproof implements ProgrammableRole<null> {

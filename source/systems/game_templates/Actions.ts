@@ -468,4 +468,8 @@ export default class Actions {
 	private removeUndefinedActionables(): void {
 		this.actions = this.actions.filter((action) => !!action)
 	}
+
+	getPreviousVisitLog(): ExecutionParams[] {
+		return this.previous_visit_log
+	}
 }

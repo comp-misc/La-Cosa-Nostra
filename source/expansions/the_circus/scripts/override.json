@@ -1,0 +1,88 @@
+{
+	"messages": {
+		"name": "The Circus",
+
+		"game-start": "**Welcome to The Circus.**\nThis is the general chat channel and the primary platform for gameplay discussion. All players are able to see this channel.",
+		"whisper-log": "**This is the Note-Board.**\n\nThis is a secondary general discussion channel. Players are advised to direct the purpose of this channel to suit their needs.",
+		"mafia": "**This is the Mafia Chat.**\n\nThis channel is only open at night for members of the Mafia to communicate.",
+
+		"opening-quote": "This aint no time for clowning around",
+		"daytime-quote": "**Rise and shine! The day has begun**",
+		"nighttime-quote": "**Night has descended. This chat is now locked until Daytime starts. Remember to use your night actions if you intend to!**",
+		"no-summary": "Nothing of importance was uncovered.",
+		"no-summary-day": "The town chose to not lynch anyone.",
+
+		"singular-lynch": ":skull_crossbones: {;player} is dragged kicking and screaming to the fire pit. An old match is used to ignite loose paper and sticks, and soon the air is filled with the victim's screams as the smell of human ashes haunts you into the night",
+		"plural-lynch": ":skull_crossbones: {;players} are dragged kicking and screaming to the fire pit. An old match is used to ignite loose paper and sticks, and soon the air is filled with the screams of the victims as the smell of human ashes haunts you into the night",
+		"abstain-lynch": "**The Town has spared the life of its members for today.**",
+
+		"game-over": "**Game over!**\n\nThis channel is now open to everyone who has participated in the game.",
+
+		"welcome-dm-message": null,
+		"welcome-message": null
+	},
+
+	"game": {
+		"playersNeeded": 18,
+		"show-roles": false,
+
+		"mafia": {
+			"has-chat": true,
+			"chat-name": "mafia",
+			"night-only": true
+		},
+
+		"town": {
+			"night-chat": false
+		},
+
+		"fast-forwarding": {
+			"allow": true,
+			"ratio": 1,
+
+			"night": true,
+			"day": true
+		},
+
+		"day-zero": true,
+		"lynch-ratio-floored": 0,
+
+		"lynch": {
+			"top-voted-lynch": true,
+			"top-voted-lynch-minimum-votes": 0,
+
+			"tied-random": true,
+
+			"allow-hammer": true,
+			"no-lynch-option": true
+		},
+
+		"minimum-lynch-votes": 2,
+		"minimum-nolynch-votes": 2,
+		"minimum-trials": 1,
+
+		"allow-pre-emptive-votes": false,
+
+		"last-wills": {
+			"allow": false,
+			"character-count-limit": 800
+		},
+
+		"whispers": {
+			"allow": false,
+
+			"night": false,
+			"day": true,
+
+			"broadcast": true,
+
+			"allow-dead": false
+		},
+
+		"cause-of-death": {
+			"hide-day": true,
+			"hide-night": true,
+			"exceptions": ["modkill", "__shot__"]
+		}
+	}
+}

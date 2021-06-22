@@ -14,8 +14,6 @@ const stalemate: WinCondition = (game) => {
 stalemate.STOP_GAME = true
 stalemate.STOP_CHECKS = false
 
-stalemate.FACTIONAL = true
-
 stalemate.PRIORITY = 10
 stalemate.CHECK_ONLY_WHEN_GAME_ENDS = false
 

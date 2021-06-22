@@ -6,7 +6,7 @@ import auxils from "./auxils"
 export interface FlavourRoleData {
 	name: string
 	/** File location of banner */
-	banner: string
+	banner?: string
 	description: string
 }
 export interface AssetSwap {

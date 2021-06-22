@@ -90,5 +90,7 @@ export interface ProgrammableRole<T> {
 
 	onStart(player: Player): void | Promise<void>
 
+	postAdditionalRoleInformation?: (player: Player) => void | Promise<void>
+
 	onRoutines(player: Player): void | Promise<void>
 }
