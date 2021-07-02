@@ -73,7 +73,7 @@ export default class TownNoU implements ProgrammableRole<NoUConfig> {
 	}
 
 	onUse(): void {
-		this.config.uses = this.getUses() - 1
+		this.config.uses = this.getUses() + 1
 	}
 
 	getRoleCard(): Promise<Buffer> {
