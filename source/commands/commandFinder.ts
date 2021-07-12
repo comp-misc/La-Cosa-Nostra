@@ -12,16 +12,18 @@ export const getRoleCommandsFor = (member: GuildMember, channel: Channel): Comma
 	if (!player) {
 		return []
 	}
-	const validCommands = player.role.role.commands.filter(({ command }) => {
-		const { PRIVATE_ONLY, attribute } = command
-		if (attribute && !player.hasAttribute(attribute)) {
-			return false
-		}
-		if (PRIVATE_ONLY && channel.id !== player.channel?.id) {
-			return false
-		}
-		return true
-	})
+	const validCommands = player.role.allParts
+		.flatMap((p) => p.commands)
+		.filter(({ command }) => {
+			const { PRIVATE_ONLY, attribute } = command
+			if (attribute && !player.hasAttribute(attribute)) {
+				return false
+			}
+			if (PRIVATE_ONLY && channel.id !== player.channel?.id) {
+				return false
+			}
+			return true
+		})
 	return validCommands.map((cmd) => ({
 		...cmd,
 		type: "role",

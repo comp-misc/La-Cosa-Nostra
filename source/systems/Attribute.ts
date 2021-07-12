@@ -1,6 +1,6 @@
 import Player, { PlayerAttribute } from "./game_templates/Player"
-import { RoleRoutine } from "./Role"
 import { CommandType, RoleCommand } from "../commands/CommandType"
+import { RoleRoutine } from "../role"
 
 export interface DisplayField {
 	name: string
@@ -27,8 +27,7 @@ export interface Attribute {
 }
 
 export interface AttributeStart {
-	//TODO What is this boolean used to indicate?
-	(player: Player, attribute: PlayerAttribute, boolean: boolean): void | Promise<void>
+	(player: Player, attribute: PlayerAttribute, isGameStart: boolean): void | Promise<void>
 	DO_NOT_RUN_ON_GAME_START?: boolean
 	DO_NOT_RUN_ON_ADDITION?: boolean
 }

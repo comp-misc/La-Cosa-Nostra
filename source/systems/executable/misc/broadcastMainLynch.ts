@@ -15,7 +15,7 @@ export default async function (game: Game, roles: Player[]): Promise<void> {
 
 	const lynched = auxils.pettyFormat(
 		roles.map((role) => {
-			role.misc.time_of_death = game.getPeriod() + 0.2
+			role.time_of_death = game.getPeriod() + 0.2
 			return "**" + role.getDisplayName() + "**"
 		})
 	)

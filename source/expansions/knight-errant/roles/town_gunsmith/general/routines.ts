@@ -1,4 +1,4 @@
-import { RoleRoutine } from "../../../../../systems/Role"
+import { RoleRoutine } from "../../../../../role"
 
 const routines: RoleRoutine = async (player) => {
 	const config = player.getGame().config

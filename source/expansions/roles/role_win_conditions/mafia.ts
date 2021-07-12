@@ -8,12 +8,12 @@ const mafia: WinCondition = async (game) => {
 	// Return true to determine win
 
 	const alive = game.findAllPlayers((x) => x.isAlive())
-	const mafia = game.findAllPlayers((x) => x.role.properties.alignment === "mafia" && x.isAlive())
+	const mafia = game.findAllPlayers((x) => x.role.properties.alignment.id === "mafia" && x.isAlive())
 
 	if (mafia.length >= alive.length / 2) {
 		// Parity reached
 
-		const winners = game.findAllPlayers((x) => x.role.properties.alignment === "mafia" && x.canWin())
+		const winners = game.findAllPlayers((x) => x.role.properties.alignment.id === "mafia" && x.canWin())
 
 		await game.setWins(winners)
 		await game.getMainChannel().send(auxils.getAssetAttachment("mafia-wins.png"))
@@ -25,6 +25,7 @@ const mafia: WinCondition = async (game) => {
 	return false
 }
 
+mafia.id = "mafia"
 mafia.STOP_GAME = true
 mafia.STOP_CHECKS = false
 
@@ -38,6 +39,6 @@ mafia.SURVIVING = ["mafia"]
 
 mafia.PREVENT_CHECK_ON_WIN = []
 
-mafia.DESCRIPTION = "Destroy anybody who would not submit to the Mafia."
+mafia.DESCRIPTION = "You win when mafia gains majority and all other threats are eliminated."
 
 export default mafia

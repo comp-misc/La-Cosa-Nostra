@@ -11,6 +11,7 @@ const stalemate: WinCondition = (game) => {
 	return false
 }
 
+stalemate.id = "stalemate"
 stalemate.STOP_GAME = true
 stalemate.STOP_CHECKS = false
 

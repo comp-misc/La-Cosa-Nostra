@@ -1,33 +1,41 @@
-import { instantiateRole } from "../../../systems/roles"
-import ConsecutiveTargetConfig from "../../roles/roles/ConsecutiveTargetConfig"
-import MafiaGoon from "../../roles/roles/mafia_goon"
-import MafiaRoleCop from "../../roles/roles/mafia_role_cop"
-import TownDoctor from "../../roles/roles/town_doctor"
-import TownJailkeeper from "../../roles/roles/town_jailkeeper"
-import TownMotionDetector from "../../roles/roles/town_motion_detector"
-import TownRoleblocker from "../../roles/roles/town_roleblocker"
-import TownTracker from "../../roles/roles/town_tracker"
-import VanillaTownie from "../../roles/roles/town_vanilla_townie"
-import TownVigilante, { KillStage } from "../../roles/roles/town_vigilante"
-import TownVoyeur from "../../roles/roles/town_voyeur"
-import JackOfAllTrades from "../roles/jack_of_all_trades"
+import { createRoleInfo } from "../../../role"
+import Doctor from "../../roles/parts/doctor"
+import Goon from "../../roles/parts/goon"
+import JailKeeper from "../../roles/parts/jailkeeper"
+import MotionDetector from "../../roles/parts/motion_detector"
+import Roleblocker from "../../roles/parts/roleblocker"
+import RoleCop from "../../roles/parts/role_cop"
+import { RoleUsePeriod } from "../../roles/parts/targetableRolePart"
+import Tracker from "../../roles/parts/tracker"
+import VanillaTownie from "../../roles/parts/vanilla_townie"
+import Vigilante from "../../roles/parts/vigilante"
+import Voyeur from "../../roles/parts/voyeur"
+import BasicMafia from "../../roles/roles/basic_mafia"
+import Town from "../../roles/roles/town"
+import JackOfAllTrades from "../parts/jack_of_all_trades"
 
-const cooldownConfig: ConsecutiveTargetConfig = {
-	sameTargetCooldown: 1,
-}
-export const mafiaGoon = instantiateRole(MafiaGoon)
-export const mafiaRoleCop = instantiateRole(MafiaRoleCop, {
-	allowMultipleActions: true,
-})
+const town = new Town()
+const mafia = new BasicMafia({})
 
-export const townDoctor = instantiateRole(TownDoctor, cooldownConfig)
-export const townVigilante = instantiateRole(TownVigilante, {
-	stages: [KillStage.EVEN_NIGHT],
-})
-export const townJackOfAllTrades = instantiateRole(JackOfAllTrades)
-export const townJailkeeper = instantiateRole(TownJailkeeper, cooldownConfig)
-export const townMotionDetector = instantiateRole(TownMotionDetector)
-export const townRoleblocker = instantiateRole(TownRoleblocker, cooldownConfig)
-export const townTracker = instantiateRole(TownTracker)
-export const vanillaTownie = instantiateRole(VanillaTownie)
-export const townVoyeur = instantiateRole(TownVoyeur)
+export const mafiaGoon = createRoleInfo(mafia, new Goon())
+export const mafiaRoleCop = createRoleInfo(mafia, new RoleCop({}))
+
+export const townDoctor = createRoleInfo(town, new Doctor({ sameTargetCooldown: 1 }))
+export const townVigilante = createRoleInfo(
+	town,
+	new Vigilante({
+		periods: {
+			type: "even",
+			on: RoleUsePeriod.NIGHT,
+		},
+	})
+)
+
+export const townJackOfAllTrades = createRoleInfo(town, new JackOfAllTrades())
+
+export const townJailkeeper = createRoleInfo(town, new JailKeeper({ sameTargetCooldown: 1 }))
+export const townMotionDetector = createRoleInfo(town, new MotionDetector({}))
+export const townRoleblocker = createRoleInfo(town, new Roleblocker({ sameTargetCooldown: 1 }))
+export const townTracker = createRoleInfo(town, new Tracker({}))
+export const vanillaTownie = createRoleInfo(town, new VanillaTownie())
+export const townVoyeur = createRoleInfo(town, new Voyeur({}))

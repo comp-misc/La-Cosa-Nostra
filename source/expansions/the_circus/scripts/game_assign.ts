@@ -1,46 +1,59 @@
 import { GameAssignScript } from "../../../Expansion"
-import { instantiateRole } from "../../../systems/roles"
-import Jester from "../../roles/roles/3p_jester"
-import BaseMafiaConfig from "../../roles/roles/BaseMafiaConfig"
-import MafiaGoon from "../../roles/roles/mafia_goon"
-import MafiaRoleCop from "../../roles/roles/mafia_role_cop"
-import TownBulletproof from "../../roles/roles/town_bulletproof"
-import VanillaTownie from "../../roles/roles/town_vanilla_townie"
+import { createRoleInfo } from "../../../role"
+import Bulletproof from "../../roles/parts/bulletproof"
+import Goon from "../../roles/parts/goon"
+import RoleCop from "../../roles/parts/role_cop"
+import VanillaTownie from "../../roles/parts/vanilla_townie"
+import BasicMafia from "../../roles/roles/basic_mafia"
+import Jester from "../../roles/roles/jester"
+import Town from "../../roles/roles/town"
+import CrimeSceneInvestigator from "../parts/crime_scene_investigator"
+import Escapee from "../parts/escapee"
+import InsuranceBroker from "../parts/insurance_broker"
+import Lobbyist from "../parts/lobbyist"
+import Marksman from "../parts/marksman"
+import NoU from "../parts/no_u"
+import Socialiser from "../parts/socialiser"
 import CorruptPolitician from "../roles/corrupt_politician"
-import MafiaEscapee from "../roles/mafia_escapee"
-import MafiaLobbyist from "../roles/mafia_lobbyist"
-import CrimeSceneInvestigator from "../roles/town_crime_scene_investigator"
-import TownInsuranceBroker from "../roles/town_insurance_broker"
-import TownMarksman from "../roles/town_marksman"
-import TownNoU from "../roles/town_no_u"
-import TownSocialiser from "../roles/town_socialiser"
 
 const gameAssign: GameAssignScript = (config) => {
-	const mafiaConfig: BaseMafiaConfig = {
-		allowMultipleActions: true,
-	}
-	const jester = instantiateRole(Jester)
-	const lobbyist = instantiateRole(MafiaLobbyist, mafiaConfig)
-	const mafiaRolecop = instantiateRole(MafiaRoleCop, mafiaConfig)
-	const mafiaGoon = instantiateRole(MafiaGoon)
-	const mafiaEscapee = instantiateRole(MafiaEscapee)
-	const crimeSceneInvestigator = instantiateRole(CrimeSceneInvestigator, {
-		maximumUses: 2,
-		totalSuspects: 3,
-	})
-	const marksman = instantiateRole(TownMarksman, {
-		bullets: 1,
-		killProbability: 0.7,
-		missProbability: 0.15,
-		selfInflictProbability: 0.15,
-	})
-	const townBulletproof = instantiateRole(TownBulletproof)
-	const townSocialiser = instantiateRole(TownSocialiser)
-	const townNou = instantiateRole(TownNoU, {
-		maximumUses: 2,
-	})
-	const townInsuranceBroker = instantiateRole(TownInsuranceBroker)
-	const corruptPolitician = instantiateRole(CorruptPolitician, mafiaConfig)
+	const town = new Town()
+	const mafia = new BasicMafia({})
+
+	const jester = createRoleInfo(new Jester())
+
+	const lobbyist = createRoleInfo(mafia, new Lobbyist({}))
+	const mafiaRolecop = createRoleInfo(mafia, new RoleCop({}))
+	const mafiaGoon = createRoleInfo(mafia, new Goon())
+	const mafiaEscapee = createRoleInfo(mafia, new Escapee())
+
+	const crimeSceneInvestigator = createRoleInfo(
+		town,
+		new CrimeSceneInvestigator({
+			uses: 2,
+			totalSuspects: 3,
+		})
+	)
+	const marksman = createRoleInfo(
+		town,
+		new Marksman({
+			bullets: 1,
+			killProbability: 1,
+			missProbability: 0,
+			selfInflictProbability: 0,
+		})
+	)
+	const townBulletproof = createRoleInfo(town, new Bulletproof())
+	const townSocialiser = createRoleInfo(town, new Socialiser({}))
+	const townNoU = createRoleInfo(
+		town,
+		new NoU({
+			maximumUses: 2,
+		})
+	)
+
+	const townInsuranceBroker = createRoleInfo(town, new InsuranceBroker({}))
+	const corruptPolitician = createRoleInfo(new CorruptPolitician())
 
 	return {
 		...config,
@@ -55,10 +68,10 @@ const gameAssign: GameAssignScript = (config) => {
 			marksman, //g
 			townBulletproof, //h
 			townSocialiser, //i
-			townNou, //j
+			townNoU, //j
 			townInsuranceBroker, //k
 			corruptPolitician, //l
-			...Array.from({ length: 6 }, () => instantiateRole(VanillaTownie)), //m-r
+			...Array.from({ length: 6 }, () => createRoleInfo(town, new VanillaTownie())), //m-r
 		],
 	}
 }

@@ -7,7 +7,7 @@ const commute: RoleCommand = async (game, message, params, from) => {
 	const actions = game.actions
 	const config = game.config
 
-	if (from.misc.commutes_left < 1) {
+	if ((from.misc.commutes_left as number) < 1) {
 		await message.reply(":x: No commutes left")
 		return
 	}

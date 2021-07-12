@@ -12,18 +12,18 @@ const getSummary = (game: Game) => {
 	for (const player of players) {
 		if (!player.status.alive) {
 			let alignment: string
-			if (player.role.properties.alignment === "town") {
+			if (player.role.properties.alignment.id === "town") {
 				alignment = "🏡"
-			} else if (["mafia", "mafia_team_1", "mafia_team_2"].includes(player.role.properties.alignment)) {
+			} else if (["mafia", "mafia_team_1", "mafia_team_2"].includes(player.role.properties.alignment.id)) {
 				alignment = "👨‍⚖️"
 			} else {
 				alignment = "🌒"
 			}
 
-			if (player.misc.time_of_death == undefined) {
+			if (player.time_of_death == undefined) {
 				information_list.push([game.getPeriod() + 0.1, alignment + " " + player.getDisplayName()])
 			} else {
-				information_list.push([player.misc.time_of_death, alignment + " " + player.getDisplayName()])
+				information_list.push([player.time_of_death, alignment + " " + player.getDisplayName()])
 			}
 		} else {
 			survivors_display = survivors_display + player.getDisplayName() + ", "
@@ -111,19 +111,11 @@ const postWinLog = async (game: Game, faction: string, description: string): Pro
 	const players = game.players
 	const concat = []
 
-	const flavour = game.getGameFlavour()
-
-	let display_role_equivalent = false
-
-	if (flavour && flavour.info["display-role-equivalent-in-win-log"]) {
-		display_role_equivalent = true
-	}
-
 	for (let i = 0; i < players.length; i++) {
 		const player = players[i]
 		const display_name = player.getDisplayName()
 
-		let text = "**" + display_name + "**: " + player.initialRole.getName(display_role_equivalent)
+		let text = "**" + display_name + "**: " + player.initialRoleName
 
 		if (player.getStatus("won") === true) {
 			// Add a star

@@ -8,3 +8,16 @@ export default <T>(array: T[]): T[] => {
 	}
 	return ret
 }
+
+export const getUniqueBy = <T, R>(array: T[], uniqueBy: (item: T) => R): T[] => {
+	const unique = new Set<R>()
+	const result: T[] = []
+	for (const item of array) {
+		const key = uniqueBy(item)
+		if (!unique.has(key)) {
+			unique.add(key)
+			result.push(item)
+		}
+	}
+	return result
+}

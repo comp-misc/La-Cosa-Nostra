@@ -1,7 +1,7 @@
 // Executes BEFORE introduction
 
+import { RoleStart } from "../../../../../role"
 import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
-import { RoleStart } from "../../../../../systems/Role"
 
 const start: RoleStart = async (player) => {
 	await player.getGame().addAction("town_gunsmith/roleblock_noresult", ["roleblock"], {

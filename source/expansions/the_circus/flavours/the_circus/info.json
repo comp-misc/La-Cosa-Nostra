@@ -5,7 +5,6 @@
 	"display-role-equivalent-on-death": false,
 	"display-role-equivalent-in-win-log": false,
 	"investigator-sees-flavour-role": true,
-	"show-role-category": false,
 	"post-role-card-and-description-on-death": true,
 	"display-standard-role-details": false
 }

@@ -1,5 +1,5 @@
+import { RoleStart } from "../../../../../role"
 import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
-import { RoleStart } from "../../../../../systems/Role"
 
 const start: RoleStart = async (player) => {
 	if (

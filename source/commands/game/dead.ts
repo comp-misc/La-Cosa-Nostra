@@ -29,13 +29,13 @@ const dead: GameCommand = async (game, message) => {
 	for (const role of deadPlayers) {
 		players_dead++
 
-		if (role.misc.time_of_death == undefined) {
-			role.misc.time_of_death = game.getPeriod()
+		if (role.time_of_death == undefined) {
+			role.time_of_death = game.getPeriod()
 			information_list.push([game.getPeriod(), role])
 		} else {
 			//if already defined -> either because, 1) defined here before or 2) defined in .../executable_misc/getDeathMessage.js
 
-			information_list.push([role.misc.time_of_death, role])
+			information_list.push([role.time_of_death, role])
 		}
 	}
 
@@ -58,7 +58,7 @@ const dead: GameCommand = async (game, message) => {
 				": " +
 				sorted_list[i][1].getDisplayName() +
 				" - " +
-				sorted_list[i][1].role.getDisplayName() +
+				sorted_list[i][1].role.getDeathName() +
 				"\n"
 		}
 

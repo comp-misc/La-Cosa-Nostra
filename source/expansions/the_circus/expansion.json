@@ -8,20 +8,18 @@
 
 	"overrides": {
 		"flavours": ["the_circus/the_circus"],
-		"role_win_conditions": ["roles/town", "roles/mafia", "roles/stalemate", "roles/jester"],
-		"roles": [
-			"roles/mafia_goon",
-			"roles/mafia_role_cop",
-			"roles/town_bulletproof",
-			"roles/town_alignment_cop",
-			"roles/town_vanilla_townie",
-			"roles/3p_jester",
-			"the_circus/corrupt_politician",
-			"the_circus/mafia_lobbyist",
-			"the_circus/town_crime_scene_investigator",
-			"the_circus/town_marksman",
-			"the_circus/town_paparazzi",
-			"the_circus/town_no_u"
+		"role_win_conditions": ["roles/town", "roles/mafia", "roles/stalemate"],
+		"roles": ["roles/mafia", "roles/town", "roles/jester", "the_circus/*"],
+		"parts": [
+			"roles/mafia_communication",
+			"roles/mafia_faction_kill",
+
+			"roles/goon",
+			"roles/role_cop",
+			"roles/bulletproof",
+			"roles/vanilla_townie",
+
+			"the_circus/*"
 		]
 	},
 

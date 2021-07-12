@@ -11,7 +11,7 @@ const unstoppableAttack: AttackPrototype = async <T>(
 ): Promise<boolean> => {
 	const attacked = game.getPlayerByIdentifierOrThrow(actionable.to)
 
-	const attack_parameters: Record<string, any> = {
+	const attack_parameters: Record<string, unknown> = {
 		attacker: actionable.from,
 		target: actionable.to,
 		priority: actionable.priority,

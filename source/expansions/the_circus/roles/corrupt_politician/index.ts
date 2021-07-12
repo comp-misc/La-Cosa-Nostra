@@ -1,84 +1,83 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { CommandProperties, RoleCommand } from "../../../../commands/CommandType"
+import { BasicCompleteRole, CompleteRoleProperties, RoleDescriptor, RoutineProperties } from "../../../../role"
+import Game from "../../../../systems/game_templates/Game"
 import Player from "../../../../systems/game_templates/Player"
-import { ProgrammableRole, RoleProperties, RoutineProperties } from "../../../../systems/Role"
-import BaseMafiaConfig from "../../../roles/roles/BaseMafiaConfig"
-import roleProperties from "./role.json"
+import { WinCondition } from "../../../../systems/win_conditions"
+import MafiaCommunication from "../../../roles/parts/mafia_communication"
+import MafiaFactionKill from "../../../roles/parts/mafia_faction_kill"
+import mafiaWinCon from "../../../roles/role_win_conditions/mafia"
+import townWinCon from "../../../roles/role_win_conditions/town"
 
-const DESCRIPTION = `
-Welcome to \${game.name}! You are a Corrupt Politician.
-
-Life is tough you know? While you primarily work for your citizens, you can be bribed to join the Mafia.
-
-At night, Mafia may attempt to bribe a player to join their organisation, however they are unaware which players are corrupt (including you!)
-
-Role Abilities:
-- As Town: You have the ability to be bribed and join the Mafia.
-- As Mafia: 
-   - Factional Communication: Each night phase, you may communicate with your group.
-   - Factional Kill: Each night phase, you may send a member of your group to target another player in the game, attempting to kill them.
-
-Win Condition: 
- - As Town:  You win when all threats to town have been eliminated and there is at least one member of town left.
- - As Mafia: You win when Mafia gains a majority and all other threats are eliminated.
-`.trim()
-
-export interface CorruptPoliticianConfig extends BaseMafiaConfig {
-	isCorrupt?: boolean
+export interface State {
+	isCorrupt: boolean
 }
 
-export default class CorruptPolitician implements ProgrammableRole<CorruptPoliticianConfig> {
-	readonly config: CorruptPoliticianConfig
-	readonly properties: RoleProperties = roleProperties
+export default class CorruptPolitician extends BasicCompleteRole<null, State> {
 	readonly commands: CommandProperties<RoleCommand>[] = []
-
-	constructor(config: CorruptPoliticianConfig) {
-		this.config = config
-		if (this.config.isCorrupt) {
-			this.properties.alignment = "mafia"
-			this.properties["see-mafia-chat"] = true
-		}
-	}
-
-	async bribe(player: Player): Promise<void> {
-		const game = player.getGame()
-		const member = player.getGuildMember()
-		if (member) {
-			const mafiaChannel = game.getChannel(game.channels.mafia.id)
-			if (!mafiaChannel) {
-				throw new Error("No mafia channel found")
-			}
-			const readPerms = game.config["base-perms"].read
-			await mafiaChannel.createOverwrite(member, readPerms)
-			player.addSpecialChannel(mafiaChannel)
-		}
-
-		this.properties.alignment = "mafia"
-		this.properties["see-mafia-chat"] = true
-
-		await player.addAttribute("mafia_factionkill")
-		this.config.isCorrupt = true
-		game.addMessage(player, ":moneybag: You have been bribed and will join the Mafia chat")
-		player.see_mafia_chat = true
-	}
-
-	isCorrupt(): boolean {
-		return this.config.isCorrupt === true
-	}
-
-	getDescription(): string {
-		return DESCRIPTION
-	}
-
-	onStart(): void {
-		this.config.isCorrupt = false
-	}
-
-	onRoutines(): void {}
-
 	readonly routineProperties: RoutineProperties = {
 		ALLOW_DAY: false,
 		ALLOW_DEAD: false,
 		ALLOW_NIGHT: false,
+	}
+
+	constructor(_config?: null, state?: State) {
+		super(null, state || { isCorrupt: false })
+	}
+
+	formatDescriptor(descriptor: RoleDescriptor): void {
+		descriptor.name = "Corrupt Politician"
+		descriptor.flavorText =
+			"Life is tough you know? While you primarily work for your citizens, you can be bribed to join the Mafia.\n\n" +
+			"At night, Mafia may attempt to bribe a player to join their organisation, however they are unaware which players are corrupt (including you!)"
+		descriptor.addDescription("Role Abilities (as Town)", {
+			name: "Bribeable",
+			description: "You have the ability to be bribed and join the Mafia",
+		})
+		descriptor.addDescription(
+			"Role Abilities (as Mafia)",
+			{
+				name: "Communication",
+				description: "Each night phase, you may communicate with your group",
+			},
+			{
+				name: "Kill",
+				description:
+					"Each night phase, you may send one member of your group to target another player in the game, attempting to kill them",
+			}
+		)
+	}
+
+	async bribe(player: Player): Promise<void> {
+		if (this.state.isCorrupt) {
+			return
+		}
+		await player.role.addPart(new MafiaCommunication())
+		await player.role.addPart(new MafiaFactionKill({}))
+		this.state.isCorrupt = true
+
+		player.getGame().addMessage(player, ":moneybag: You have been bribed and will join the Mafia chat")
+	}
+
+	get properties(): CompleteRoleProperties {
+		return {
+			alignment: {
+				id: this.state.isCorrupt ? "mafia" : "town",
+			},
+		}
+	}
+
+	get winCondition(): WinCondition {
+		return this.duplicateWinCondition(this.state.isCorrupt ? mafiaWinCon : townWinCon)
+	}
+
+	isCorrupt(): boolean {
+		return this.state.isCorrupt
+	}
+
+	private duplicateWinCondition(condition: WinCondition): WinCondition {
+		const newCon = (game: Game) => condition(game)
+		Object.assign(newCon, condition)
+		newCon.DESCRIPTION = "As Town: " + townWinCon.DESCRIPTION + "\n - As Mafia: " + mafiaWinCon.DESCRIPTION
+		return newCon as WinCondition
 	}
 }

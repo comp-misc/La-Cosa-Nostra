@@ -4,12 +4,12 @@ import makeCommand from "../makeCommand"
 
 const save: ConsoleCommand = async (client, config, params) => {
 	if (!hasTimer()) {
-		console.error(":x: No savable instance.")
+		console.error("No savable instance.")
 		return
 	}
 	await getTimer().game.save(params[0])
 
-	console.log(":ok: Saved the game.")
+	console.log("Saved the game.")
 }
 
 export default makeCommand(save, {

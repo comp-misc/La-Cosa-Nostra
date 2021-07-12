@@ -1,4 +1,6 @@
 import { RoleActionable } from "../../../../../systems/actionables"
+import AlignmentCop from "../../../../roles/parts/alignment_cop"
+import JailKeeper from "../../../../roles/parts/jailkeeper"
 
 const investigate: RoleActionable = async (actionable, game) => {
 	await game.execute("visit", {
@@ -19,9 +21,13 @@ const investigate: RoleActionable = async (actionable, game) => {
 		game.addMessage(from, ":mag: You got the result of __False__.")
 		return
 	}
+
+	const roleIds = target.role.allPartsMetadata.map((p) => p.identifier)
 	if (
-		["town_alignment_cop", "town_gunsmith", "town_jailkeeper", "serial_killer"].includes(target.role.identifier) ||
-		target.role.properties.alignment === "mafia"
+		target.role.hasPart(JailKeeper) ||
+		target.role.hasPart(AlignmentCop) ||
+		["town_gunsmith", "serial_killer"].some((id) => roleIds.includes(id)) ||
+		target.role.properties.alignment.id === "mafia"
 	) {
 		game.addMessage(from, ":mag: You got the result of __True__.")
 	} else {

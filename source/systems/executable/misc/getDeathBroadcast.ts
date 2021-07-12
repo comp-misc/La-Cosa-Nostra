@@ -8,7 +8,7 @@ export default (game: Game, player: Player, reason: string): string => {
 
 	message = message.replace(new RegExp("{;player}", "g"), player.getDisplayName())
 	message = message.replace(new RegExp("{;reason}", "g"), reason)
-	message = message.replace(new RegExp("{;role}", "g"), player.role.getDisplayName(true))
+	message = message.replace(new RegExp("{;role}", "g"), player.role.getDeathName())
 
 	if (game.config.game["last-wills"].allow) {
 		let will = "We could not find a last will."

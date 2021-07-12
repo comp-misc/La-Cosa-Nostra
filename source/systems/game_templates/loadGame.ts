@@ -3,47 +3,57 @@ import fs from "fs"
 import { PathLike } from "node:fs"
 import jsonReviver from "../../auxils/jsonReviver"
 import botDirectories from "../../BotDirectories"
+import getLogger from "../../getLogger"
 import { LcnConfig } from "../../LcnConfig"
-import { Role } from "../Role"
+import { LoadedRoleMetadata, RoleInfo } from "../../role"
 import getRoles from "../roles"
 import Actions from "./Actions"
 import Game from "./Game"
 import Player from "./Player"
-import PlayerRole from "./PlayerRole"
-import { SerializedRole } from "./saveGame"
+import { SerializedRole, SerializedRolePart } from "./saveGame"
 import Timer from "./Timer"
 
 const data_directory = botDirectories.data
 
-const loadRole = (role: SerializedRole, file: PathLike): Role => {
-	const roles = getRoles()
-	const roleData = Object.values(roles).find(
-		(r) => r.identifier === role.identifier && r.expansion === role.expansion
-	)
-	if (!roleData) {
-		throw new Error(
-			`Unable to find role '${role.identifier}' from expansion '${role.expansion}' in file ${file.toString()}`
-		)
+const getId = (part: SerializedRolePart): string => part.expansion + "/" + part.identifier
+
+const loadRolePartMetadata = (part: SerializedRolePart): LoadedRoleMetadata => {
+	const metadata = getRoles()[getId(part)]
+	if (!metadata) {
+		throw new Error(`No role loaded with id '${getId(part)}'`)
 	}
-	const result: Role = {
-		...roleData,
-		role: new roleData.roleClass(role.config),
+	return metadata
+}
+
+const loadRole = (role: SerializedRole): RoleInfo => {
+	const main = loadRolePartMetadata(role.main)
+	if (main.type !== "complete" && main.type !== "legacy") {
+		throw new Error(`Invalid main role '${getId(role.main)}`)
 	}
-	return result
+	return {
+		mainRole: {
+			role: new main.constructor(role.main.config, role.main.state),
+			...main,
+		},
+		parts: role.parts.map((part) => {
+			const metadata = loadRolePartMetadata(part)
+			return {
+				role: new metadata.constructor(part.config, part.state),
+				...metadata,
+			}
+		}),
+	}
 }
 
 const loadPlayer = async (file: PathLike, game: Game): Promise<Player> => {
 	const playerSave = await loadFileJson(file)
 
-	const playerRole = loadRole(playerSave.role, file)
+	const playerRole = loadRole(playerSave.role)
 	//Delete from save to prevent overriding
 	delete playerSave.role
 
 	const player = new Player(game, playerSave.id, playerSave.identifier, playerSave.alphabet, playerRole)
 	Object.assign(player, playerSave)
-	player.previousRoles = (playerSave.previousRoles as SerializedRole[]).map(
-		(data) => new PlayerRole(loadRole(data, file), player)
-	)
 	return player
 }
 
@@ -61,7 +71,12 @@ const loadGame = async (client: Client, config: LcnConfig, saveFolder = "game_ca
 		if (!playerFile.toLowerCase().endsWith(".json")) {
 			continue
 		}
-		game.players.push(await loadPlayer(`${data_directory}/${saveFolder}/players/${playerFile}`, game))
+		try {
+			game.players.push(await loadPlayer(`${data_directory}/${saveFolder}/players/${playerFile}`, game))
+		} catch (e) {
+			getLogger().log(4, "Failed to player file '" + playerFile + "': ")
+			throw e
+		}
 	}
 
 	const actions = new Actions(game)

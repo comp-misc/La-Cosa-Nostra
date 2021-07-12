@@ -1,8 +1,8 @@
 {
 	"playing": {
-		"players": "auto",
+		"players": "dev",
 		"roles": [],
-		"expansions": ["compmeme", "the_circus"],
+		"expansions": ["compmeme", "knight-errant"],
 		"shuffle": true,
 		"flavour": null
 	}

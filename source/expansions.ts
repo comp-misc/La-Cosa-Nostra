@@ -101,6 +101,7 @@ const getExpansions = (identifiers: string[], scanned: Expansion[] = []): Expans
 			additions: {
 				assets: recursiveFileFind(directory + "/assets"),
 				roles: attemptReaddirDirectories(directory + "/roles"),
+				roleParts: attemptReaddirDirectories(directory + "/parts"),
 				flavours: attemptReaddirDirectories(directory + "/flavours"),
 				role_win_conditions: attemptReaddir(directory + "/role_win_conditions"),
 				attributes: attemptReaddirDirectories(directory + "/attributes"),

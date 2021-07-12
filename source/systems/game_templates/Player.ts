@@ -2,12 +2,11 @@ import { Client, Guild, GuildMember, Snowflake, TextChannel, User } from "discor
 import operations from "../../auxils/operations"
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
+import { createRoutines, RoleInfo, RoleRoutine } from "../../role"
 import alpha_table from "../alpha_table"
 import { Attribute } from "../Attribute"
 import attributes from "../attributes"
 import executable from "../executable"
-import { createRoutines, Role, RoleRoutine } from "../Role"
-import win_conditions from "../win_conditions"
 import Game, { VoteMeta } from "./Game"
 import Logger from "./Logger"
 import PlayerRole from "./PlayerRole"
@@ -62,7 +61,7 @@ export enum FFStatus {
 
 export type PlayerIdentifier = string
 
-class Player {
+export default class Player {
 	private readonly client: Client
 	private readonly game: Game
 
@@ -91,9 +90,8 @@ class Player {
 	intro_messages: string[] = []
 	channel: ChannelMeta | undefined = undefined
 	special_channels: ChannelMeta[] = []
-	see_mafia_chat: boolean
 	attributes: PlayerAttribute[] = []
-	misc: Record<string, any> = {}
+	misc: Record<string, unknown> = {}
 	role: PlayerRole
 	tampered_load_times?: Date[]
 
@@ -102,19 +100,18 @@ class Player {
 
 	ffstatus: FFStatus = FFStatus.OFF
 
-	previousRoles: PlayerRole[] = []
+	initialRoleName = ""
+	time_of_death?: number
 
-	constructor(game: Game, id: string, identifier: string, alphabet: keyof typeof alpha_table, role: Role) {
+	constructor(game: Game, id: string, identifier: string, alphabet: keyof typeof alpha_table, role: RoleInfo) {
 		this.game = game
 		this.client = game.client
 		this.id = id
 		this.identifier = identifier
 		this.alphabet = alphabet
-		this.role = new PlayerRole(role, this)
+		this.role = new PlayerRole(this, role)
 
 		const roleProperties = this.role.properties
-
-		this.see_mafia_chat = roleProperties["see-mafia-chat"]
 
 		this.permanent_stats = {
 			"basic-defense": 0,
@@ -127,13 +124,6 @@ class Player {
 			"vote-magnitude": roleProperties.stats["vote-magnitude"],
 		}
 		this.game_stats = this.permanent_stats
-
-		const winCon = win_conditions[this.role.properties["win-condition"]]
-		if (!winCon) {
-			throw new Error(
-				`Unknown win condition '${this.role.properties["win-condition"]}' found for role ${role.identifier}`
-			)
-		}
 	}
 
 	isVotedAgainstBy(identifier: string): boolean {
@@ -288,7 +278,7 @@ class Player {
 	}
 
 	getRoleStats(): PlayerStats {
-		return this.role.stats
+		return this.role.properties.stats
 	}
 
 	getPermanentStats(): PlayerStats {
@@ -311,7 +301,7 @@ class Player {
 
 		const a = this.game_stats[key]
 		const b = this.permanent_stats[key]
-		const c = this.role.stats[key]
+		const c = this.getRoleStats()[key]
 
 		return modifier(modifier(a, b), c)
 	}
@@ -375,42 +365,17 @@ class Player {
 	}
 
 	async start(): Promise<void> {
-		const role = this.role
-		try {
-			await role.role.onStart(this)
-		} catch (err) {
-			this.logger.log(
-				4,
-				"Role start script error with player %s (%s) [%s]",
-				this.identifier,
-				this.getDisplayName(),
-				this.role.identifier
-			)
-			this.logger.logError(err)
+		for (const part of this.role.allParts) {
+			await part.onRoleStart(this.role)
+		}
+		for (const part of this.role.allParts) {
+			await part.onStart(this)
 		}
 
 		// Start attributes
-		for (let i = 0; i < this.attributes.length; i++) {
-			const attribute = attributes[this.attributes[i].identifier]
-
-			if (attribute.start) {
-				if (attribute.start.DO_NOT_RUN_ON_GAME_START === true) {
-					return
-				}
-
-				try {
-					// Define truestart synchronisation
-					await attribute.start(this, this.attributes[i], true)
-				} catch (err) {
-					this.logger.log(
-						4,
-						"Attribute start script error with player %s (%s) [%s]",
-						this.identifier,
-						this.getDisplayName(),
-						this.attributes[i].identifier
-					)
-					this.logger.logError(err)
-				}
+		for (const attribute of this.attributes) {
+			if (attribute.start && attribute.start.DO_NOT_RUN_ON_GAME_START === true) {
+				await attribute.start(this, attribute, true)
 			}
 		}
 
@@ -421,17 +386,10 @@ class Player {
 	private async postIntro() {
 		// Post intro
 		await executable.roles.postRoleIntroduction(this)
-		const postInfo = this.role.role.postAdditionalRoleInformation
-		if (postInfo) {
-			await postInfo(this)
-		}
-	}
 
-	get initialRole(): PlayerRole {
-		if (this.previousRoles.length === 0) {
-			return this.role
+		for (const part of this.role.allParts) {
+			await part.postAdditionalRoleInformation(this)
 		}
-		return this.previousRoles[0]
 	}
 
 	assignChannel(channel: TextChannel): void {
@@ -481,22 +439,6 @@ class Player {
 		return this.getStatus("alive")
 	}
 
-	async changeRole(newRole: Role, change_vote_magnitude_stat = false, rerun_start = true): Promise<void> {
-		this.previousRoles.push(this.role)
-		this.role = new PlayerRole(newRole, this)
-
-		this.see_mafia_chat = this.see_mafia_chat || this.role.properties["see-mafia-chat"]
-
-		if (change_vote_magnitude_stat) {
-			const current_magnitude = this.role.stats["vote-magnitude"]
-			this.setPermanentStat("vote-magnitude", current_magnitude, "set")
-		}
-
-		if (rerun_start) {
-			await this.role.role.onStart(this)
-		}
-	}
-
 	isSame(player: Player): boolean {
 		// Compare identifiers
 		return this.identifier === player.identifier
@@ -507,12 +449,8 @@ class Player {
 
 		this.checkAttributeExpires()
 
-		try {
-			await this.executeRoutine(
-				createRoutines((p) => this.role.role.onRoutines(p), this.role.role.routineProperties)
-			)
-		} catch (e) {
-			this.logger.logError(e)
+		for (const part of this.role.allParts) {
+			await this.executeRoutine(createRoutines((p) => part.onRoutines(p), part.routineProperties))
 		}
 
 		for (let i = 0; i < this.attributes.length; i++) {
@@ -536,11 +474,9 @@ class Player {
 		if (!this.isAlive() && !routine.ALLOW_DEAD) {
 			return
 		}
-
 		if (this.getGame().isDay() && !routine.ALLOW_DAY) {
 			return
 		}
-
 		if (!this.getGame().isDay() && !routine.ALLOW_NIGHT) {
 			return
 		}
@@ -568,8 +504,12 @@ class Player {
 		this.intro_messages.push(message)
 	}
 
-	substitute(id: string): void {
+	async substitute(id: string): Promise<void> {
 		this.id = id
+
+		for (const part of this.role.allParts) {
+			await part.onSubstitute(this)
+		}
 	}
 
 	hasAttribute(attribute: string): boolean {
@@ -678,6 +618,8 @@ class Player {
 			)
 		}
 	}
-}
 
-export default Player
+	async broadcastTargetMessage(message: string): Promise<void> {
+		await Promise.all(this.role.allParts.map((part) => part.broadcastActionMessage(this, message)))
+	}
+}

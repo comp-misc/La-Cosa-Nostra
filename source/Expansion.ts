@@ -9,7 +9,6 @@ export type ExpansionType = "Setup" | "Utility" | "Commands" | "Expansion"
 export interface ExpansionOverrides {
 	flavours?: string[]
 	role_win_conditions?: string[]
-	roles?: string[]
 	attributes?: string[]
 }
 
@@ -60,6 +59,7 @@ export interface ExpansionScripts {
 export interface ExpansionAdditions {
 	assets: string[]
 	roles: string[]
+	roleParts: string[]
 	flavours: string[]
 	role_win_conditions: string[]
 	attributes: string[]

@@ -1,4 +1,4 @@
-import { SetupRole } from "../../../LcnConfig"
+import { RoleInfo } from "../../../role"
 import {
 	mafiaBulletproof,
 	mafiaEvenNightWatcher,
@@ -15,7 +15,7 @@ import {
 } from "./roles"
 
 export interface RoleTableBlock {
-	role: SetupRole
+	role: RoleInfo
 	ability: string
 }
 

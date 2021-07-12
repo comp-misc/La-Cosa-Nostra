@@ -1,46 +1,65 @@
 import { CommandProperties, RoleCommand } from "../../../../commands/CommandType"
 import { SetupAttributeData } from "../../../../LcnConfig"
+import { BasicCompleteRole, CompleteRoleProperties, RoleDescriptor, RoutineProperties } from "../../../../role"
 import Player from "../../../../systems/game_templates/Player"
-import { ProgrammableRole, RoleProperties, RoutineProperties } from "../../../../systems/Role"
-import roleProperties from "./role.json"
-
+import { WinCondition } from "../../../../systems/win_conditions"
+import skWinCondition from "../../../roles/role_win_conditions/serial_killer"
 import killCmd from "./commands/kill"
 import listAbilitiesCmd from "./commands/listAbilities"
 import strongKillCmd from "./commands/strongKill"
 
-const description = `
-Welcome to \${game.name}! You are a Serial Killer.
-
-Abilities:
-- Kill: Each night phase, you may target another player in the game to attempt to kill them.
-- Strong Kill: Once, at night, instead of using your normal kill, you may target a player to deal an unstoppable kill on them.
-- Limited-Use Abilities: You are granted special limited-use abilities at the start of the game depending on the role distribution which you may use accordingly in conjunction with the kill.
-
-Win condition:
-- You win when you are the last player alive, or that is inevitable.
-
-`.trim()
-
-export interface SerialKillerConfig {
+export interface Config {
 	abilities: SetupAttributeData[]
 }
 
-export default class SerialKiller implements ProgrammableRole<SerialKillerConfig> {
-	readonly config: SerialKillerConfig
-	readonly properties: RoleProperties = roleProperties
+export interface State {
+	strongkills_left: number
+	can_pick: boolean
+}
 
-	readonly commands: CommandProperties<RoleCommand>[]
+export default class SerialKiller extends BasicCompleteRole<Config, State> {
+	readonly properties: CompleteRoleProperties = {
+		alignment: {
+			id: "3p",
+			representation: null,
+		},
+		investigation: "Serial Killer",
+	}
+	readonly winCondition: WinCondition = skWinCondition
+	readonly commands: CommandProperties<RoleCommand>[] = [killCmd, listAbilitiesCmd, strongKillCmd]
 
-	constructor(config: SerialKillerConfig) {
-		this.config = config
-		this.commands = [killCmd, listAbilitiesCmd, strongKillCmd]
+	constructor(config: Config, state?: State) {
+		super(
+			config,
+			state || {
+				strongkills_left: 1,
+				can_pick: true,
+			}
+		)
 	}
 
-	getDescription(): string {
-		return description
+	formatDescriptor(descriptor: RoleDescriptor): void {
+		descriptor.name = "Serial Killer"
+		descriptor.addDescription(
+			RoleDescriptor.CATEGORY.ROLE_ABILITIES,
+			{
+				name: "Kill",
+				description: "Each night phase, you may target another player in the game to attempt to kill them.",
+			},
+			{
+				name: "Strong Kill",
+				description:
+					"Once, at night, instead of using your normal kill, you may target a player to deal an unstoppable kill on them.",
+			},
+			{
+				name: "Limited-Use Abilities",
+				description:
+					"You are granted special limited-use abilities at the start of the game depending on the role distribution which you may use accordingly in conjunction with the kill.",
+			}
+		)
 	}
 
-	async onStart(player: Player): Promise<void> {
+	override async onStart(player: Player): Promise<void> {
 		for (const ability of this.config.abilities) {
 			await player.addAttribute(ability.identifier, ability.expiry, ability.tags)
 		}
@@ -55,8 +74,6 @@ export default class SerialKiller implements ProgrammableRole<SerialKillerConfig
 				prefix +
 				"listabilities`: lists all the **non-passive** limited-use abilities you have at the time of execution. May only be run in your private channel."
 		)
-
-		player.misc.can_pick = true
 
 		const abilities = player.attributes.filter(
 			(x) =>
@@ -79,17 +96,15 @@ export default class SerialKiller implements ProgrammableRole<SerialKillerConfig
 				":exclamation: You have no limited-use abilities (both **non-passive** and **passive**)."
 			)
 		}
-
-		player.misc.strongkills_left = 1
 	}
 
-	async onRoutines(player: Player): Promise<void> {
+	override async onRoutines(player: Player): Promise<void> {
 		const config = player.getGame().config
 
 		// Nighttime actions
 		const channel = player.getPrivateChannel()
 
-		if (player.misc.strongkills_left > 0) {
+		if (this.state.strongkills_left > 0) {
 			await player
 				.getGame()
 				.sendPeriodPin(

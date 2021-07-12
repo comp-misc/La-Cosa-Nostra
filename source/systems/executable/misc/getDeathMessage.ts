@@ -8,10 +8,10 @@ export default (game: Game, player: Player, reason: string): string => {
 
 	message = message.replace(new RegExp("{;player}", "g"), player.getDisplayName())
 	message = message.replace(new RegExp("{;reason}", "g"), reason)
-	message = message.replace(new RegExp("{;role}", "g"), player.role.getDisplayName(true))
+	message = message.replace(new RegExp("{;role}", "g"), player.role.getDeathName())
 
-	if (player.misc.time_of_death == undefined) {
-		player.misc.time_of_death = game.getPeriod() + 0.1
+	if (player.time_of_death == undefined) {
+		player.time_of_death = game.getPeriod() + 0.1
 	}
 
 	let will = "We could not find a last will."

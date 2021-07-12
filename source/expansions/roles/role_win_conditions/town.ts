@@ -2,7 +2,7 @@ import auxils from "../../../systems/auxils"
 import { WinCondition } from "../../../systems/win_conditions"
 
 const town: WinCondition = async (game) => {
-	const winners = game.findAllPlayers((x) => x.role.properties.alignment === "town" && x.canWin())
+	const winners = game.findAllPlayers((x) => x.role.properties.alignment.id === "town" && x.canWin())
 
 	await game.setWins(winners)
 	await game.getMainChannel().send(auxils.getAssetAttachment("town-wins.png"))
@@ -11,6 +11,7 @@ const town: WinCondition = async (game) => {
 	return true
 }
 
+town.id = "town"
 town.STOP_GAME = true
 town.STOP_CHECKS = false
 
@@ -37,6 +38,7 @@ town.SURVIVING = ["town"]
 
 town.PREVENT_CHECK_ON_WIN = []
 
-town.DESCRIPTION = "Eliminate all threats to the Town."
+town.DESCRIPTION =
+	"You win when all threats to town have been eliminated and there is at least one member of town left."
 
 export default town

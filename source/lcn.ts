@@ -1,21 +1,19 @@
 // NOTE = the order matters!
 
-import config_handler from "./systems/config_handler"
-
-import auxils from "./systems/auxils"
-import expansions from "./expansions"
-import rolesystem from "./rolesystem/rolesystem"
-import attributes from "./systems/attributes"
-import executable from "./systems/executable"
 import commands from "./commands"
-import flavours from "./systems/flavours"
-import win_conditions from "./systems/win_conditions"
-import actionables from "./systems/actionables"
-import getRoles from "./systems/roles"
-import assets from "./systems/assets"
-import { LcnConfig } from "./LcnConfig"
 import { Expansion } from "./Expansion"
-import { ProgrammableRole, RoleMetadata } from "./systems/Role"
+import expansions from "./expansions"
+import { LcnConfig } from "./LcnConfig"
+import { LoadedRoleMetadata } from "./role"
+import rolesystem from "./rolesystem/rolesystem"
+import assets from "./systems/assets"
+import attributes from "./systems/attributes"
+import auxils from "./systems/auxils"
+import config_handler from "./systems/config_handler"
+import executable from "./systems/executable"
+import flavours from "./systems/flavours"
+import getRoles from "./systems/roles"
+import win_conditions from "./systems/win_conditions"
 
 interface Lcn {
 	auxils: typeof auxils
@@ -26,8 +24,7 @@ interface Lcn {
 	commands: typeof commands
 	flavours: typeof flavours
 	win_conditions: typeof win_conditions
-	actionables: typeof actionables
-	roles: Record<string, RoleMetadata<ProgrammableRole<unknown>, unknown>>
+	roles: Record<string, LoadedRoleMetadata>
 	assets: typeof assets
 	config: LcnConfig
 }
@@ -50,7 +47,6 @@ const lcn: Lcn = {
 	commands,
 	flavours,
 	win_conditions,
-	actionables,
 	roles: getRoles(),
 	assets,
 	config,

@@ -11,19 +11,16 @@ import editTrialVote from "./editTrialVote"
 import getDeathBroadcast from "./getDeathBroadcast"
 import getDeathMessage from "./getDeathMessage"
 import kill from "./kill"
-import lockMafiaChat from "./lockMafiaChat"
 import lockMainChats from "./lockMainChats"
 import lynch from "./lynch"
 import lynchOff from "./lynchOff"
 import lynchReached from "./lynchReached"
 import nolynchOff from "./nolynchOff"
 import nolynchReached from "./nolynchReached"
-import openMafiaChat from "./openMafiaChat"
 import openMainChats from "./openMainChats"
 import pinMessage from "./pinMessage"
 import postDelayNotice from "./postDelayNotice"
 import postGameStart from "./postGameStart"
-import postMafiaPeriodicMessage from "./postMafiaPeriodicMessage"
 import postNewPeriod from "./postNewPeriod"
 import postPrimeMessage from "./postPrimeMessage"
 import postWinLog from "./postWinLog"
@@ -51,19 +48,16 @@ export default {
 	getDeathBroadcast,
 	getDeathMessage,
 	kill,
-	lockMafiaChat,
 	lockMainChats,
 	lynch,
 	lynchOff,
 	lynchReached,
 	nolynchOff,
 	nolynchReached,
-	openMafiaChat,
 	openMainChats,
 	pinMessage,
 	postDelayNotice,
 	postGameStart,
-	postMafiaPeriodicMessage,
 	postNewPeriod,
 	postPrimeMessage,
 	postWinLog,

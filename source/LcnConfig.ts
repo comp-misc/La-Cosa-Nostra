@@ -1,5 +1,5 @@
 import { PermissionObject, Snowflake } from "discord.js"
-import { ProgrammableRole, Role } from "./systems/Role"
+import { RoleInfo } from "./role"
 
 export interface GameConfig {
 	mafia: {
@@ -142,13 +142,11 @@ export interface SetupAttributeData {
 	tags?: Record<string, unknown>
 }
 
-export type SetupRole = Role<ProgrammableRole<any>, any>
-
 export interface PlayingConfig {
-	players: "auto" | string[] | string
+	players: "auto" | "dev" | string[] | string
 	expansions: string[]
-	possibleRoles: SetupRole[]
-	roles: SetupRole[]
+	possibleRoles: RoleInfo[]
+	roles: RoleInfo[]
 	shuffle: boolean
 	flavour: string | null
 }

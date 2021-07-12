@@ -1,3 +1,4 @@
+import SerialKiller from ".."
 import createTargetCommand, { TargetRoleCommand } from "../../../../../commands/createTargetCommand"
 import ActionPriorities from "../../../../../systems/game_templates/ActionPriorities"
 
@@ -13,7 +14,8 @@ const strongkill: TargetRoleCommand = async (game, message, target, from) => {
 		return
 	}
 
-	if (from.misc.strongkills_left < 1) {
+	const role = from.role.getPartOrThrow(SerialKiller)
+	if (role.state.strongkills_left < 1) {
 		await message.reply(":x: You have run out of strong kills")
 		return
 	}

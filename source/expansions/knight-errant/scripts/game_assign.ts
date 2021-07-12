@@ -4,11 +4,13 @@ import getUniqueArray from "../../../auxils/getUniqueArray"
 import pettyFormat from "../../../auxils/pettyFormat"
 import { GameAssignScript } from "../../../Expansion"
 import getLogger from "../../../getLogger"
-import { SetupAttributeData, SetupRole } from "../../../LcnConfig"
-import { instantiateRole } from "../../../systems/roles"
+import { SetupAttributeData } from "../../../LcnConfig"
+import { createRoleInfo, MergedRole } from "../../../role"
+import Mason from "../../roles/parts/mason"
+import Town from "../../roles/roles/town"
 import SerialKiller from "../roles/serial_killer"
 import createRoleTable from "./createRoleTable"
-import { mafiaGoon, townMason, vanillaTownie } from "./roles"
+import { mafiaGoon, vanillaTownie } from "./roles"
 
 const gameAssign: GameAssignScript = (playing_config) => {
 	const logger = getLogger()
@@ -26,7 +28,8 @@ const gameAssign: GameAssignScript = (playing_config) => {
 	const role_table = roleTable[0].map((_col, i) => roleTable.map((row) => row[i]))
 
 	// Default setup
-	let setup: SetupRole[] = [townMason, townMason, mafiaGoon, mafiaGoon]
+	const town = new Town()
+	let setup = [createRoleInfo(town, new Mason()), createRoleInfo(town, new Mason()), mafiaGoon, mafiaGoon]
 
 	// Choose from role table using knight move
 	const possibilities = knightMatrix([4, 4], [2, 1])
@@ -43,7 +46,7 @@ const gameAssign: GameAssignScript = (playing_config) => {
 	const roles = concatenable.map((x) => x.role)
 	const abilities = concatenable.map((x) => x.ability)
 
-	setup = setup.concat(roles)
+	setup = [...setup, ...roles]
 
 	const unique = getUniqueArray(abilities)
 
@@ -52,26 +55,20 @@ const gameAssign: GameAssignScript = (playing_config) => {
 		tags: { uses: abilities.filter((x) => x === identifier).length },
 	}))
 
-	const serial_killer = instantiateRole(SerialKiller, {
-		abilities: attributes,
-	})
+	const serial_killer = createRoleInfo(
+		new SerialKiller({
+			abilities: attributes,
+		})
+	)
 	setup.push(serial_killer)
 
-	const townies = Array.from({ length: 18 }, () => vanillaTownie)
-	setup = [...setup, ...townies]
-
-	for (let c = setup.length - 1; c > 0; c--) {
-		const b = Math.floor(Math.random() * (c + 1))
-		const a = setup[c]
-		setup[c] = setup[b]
-		setup[b] = a
-	}
+	setup.push(...Array.from({ length: 18 - setup.length }, () => vanillaTownie))
 
 	logger.log(
 		2,
 		"[Knight-Errant] Running setup: %s [%s]",
 		choice.name,
-		pettyFormat(roles.map((role) => role.identifier))
+		pettyFormat(roles.map((role) => new MergedRole(role).getName()))
 	)
 
 	return {

@@ -8,21 +8,7 @@
 	"authors": ["Alduskkel"],
 
 	"overrides": {
-		"roles": [
-			"knight-errant/*",
-			"roles/mafia_bulletproof",
-			"roles/mafia_godfather",
-			"roles/mafia_goon",
-			"roles/mafia_roleblocker",
-			"roles/town_bulletproof",
-			"roles/town_doctor",
-			"roles/town_jailkeeper",
-			"roles/town_mason",
-			"roles/town_roleblocker",
-			"roles/town_tracker",
-			"roles/town_vanilla_townie"
-		],
-		"attributes": ["roles/mafia_factionkill", "roles/protection", "knight-errant/*"],
+		"attributes": ["roles/protection", "knight-errant/*"],
 		"role_win_conditions": ["roles/mafia", "roles/serial_killer", "roles/stalemate", "roles/town"]
 	},
 

@@ -1,11 +1,16 @@
 // Stores all the executable actions
 
-import actionables from "../actionables" // for now
 import crypto from "crypto"
+import { Message } from "discord.js"
+import fs from "fs"
+import { getUniqueBy } from "../../auxils/getUniqueArray"
+import recursiveFileFind from "../../auxils/recursiveFileFind"
+import requireScript from "../../auxils/requireScript"
+import getLogger from "../../getLogger"
+import { RoleActionable } from "../actionables"
+import attributes from "../attributes"
 import auxils from "../auxils"
 import Game from "./Game"
-import { Message } from "discord.js"
-import getLogger from "../../getLogger"
 import Player, { PlayerIdentifier } from "./Player"
 
 const allowedTriggers = [
@@ -83,11 +88,15 @@ interface StoredActionable<T> extends Actionable<T> {
 	_scan: string[]
 }
 
+const cycle = (directory: string) => (fs.existsSync(directory) ? recursiveFileFind(directory, ["js", "ts"]) : [])
+
 export default class Actions {
 	game: Game
 	actions: StoredActionable<unknown>[]
 	visit_log: ExecutionParams[]
 	private previous_visit_log: ExecutionParams[]
+
+	actionables: Record<string, RoleActionable> = {}
 
 	constructor(game: Game) {
 		this.actions = []
@@ -95,6 +104,7 @@ export default class Actions {
 		this.previous_visit_log = []
 
 		this.game = game
+		this.refreshActionables()
 
 		return this
 	}
@@ -160,7 +170,7 @@ export default class Actions {
 		}
 
 		// Append new tags to array
-		const runnable = actionables[actionable.identifier]
+		const runnable = this.actionables[actionable.identifier]
 
 		if (typeof runnable === "function" && Array.isArray(runnable.TAGS)) {
 			actionable.tags = actionable.tags.concat(runnable.TAGS)
@@ -312,7 +322,7 @@ export default class Actions {
 				continue
 			}
 
-			const run = actionables[action.identifier]
+			const run = this.actionables[action.identifier]
 
 			if (!run) {
 				getLogger().log(3, "Bad undefined function in actions: " + action.identifier + "!")
@@ -471,5 +481,45 @@ export default class Actions {
 
 	getPreviousVisitLog(): ExecutionParams[] {
 		return this.previous_visit_log
+	}
+
+	refreshActionables(): void {
+		this.actionables = {}
+
+		for (const attribute in attributes) {
+			const directory = attributes[attribute].directory + "/actionables"
+			const actions = cycle(directory)
+
+			for (let i = 0; i < actions.length; i++) {
+				const key = "a/" + attribute + actions[i].substring(directory.length, actions[i].length - 3)
+				this.actionables[key] = requireScript(actions[i])
+			}
+		}
+
+		const idForExpansion: Record<string, string> = {}
+
+		const allRoles = this.game.players.flatMap((player) => player.role.allPartsMetadata)
+		const uniqueRoles = getUniqueBy(allRoles, (role) => role.directory)
+
+		for (const role of uniqueRoles) {
+			if (role.identifier in idForExpansion && idForExpansion[role.identifier] != role.expansion) {
+				throw new Error(
+					`More than 1 role with the same id encountered (${idForExpansion[role.identifier]} vs ${
+						role.expansion
+					})`
+				)
+			}
+			const directory = role.directory + "/actionables"
+			for (const action of cycle(directory)) {
+				const key = role.identifier + action.substring(directory.length, action.length - 3)
+				this.actionables[key] = requireScript(action)
+			}
+		}
+
+		for (const [key, value] of Object.entries(this.actionables)) {
+			if (typeof value !== "function") {
+				throw new Error(`Actionable '${key}' is not a valid function`)
+			}
+		}
 	}
 }

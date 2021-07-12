@@ -13,7 +13,7 @@ export default async (game: Game, id1: string, id2: string, detailed_substitutio
 	}
 
 	const bef_member = player.getGuildMember()
-	player.substitute(id2)
+	await player.substitute(id2)
 	const aft_member = player.getGuildMember()
 
 	logger.log(2, "Player %s substituted for %s.", id1, id2)

@@ -3,7 +3,9 @@ import { WinCondition } from "../../../systems/win_conditions"
 
 const serial_killer: WinCondition = async (game) => {
 	const alive = game.findAllPlayers((x) => x.isAlive())
-	const serial_killers = game.findAllPlayers((x) => x.role.identifier === "serial_killer" && x.isAlive())
+	const serial_killers = game.findAllPlayers(
+		(x) => x.isAlive() && x.role.allPartsMetadata.some((role) => role.identifier === "serial_killer")
+	)
 
 	if (serial_killers.length >= alive.length / 2) {
 		const winners = serial_killers.filter((x) => x.canWin())
@@ -21,6 +23,7 @@ const serial_killer: WinCondition = async (game) => {
 	return false
 }
 
+serial_killer.id = "serial_killer"
 serial_killer.STOP_GAME = true
 serial_killer.STOP_CHECKS = false
 
@@ -34,6 +37,6 @@ serial_killer.SURVIVING = ["serial_killer"]
 
 serial_killer.PREVENT_CHECK_ON_WIN = ["mafia"]
 
-serial_killer.DESCRIPTION = "Kill everyone who can oppose you."
+serial_killer.DESCRIPTION = "You win when you are the last player alive."
 
 export default serial_killer

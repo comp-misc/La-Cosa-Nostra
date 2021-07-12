@@ -9,7 +9,10 @@ const attackedExport = async <T>(actionable: Actionable<T>, game: Game, params: 
 
 	const strength = params.strength as number
 
-	const defense = Math.max(attacked.role.stats["basic-defense"], attacked.getPermanentStats()["basic-defense"])
+	const defense = Math.max(
+		attacked.role.properties.stats["basic-defense"],
+		attacked.getPermanentStats()["basic-defense"]
+	)
 	const temp_defense = attacked.getTemporaryStats()["basic-defense"]
 
 	const cond1 = strength <= defense

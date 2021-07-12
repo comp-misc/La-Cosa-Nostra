@@ -17,8 +17,9 @@ import {
 	TextChannel,
 	User,
 } from "discord.js"
+import filterDefined from "../../auxils/filterDefined"
 import formatEmoji from "../../auxils/formatEmoji"
-import getUniqueArray from "../../auxils/getUniqueArray"
+import getUniqueArray, { getUniqueBy } from "../../auxils/getUniqueArray"
 import expansions from "../../expansions"
 import getGuild from "../../getGuild"
 import getLogger from "../../getLogger"
@@ -145,7 +146,6 @@ class Game {
 	timer_identifier: string | undefined
 	trial_vote_operations: TrialVoteOperation[] = []
 	private period_log: Record<string, PeriodLogEntry> = {}
-	private previously_uploaded_role_info: string[] = []
 	private win_log: WinLog | undefined
 	private trial_collectors: ReactionCollector[] = []
 	tampered_load_times?: Date[]
@@ -849,31 +849,30 @@ class Game {
 	}
 
 	private async messageAll(message: string, pin: "period" | "permanent" | null = null) {
-		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].isAlive()) {
-				const channel = this.players[i].getPrivateChannel()
-
-				if (pin === "period") {
-					await this.sendPeriodPin(channel, message)
-				} else if (pin === "permanent") {
-					await this.sendPin(channel, message)
-				} else {
-					await channel.send(message)
-				}
-				await auxils.delay(100)
+		const channels = filterDefined(
+			getUniqueBy(
+				this.getAlivePlayers().flatMap((p) => p.special_channels),
+				(ch) => ch.id
+			).map(({ id }) => this.getChannelById(id) || undefined)
+		)
+		for (const channel of channels) {
+			if (pin === "period") {
+				await this.sendPeriodPin(channel, message)
+			} else if (pin === "permanent") {
+				await this.sendPin(channel, message)
+			} else {
+				await channel.send(message)
 			}
+			await auxils.delay(100)
 		}
 	}
 
 	async cycle(): Promise<void> {
-		for (let i = expansions.length - 1; i >= 0; i--) {
-			const cycle = expansions[i].scripts.cycle
-
-			if (!cycle) {
-				continue
+		for (const expansion of expansions) {
+			const { cycle } = expansion.scripts
+			if (cycle) {
+				await cycle(this)
 			}
-
-			await cycle(this)
 		}
 
 		if (this.period % 2 === 0) {
@@ -889,23 +888,11 @@ class Game {
 		if (this.game_start_message_sent) {
 			await this.createTrialVote()
 		}
-
-		if (this.config.game.mafia["night-only"]) {
-			await executable.misc.lockMafiaChat(this)
-		} else {
-			await executable.misc.openMafiaChat(this)
-			await executable.misc.postMafiaPeriodicMessage(this)
-		}
-
 		await executable.misc.openMainChats(this)
 	}
 
 	async night(): Promise<void> {
 		// Executed at the start of nighttime
-
-		// Lynch players
-		await executable.misc.openMafiaChat(this)
-		await executable.misc.postMafiaPeriodicMessage(this)
 
 		if (!this.config.game.town["night-chat"]) {
 			await executable.misc.lockMainChats(this)
@@ -1052,7 +1039,7 @@ class Game {
 	}
 
 	async silentKill(
-		role: Player,
+		player: Player,
 		reason: string,
 		secondary_reason?: string,
 		broadcast_position_offset = 0,
@@ -1069,11 +1056,15 @@ class Game {
 		// Can be used to mask death but show true
 		// reason of death to the player killed
 		await this.execute("killed", {
-			target: role.identifier,
+			target: player.identifier,
 			circumstances: circumstances,
 		})
-		await executable.misc.kill(this, role)
-		this.primeDeathMessages(role, reason, secondary_reason, broadcast_position_offset, circumstances)
+		for (const part of player.role.allParts) {
+			await part.onDeath(player, circumstances)
+		}
+
+		await executable.misc.kill(this, player)
+		this.primeDeathMessages(player, reason, secondary_reason, broadcast_position_offset, circumstances)
 	}
 
 	async modkill(player: Player): Promise<boolean> {
@@ -1192,25 +1183,9 @@ class Game {
 	private async uploadPublicRoleInformation(playerIdentifiers: string[]): Promise<void> {
 		const display: Player[] = []
 
-		if (!this.previously_uploaded_role_info) {
-			this.previously_uploaded_role_info = []
-		}
-
 		for (let i = 0; i < playerIdentifiers.length; i++) {
 			const player = this.getPlayerOrThrow(playerIdentifiers[i])
-			const flavour = this.getGameFlavour()
-			const exception =
-				this.previously_uploaded_role_info.includes(player.role.identifier) &&
-				flavour &&
-				flavour.info["do-not-repost-duplicate-cards"] === true
-
-			if (!player.misc.role_cleaned && !exception) {
-				display.push(player)
-			}
-
-			if (!this.previously_uploaded_role_info.includes(player.role.identifier)) {
-				this.previously_uploaded_role_info.push(player.role.identifier)
-			}
+			display.push(player)
 		}
 		await executable.roles.uploadPublicRoleInformation(this, display)
 	}
@@ -1319,6 +1294,7 @@ class Game {
 		}
 
 		const cache = this.players.map((player) => player.start())
+		this.actions.refreshActionables()
 
 		this.game_start_message_sent = true
 
@@ -1540,6 +1516,7 @@ class Game {
 			)
 		}
 		await this.instantiateTrialVoteCollector()
+		this.actions.refreshActionables()
 	}
 
 	addAction<T>(
@@ -1671,6 +1648,10 @@ class Game {
 
 	isDay(): boolean {
 		return this.getPeriod() % 2 === 0
+	}
+
+	isNight(): boolean {
+		return this.getPeriod() % 2 === 1
 	}
 
 	async setWin(role: Player): Promise<void> {
@@ -1805,21 +1786,12 @@ class Game {
 			condition = condition.toLowerCase()
 
 			// Check separately
-			const cond1 = this.playerExists((x) => x.isAlive() && x.role.identifier === condition)
-			const cond2 = this.playerExists((x) => x.isAlive() && x.role.properties.alignment === condition)
-			const cond3 = this.playerExists((x) => x.isAlive() && x.role.properties.class === condition)
+			const cond1 = this.playerExists(
+				(x) => x.isAlive() && x.role.allPartsMetadata.some((meta) => meta.identifier === condition)
+			)
+			const cond2 = this.playerExists((x) => x.isAlive() && x.role.properties.alignment.id === condition)
 
-			let cond4 = false
-
-			if (condition.includes("-")) {
-				const parts = condition.split("-")
-				cond4 = this.playerExists(
-					(x) =>
-						x.isAlive() && x.role.properties.alignment === parts[0] && x.role.properties.class === parts[1]
-				)
-			}
-
-			return cond1 || cond2 || cond3 || cond4
+			return cond1 || cond2
 		}
 	}
 

@@ -1,14 +1,10 @@
-import { Alignment } from "../../../../../systems/Role"
-import { RoleActionable } from "../../../../../systems/actionables"
 import attributeDecrement from "../../../../../rolesystem/modular/attributeDecrement"
+import { RoleActionable } from "../../../../../systems/actionables"
 
-const responses: Record<Alignment, string> = {
+const responses: Record<string, string> = {
 	"3p": ":mag_right: Your target is __Anti-town__.",
-	cult: ":mag_right: Your target is __Anti-town__.",
 	mafia: ":mag_right: Your target is __Anti-town__.",
 	town: ":mag_right: Your target is __Town__.",
-
-	role: ":mag_right: Your target's role is **{;role}**.",
 }
 
 const investigate: RoleActionable = async (actionable, game, params) => {
@@ -28,13 +24,8 @@ const investigate: RoleActionable = async (actionable, game, params) => {
 
 	// Not immune
 	if (immunity < 1) {
-		if (targetRole.properties["reveal-role-on-interrogation"]) {
-			const response = responses.role.replace(new RegExp("{;role}", "g"), targetRole.getDisplayName())
-			game.addMessage(from, response)
-		} else {
-			const response = responses[targetRole.properties.alignment]
-			game.addMessage(from, response ? response : responses.town)
-		}
+		const response = responses[targetRole.properties.alignment.id]
+		game.addMessage(from, response ? response : responses.town)
 	} else {
 		// Show Town
 		game.addMessage(from, responses.town)

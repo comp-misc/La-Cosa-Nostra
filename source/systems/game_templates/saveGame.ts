@@ -6,13 +6,20 @@ import Player from "./Player"
 import jsonInfinityCensor from "../../auxils/jsonInfinityCensor"
 import getLogger from "../../getLogger"
 import { PathLike } from "node:fs"
+import { RoleMetadata, RolePart } from "../../role"
 
 const data_directory = botDirectories.data
 
 export interface SerializedRole {
+	main: SerializedRolePart
+	parts: SerializedRolePart[]
+}
+
+export interface SerializedRolePart {
 	identifier: string
 	expansion: string
 	config: unknown
+	state: unknown
 }
 
 const serializePlayer = (player: Player): Record<string, any> => {
@@ -25,8 +32,6 @@ const serializePlayer = (player: Player): Record<string, any> => {
 	delete playerSerialized.client
 
 	playerSerialized.role = serializeRole(player.role)
-	playerSerialized.previousRoles = player.previousRoles.map(serializeRole)
-
 	return playerSerialized
 }
 
@@ -81,10 +86,16 @@ const writeFileJson = <T>(file: PathLike, data: T): Promise<void> =>
 		})
 	)
 
-const serializeRole = (role: PlayerRole): SerializedRole => ({
+const serializeRolePart = (role: RoleMetadata<RolePart<unknown, unknown>>): SerializedRolePart => ({
 	identifier: role.identifier,
 	expansion: role.expansion,
 	config: role.role.config,
+	state: role.role.state,
+})
+
+const serializeRole = (role: PlayerRole): SerializedRole => ({
+	main: serializeRolePart(role.mainRoleMetadata),
+	parts: role.partsMetadata.map(serializeRolePart),
 })
 
 export default saveGame

@@ -7,21 +7,7 @@
 	"authors": ["Ethan"],
 
 	"overrides": {
-		"flavours": ["2x5/2x5"],
-		"role_win_conditions": ["roles/town", "roles/mafia", "roles/stalemate"],
-		"roles": [
-			"roles/mafia_goon",
-			"roles/mafia_role_cop",
-			"roles/town_vigilante",
-			"roles/roleblocker",
-			"roles/town_voyeur",
-			"roles/town_tracker",
-			"roles/town_jailkeeper",
-			"roles/town_motion_detector",
-			"roles/town_doctor",
-			"roles/town_vanilla_townie",
-			"2x5/jack_of_all_trades"
-		]
+		"flavours": ["2x5/2x5"]
 	},
 
 	"dependencies": ["roles"]

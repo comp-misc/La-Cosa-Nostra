@@ -29,7 +29,7 @@ const modkill: AdminCommand = async (message, params) => {
 	if (response) {
 		await message.channel.send(":ok:  Modkilled **" + player.getDisplayName() + "**!")
 
-		player.misc.time_of_death = game.getPeriod() + 0.05
+		player.time_of_death = game.getPeriod() + 0.05
 	} else {
 		await message.channel.send(":x:  Could not modkill player.")
 	}

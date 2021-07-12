@@ -20,13 +20,12 @@ export interface FlavourData {
 	asset_swaps: AssetSwap[]
 	flavours: Record<string, FlavourRoleData>
 }
-export interface FlavourInfo extends Record<string, any> {
+export interface FlavourInfo {
 	"default-display-flavour": boolean
 	"show-role-equivalent": boolean
 	"display-role-equivalent-on-death": boolean
 	"display-role-equivalent-in-win-log": boolean
 	"investigator-sees-flavour-role": boolean
-	"show-role-category": boolean
 	"post-role-card-and-description-on-death": boolean
 	"step-names": string[] | null
 }

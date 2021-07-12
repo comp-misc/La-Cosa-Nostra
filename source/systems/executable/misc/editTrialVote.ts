@@ -51,7 +51,7 @@ const getVoteList = (game: Game, roles: Player[]): string => {
 			names = voting_against.length > 0 ? ": " + names : ""
 
 			displays.push(`<@${role.id}> (${role.countVotes()}/${lynch_votes})${names}`)
-		} else if (role.misc.time_of_death == undefined && game.getPeriod() % 2 == 0) {
+		} else if (role.time_of_death == undefined && game.getPeriod() % 2 == 0) {
 			if (role.getStatus("lynchProof")) {
 				displays.push("<@" + role.id + "> (\\✖)")
 				return

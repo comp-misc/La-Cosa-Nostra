@@ -1,37 +1,48 @@
-import { instantiateRole, instantiateRoleFromId } from "../../../systems/roles"
-import MafiaBulletproof from "../../roles/roles/mafia_bulletproof"
-import MafiaGodfather from "../../roles/roles/mafia_godfather"
-import MafiaGoon from "../../roles/roles/mafia_goon"
-import MafiaRoleblocker from "../../roles/roles/mafia_roleblocker"
-import TownBulletproof from "../../roles/roles/town_bulletproof"
-import TownDoctor from "../../roles/roles/town_doctor"
-import TownJailkeeper from "../../roles/roles/town_jailkeeper"
-import TownMason from "../../roles/roles/town_mason"
-import TownRoleblocker from "../../roles/roles/town_roleblocker"
-import TownTracker from "../../roles/roles/town_tracker"
-import VanillaTownie from "../../roles/roles/town_vanilla_townie"
+import { createRoleInfo, createRoleInfoFromId } from "../../../role"
+import AlignmentCop from "../../roles/parts/alignment_cop"
+import Bulletproof from "../../roles/parts/bulletproof"
+import Commuter from "../../roles/parts/commuter"
+import Doctor from "../../roles/parts/doctor"
+import GodFather from "../../roles/parts/godfather"
+import Goon from "../../roles/parts/goon"
+import JailKeeper from "../../roles/parts/jailkeeper"
+import Mason from "../../roles/parts/mason"
+import Roleblocker from "../../roles/parts/roleblocker"
+import Tracker from "../../roles/parts/tracker"
+import VanillaTownie from "../../roles/parts/vanilla_townie"
+import Watcher from "../../roles/parts/watcher"
+import BasicMafia from "../../roles/roles/basic_mafia"
+import Town from "../../roles/roles/town"
 
-export const townCommuter = instantiateRoleFromId("town_3_shot_commuter")
-export const mafiaBulletproof = instantiateRole(MafiaBulletproof)
-export const townGunsmith = instantiateRoleFromId("town_gunsmith")
-export const mafiaRoleblocker = instantiateRole(MafiaRoleblocker, {
-	allowMultipleActions: true,
-	sameTargetCooldown: 0,
+const town = new Town()
+const mafia = new BasicMafia({
+	singleAction: true,
 })
-export const mafiaGodfather = instantiateRole(MafiaGodfather)
-export const townAlignmentCop = instantiateRoleFromId("town_alignment_cop")
-export const mafiaEvenNightWatcher = instantiateRoleFromId("mafia_even_night_watcher")
-export const townTracker = instantiateRole(TownTracker)
-export const townJailkeeper = instantiateRole(TownJailkeeper, {
-	sameTargetCooldown: 0,
-})
-export const townBulletproof = instantiateRole(TownBulletproof)
-export const townRoleblocker = instantiateRole(TownRoleblocker, {
-	sameTargetCooldown: 0,
-})
-export const townDoctor = instantiateRole(TownDoctor, {
-	sameTargetCooldown: 0,
-})
-export const townMason = instantiateRole(TownMason)
-export const mafiaGoon = instantiateRole(MafiaGoon)
-export const vanillaTownie = instantiateRole(VanillaTownie)
+
+export const mafiaBulletproof = createRoleInfo(mafia, new Bulletproof())
+export const mafiaRoleblocker = createRoleInfo(mafia, new Roleblocker({ singleAction: true }))
+export const mafiaGodfather = createRoleInfo(mafia, new GodFather())
+export const mafiaEvenNightWatcher = createRoleInfo(mafia, new Watcher({ singleAction: true }))
+export const mafiaGoon = createRoleInfo(mafia, new Goon())
+
+export const townCommuter = createRoleInfo(town, new Commuter({ shots: 3 }))
+export const townGunsmith = createRoleInfoFromId("knight-errant/town_gunsmith")
+export const townAlignmentCop = createRoleInfo(
+	town,
+	new AlignmentCop({
+		investigationImmuneResponse: "Town",
+		alignmentResponses: {
+			town: "Town",
+			mafia: "Anti-Town",
+			"3p": "Anti-Town",
+		},
+	})
+)
+
+export const townTracker = createRoleInfo(town, new Tracker({}))
+export const townJailkeeper = createRoleInfo(town, new JailKeeper({}))
+export const townBulletproof = createRoleInfo(town, new Bulletproof())
+export const townRoleblocker = createRoleInfo(town, new Roleblocker({}))
+export const townDoctor = createRoleInfo(town, new Doctor({}))
+export const townMason = createRoleInfo(town, new Mason())
+export const vanillaTownie = createRoleInfo(town, new VanillaTownie())
