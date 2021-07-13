@@ -26,5 +26,10 @@ export default class Bulletproof extends BasicRolePart<null, null> {
 
 	formatDescriptor(descriptor: RoleDescriptor): void {
 		descriptor.name = "Bulletproof"
+		descriptor.addDescription(RoleDescriptor.CATEGORY.PASSIVE_ABILITIES, {
+			name: "Protection 1",
+			description:
+				"You will survive one attempted night kill. This ability will be used instantly, and you will not be alerted.",
+		})
 	}
 }

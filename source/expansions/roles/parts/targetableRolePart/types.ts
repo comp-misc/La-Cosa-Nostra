@@ -1,11 +1,12 @@
 import { RolePart } from "../../../../role"
 import Game from "../../../../systems/game_templates/Game"
 import { PlayerIdentifier } from "../../../../systems/game_templates/Player"
-import { ExclusiveActionConfig } from "../RemovableAction"
+import RemovableAction, { ExclusiveActionConfig } from "../RemovableAction"
 import { TargetableRoleCommand } from "./command"
 
 export interface ITargetableRolePart<T extends TargetableRoleConfig, S extends TargetableRoleState>
-	extends RolePart<T, S> {
+	extends RolePart<T, S>,
+		RemovableAction {
 	readonly targetCommand: TargetableRoleCommand
 
 	getRoleDetails(): string[]

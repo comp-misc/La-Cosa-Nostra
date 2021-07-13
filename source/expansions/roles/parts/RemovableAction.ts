@@ -19,10 +19,22 @@ const isRemovableAction = (object: any): object is RemovableAction => {
 	return "getExistingAction" in object && "deselectExistingAction" in object
 }
 
-export const deselectExistingActions = async (from: Player, message: Message): Promise<void> => {
+export const deselectExistingActions = async (
+	from: Player,
+	message: Message,
+	...exclude: RemovableAction[]
+): Promise<void> => {
 	const promises: Promise<void>[] = []
 	for (const part of from.role.allParts) {
 		if (!isRemovableAction(part)) {
+			continue
+		}
+		if (
+			exclude.some((exclusion) => {
+				const action = exclusion.getExistingAction(from)
+				return exclusion === part && action && action.from === from.identifier
+			})
+		) {
 			continue
 		}
 		if (part.getExistingAction(from)) {

@@ -47,7 +47,7 @@ const commute: RoleCommand = async (game, message, params, from) => {
 	}
 
 	if (role.config.singleAction) {
-		await deselectExistingActions(from, message)
+		await deselectExistingActions(from, message, role)
 	}
 
 	await message.reply(":camping: You have decided to commute tonight.")

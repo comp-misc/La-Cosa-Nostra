@@ -5,7 +5,6 @@ import { BasicRolePart, RoutineProperties } from "../../../../role"
 import { Actionable } from "../../../../systems/game_templates/Actions"
 import Game from "../../../../systems/game_templates/Game"
 import Player from "../../../../systems/game_templates/Player"
-import RemovableAction from "../RemovableAction"
 import { createRealCommand, TargetableRoleCommand } from "./command"
 import {
 	ITargetableRolePart,
@@ -19,7 +18,7 @@ import {
 
 export default abstract class TargetableRolePart<T extends TargetableRoleConfig, S extends TargetableRoleState>
 	extends BasicRolePart<T, S>
-	implements ITargetableRolePart<T, S>, RemovableAction
+	implements ITargetableRolePart<T, S>
 {
 	readonly targetCommand: TargetableRoleCommand
 

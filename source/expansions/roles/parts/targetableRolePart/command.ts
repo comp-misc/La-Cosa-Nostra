@@ -3,6 +3,7 @@ import { CommandProperties, CommandUsageError, RoleCommand } from "../../../../c
 import { Actionable, ActionOptions } from "../../../../systems/game_templates/Actions"
 import Game from "../../../../systems/game_templates/Game"
 import Player from "../../../../systems/game_templates/Player"
+import { deselectExistingActions } from "../RemovableAction"
 import { ITargetableRolePart, TargetableRoleConfig, TargetableRoleState } from "./types"
 
 export interface TargetableRoleCommand {
@@ -48,9 +49,9 @@ export const sendDefaultActionMessage = async (
 	target: Player,
 	message: Message
 ): Promise<void> => {
-	await message.reply(`:${emoji}: You have decided to ${verb} **${target.getDisplayName()}** tonight.`)
+	await message.reply(`${emoji} You have decided to ${verb} **${target.getDisplayName()}** tonight.`)
 	await from.broadcastTargetMessage(
-		`:${emoji}: **${from.getDisplayName()}** has decided to ${verb} **${target.getDisplayName()}** tonight.`
+		`${emoji} **${from.getDisplayName()}** has decided to ${verb} **${target.getDisplayName()}** tonight.`
 	)
 }
 
@@ -60,9 +61,9 @@ export const sendDefaultDeselectMessage = async (
 	from: Player,
 	message: Message
 ): Promise<void> => {
-	await message.reply(`:${emoji}: Your ${description} action has been **deselected**`)
+	await message.reply(`${emoji} Your ${description} action has been **deselected**`)
 	await from.broadcastTargetMessage(
-		`:${emoji}: **${from.getDisplayName()}'s** ${description} action has been deselected`
+		`${emoji} **${from.getDisplayName()}'s** ${description} action has been deselected`
 	)
 }
 
@@ -73,9 +74,7 @@ export const sendDefaultNoActionMessage = async (
 	message: Message
 ): Promise<void> => {
 	await message.reply(`${emoji} You have decided not to ${verb} anyone tonight.`)
-	await from.broadcastTargetMessage(
-		`:${emoji}: **${from.getDisplayName()}** has decided not to ${verb} anyone tonight`
-	)
+	await from.broadcastTargetMessage(`${emoji} **${from.getDisplayName()}** has decided not to ${verb} anyone tonight`)
 }
 
 export const createBasicTargetableCommand = <T>(data: {
@@ -156,12 +155,15 @@ export const createRealCommand = <T extends TargetableRoleConfig, S extends Targ
 			return
 		}
 		if (player === to) {
-			await message.reply("You can't use your ability on yourself!")
+			await message.reply(":x: You can't use your ability on yourself!")
 			return
 		}
 		if (!(await validateCanUseSameAction(to, message, role))) {
 			return
 		}
+
+		await deselectExistingActions(player, message, role)
+
 		const targets = role.targets
 		targets[targets.length - 1] = to.identifier
 

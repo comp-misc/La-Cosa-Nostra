@@ -6,9 +6,6 @@ import { MergedRole } from "./MergedRole"
 import { RoleDescriptor } from "./RoleDescriptor"
 
 export const formatAlignment = (alignment: Alignment): string => {
-	if (alignment.representation === null) {
-		return ""
-	}
 	if (alignment.representation) {
 		return alignment.representation
 	}

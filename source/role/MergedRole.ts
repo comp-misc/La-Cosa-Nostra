@@ -110,6 +110,9 @@ export class MergedRole {
 	}
 
 	getDeathName(): string {
+		if (this.properties.alignment === null) {
+			return this.getDisplayName(true)
+		}
 		return (formatAlignment(this.properties.alignment) + " " + this.getDisplayName(true)).trim()
 	}
 

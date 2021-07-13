@@ -2,7 +2,7 @@ import { BasicDescriptionCategory, PartialRoleProperties, RoleDescriptor } from 
 import TargetableRolePart, { DEFAULT_STATE, TargetableRoleConfig, TargetableRoleState } from "../targetableRolePart"
 import roleblockCmd from "./roleblockCmd"
 
-export default class Roleblocker extends TargetableRolePart<TargetableRoleConfig, TargetableRoleState> {
+export default class RoleBlocker extends TargetableRolePart<TargetableRoleConfig, TargetableRoleState> {
 	readonly properties: PartialRoleProperties = {
 		investigation: "Roleblocker",
 	}

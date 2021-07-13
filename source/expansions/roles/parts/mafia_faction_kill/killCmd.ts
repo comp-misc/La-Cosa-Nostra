@@ -16,7 +16,7 @@ const createKillCommand = (role: MafiaFactionKill): TargetCommand => {
 		}
 
 		if (role.config.singleAction) {
-			await deselectExistingActions(from, message)
+			await deselectExistingActions(from, message, role)
 		}
 
 		await game.addAction("mafia_faction_kill/kill", ["cycle"], {

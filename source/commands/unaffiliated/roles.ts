@@ -3,7 +3,7 @@ import capitaliseFirstLetter from "../../auxils/capitaliseFirstLetter"
 import groupBy from "../../auxils/groupBy"
 import hybridisedStringComparison from "../../auxils/hybridisedStringComparison"
 import pettyFormat from "../../auxils/pettyFormat"
-import { Alignment, MergedRole } from "../../role"
+import { formatAlignment, MergedRole } from "../../role"
 import flavours from "../../systems/flavours"
 import { UnaffiliatedCommand } from "../CommandType"
 import makeCommand from "../makeCommand"
@@ -28,8 +28,6 @@ const roles: UnaffiliatedCommand = async (message, params, config) => {
 			}
 		}
 	}
-
-	const formatAlignment = (alignment: Alignment) => alignment.representation || capitaliseFirstLetter(alignment.id)
 
 	if (params.length == 0) {
 		let sendable = ""

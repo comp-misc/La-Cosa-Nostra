@@ -3,6 +3,7 @@ import { WinCondition } from "../systems/win_conditions"
 export enum BasicDescriptionCategory {
 	ROLE_ABILITIES = "Role Abilities",
 	FACTIONAL_ABILITIES = "Factional Abilities",
+	PASSIVE_ABILITIES = "Passive Abilities",
 }
 
 export type RoleDescriptionCategory = BasicDescriptionCategory | string
@@ -59,6 +60,11 @@ export class RoleDescriptor {
 				}
 			}
 		}
+		if (this.additionalInformation.length > 0) {
+			lines.push("")
+			lines.push(...this.additionalInformation)
+		}
+
 		lines.push("")
 		lines.push("Win Condition:")
 		lines.push(`- ${winCondition.DESCRIPTION}`)

@@ -13,6 +13,7 @@ export default class Neighbour extends GroupChannel<CommunicationConfig> {
 	}
 
 	formatDescriptor(descriptor: RoleDescriptor): void {
+		descriptor.name = "Neighbour"
 		descriptor.addDescription(RoleDescriptor.CATEGORY.ROLE_ABILITIES, {
 			name: "Communication",
 			description: `Each ${this.config.phase} phase, the ${this.config.channelName} channel will be unlocked for conversation`,
