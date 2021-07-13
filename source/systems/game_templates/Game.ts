@@ -1752,7 +1752,7 @@ class Game {
 	}
 
 	async checkFastForward(): Promise<void> {
-		if (this.fastForwarded) {
+		if (this.fastForwarded || !this.isNight()) {
 			return
 		}
 		const players = this.players.filter((p) => p.status.alive)

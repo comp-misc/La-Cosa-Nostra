@@ -69,6 +69,7 @@ const fastforward: GameCommand = async (game, message, params) => {
 		if (currentStatus == FFStatus.OFF) {
 			await message.reply("You are not fast forwarding the night")
 		} else {
+			player.ffstatus = FFStatus.OFF
 			await message.reply("You are no longer fast forwarding the night")
 		}
 	} else {
