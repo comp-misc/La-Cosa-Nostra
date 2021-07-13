@@ -29,6 +29,7 @@ const powerfulAttack: AttackPrototype = async <T>(
 			target: actionable.to,
 			priority: actionable.priority,
 			reason: powerfulAttack.reason,
+			type: "strong kill",
 			secondary_reason: powerfulAttack.secondary_reason,
 		})
 	}
