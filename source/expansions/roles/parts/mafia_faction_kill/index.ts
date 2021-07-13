@@ -45,7 +45,11 @@ export default class MafiaFactionKill extends BasicRolePart<ExclusiveActionConfi
 	}
 
 	getExistingAction(from: Player): Actionable<unknown> | null {
-		return from.getGame().actions.find((action) => action.identifier === "mafia_faction_kill/kill")
+		return from
+			.getGame()
+			.actions.find(
+				(action) => action.identifier === "mafia_faction_kill/kill" && action.from === from.identifier
+			)
 	}
 
 	async deselectExistingAction(from: Player, message: Message): Promise<void> {

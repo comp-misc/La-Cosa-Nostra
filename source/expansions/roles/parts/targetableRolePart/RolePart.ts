@@ -67,14 +67,18 @@ export default abstract class TargetableRolePart<T extends TargetableRoleConfig,
 		if (this.sameTargetCooldown > 0) {
 			details.push(this.formatCooldown())
 		}
-		if (Number.isFinite(this.totalShots.shots)) {
+		if (Number.isFinite(this.startingShots)) {
 			details.push(this.formatShots())
 		}
 		return details
 	}
 
 	formatShots(): string {
-		const { shots, singularText, pluralText } = this.totalShots
+		const shots = this.startingShots
+		const configShots = this.config.shots
+		const { singularText = "shot", pluralText = "shots" } =
+			configShots && typeof configShots !== "number" ? configShots : {}
+
 		if (!Number.isFinite(shots)) return ""
 		else if (shots == 1) return `You have 1 ${singularText}`
 		else return `You have ${shots} ${pluralText}`
@@ -177,7 +181,8 @@ export default abstract class TargetableRolePart<T extends TargetableRoleConfig,
 	}
 
 	hasRemainingShots(): boolean {
-		return !Number.isFinite(this.totalShots.shots) || this.shotsUsed < this.totalShots.shots
+		const startingShots = this.startingShots
+		return !Number.isFinite(startingShots) || this.shotsUsed < startingShots
 	}
 
 	get periods(): RolePeriodUse {
@@ -193,18 +198,19 @@ export default abstract class TargetableRolePart<T extends TargetableRoleConfig,
 		return this.config.sameTargetCooldown || 0
 	}
 
-	get shotsUsed(): number {
-		return this.state.shotsUsed
+	get startingShots(): number {
+		const shots = this.config.shots
+		if (shots === undefined) {
+			return Infinity
+		}
+		if (typeof shots === "number") {
+			return shots
+		}
+		return shots.shots
 	}
 
-	get totalShots(): ShotsData {
-		return (
-			this.config.shots || {
-				shots: Infinity,
-				singularText: "shot",
-				pluralText: "shots",
-			}
-		)
+	get shotsUsed(): number {
+		return this.state.shotsUsed
 	}
 
 	get targets(): PlayerTargets {

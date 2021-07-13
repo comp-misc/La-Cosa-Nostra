@@ -20,5 +20,5 @@ const listActionables: AdminCommand = async (message) => {
 export default makeCommand(listActionables, {
 	name: "_list_actionables",
 	description: "Lists all registered actionables",
-	aliases: ["_list-actionables"],
+	aliases: ["_list-actionables", "_actionables"],
 })

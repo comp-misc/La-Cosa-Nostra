@@ -21,7 +21,6 @@ export interface ITargetableRolePart<T extends TargetableRoleConfig, S extends T
 	periods: RolePeriodUse
 	sameTargetCooldown: number
 	shotsUsed: number
-	totalShots: ShotsData
 	targets: PlayerTargets
 }
 
@@ -30,8 +29,8 @@ export interface ShotsData {
 	 * The number of uses of the role the player has.
 	 */
 	shots: number
-	singularText: string
-	pluralText: string
+	singularText?: string
+	pluralText?: string
 }
 
 export interface TargetableRoleConfig extends ExclusiveActionConfig {
@@ -47,7 +46,7 @@ export interface TargetableRoleConfig extends ExclusiveActionConfig {
 	/**
 	 * The number of uses of the role the player has. Default unlimited
 	 */
-	shots?: ShotsData
+	shots?: ShotsData | number
 
 	/**
 	 * When the player can use their role. Default only nights

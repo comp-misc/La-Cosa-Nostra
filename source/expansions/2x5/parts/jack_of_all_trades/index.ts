@@ -22,11 +22,7 @@ export default class JackOfAllTrades extends BasicRolePart<null, null> {
 
 	override async onRoleStart(role: MergedRole): Promise<void> {
 		const joatTargetConfig: TargetableRoleConfig = {
-			shots: {
-				shots: 1,
-				singularText: "shot",
-				pluralText: "shots",
-			},
+			shots: 1,
 			singleAction: true,
 		}
 		await role.addPart(new Vigilante(joatTargetConfig))

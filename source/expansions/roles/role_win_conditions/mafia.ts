@@ -34,7 +34,7 @@ mafia.CHECK_ONLY_WHEN_GAME_ENDS = false
 
 // Accepts function
 // Should key in wrt to player
-mafia.ELIMINATED = ["neutral-killing", "revolutionary", "death", "pestilence", "cult", "arsonist"]
+mafia.ELIMINATED = ["neutral-killing", "revolutionary", "death", "pestilence", "cult", "arsonist", "serial_killer"]
 mafia.SURVIVING = ["mafia"]
 
 mafia.PREVENT_CHECK_ON_WIN = []
