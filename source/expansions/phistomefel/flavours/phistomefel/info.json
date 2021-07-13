@@ -1,0 +1,10 @@
+{
+	"default-display-flavour": true,
+	"show-role-equivalent": false,
+	"show-vanilla-banner": false,
+	"display-role-equivalent-on-death": false,
+	"display-role-equivalent-in-win-log": false,
+	"investigator-sees-flavour-role": false,
+	"post-role-card-and-description-on-death": false,
+	"display-standard-role-details": false
+}

@@ -1,0 +1,15 @@
+{
+	"name": "Phistomefel Mafia",
+	"type": "Setup",
+	"description": "A semi open setup",
+	"link": "https://drive.google.com/file/d/1RnyPXnUKxzTtqrlZiey-7gmTFxoO6sp8/view",
+
+	"authors": ["Ethan"],
+
+	"overrides": {
+		"flavours": ["phistomefel/phistomefel"],
+		"role_win_conditions": ["roles/town", "roles/mafia", "roles/stalemate", "roles/serial_killer"]
+	},
+
+	"dependencies": ["roles"]
+}
