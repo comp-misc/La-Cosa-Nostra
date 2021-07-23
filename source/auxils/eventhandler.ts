@@ -33,6 +33,32 @@ export default (client: Client, config: LcnConfig): void => {
 	})
 
 	onWithError("message", async (message) => {
+		if (!hasTimer() || !getTimer().game) {
+			return
+		}
+		const game = getTimer().game
+		if (
+			!game.playerExists((p) => {
+				const user = p.getDiscordUser()
+				return p.isAlive() && !!user && user.id === message.author.id
+			})
+		) {
+			return
+		}
+		if (
+			!(message.channel instanceof TextChannel) ||
+			!message.channel.parent ||
+			!["private", "current game"].includes(message.channel.parent.name.toLowerCase())
+		) {
+			return
+		}
+		if (/<#\d+>/.test(message.content) || /#([a-zA-Z-_]|\d)+/.test(message.content)) {
+			await message.delete()
+			await message.channel.send(`:x: <@${message.author.id}> Please do not link channels`)
+		}
+	})
+
+	onWithError("message", async (message) => {
 		if (!hasTimer() || !getTimer().game || getTimer().game.state !== "playing" || !message.member) {
 			return
 		}
