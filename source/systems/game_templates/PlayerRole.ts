@@ -1,4 +1,4 @@
-import { MergedRole, RoleInfo, RolePart } from "../../role"
+import { CompleteRole, MergedRole, RoleInfo, RolePart } from "../../role"
 import Player from "./Player"
 
 export default class PlayerRole extends MergedRole {
@@ -20,5 +20,17 @@ export default class PlayerRole extends MergedRole {
 			await part.onStart(this.player)
 		}
 		this.player.getGame().actions.refreshActionables()
+	}
+
+	override async changeMainRole(role: CompleteRole<unknown, unknown>, callOnStart = true): Promise<void> {
+		await super.changeMainRole(role)
+
+		if (callOnStart) {
+			await role.onStart(this.player)
+		}
+		this.player.getGame().actions.refreshActionables()
+
+		//New role may have a new win condition
+		await this.player.getGame().checkWin()
 	}
 }

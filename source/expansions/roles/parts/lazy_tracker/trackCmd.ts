@@ -3,14 +3,14 @@ import { createBasicTargetableCommand } from "../targetableRolePart/command"
 
 export default createBasicTargetableCommand({
 	command: {
-		name: "investigate",
-		description: "Investigate a player to discover their alignment",
+		name: "track",
+		description: "Track a player to determine if they are visiting anyone",
 		emoji: ":mag_right:",
 	},
-	actionVerb: "investigate",
-	actionId: "alignment_cop/investigate",
+	actionVerb: "track",
+	actionId: "lazy_tracker/track",
 	getActionOptions: (__, from, target) => ({
-		name: "AlignmentCop-investigate",
+		name: "Lazy-Tracker-track",
 		expiry: 1,
 		from,
 		to: target,

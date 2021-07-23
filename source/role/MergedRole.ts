@@ -22,7 +22,7 @@ export interface RoleProperties {
 }
 
 export class MergedRole {
-	readonly mainRoleMetadata: RoleMetadata<CompleteRole<unknown, unknown>>
+	private _mainRoleMetadata: RoleMetadata<CompleteRole<unknown, unknown>>
 	readonly partsMetadata: RoleMetadata<RolePart<unknown, unknown>>[]
 
 	private flavour?: FlavourData
@@ -30,9 +30,13 @@ export class MergedRole {
 	customDisplayName: string | null = null
 
 	constructor(roleInfo: RoleInfo, flavour?: FlavourData) {
-		this.mainRoleMetadata = roleInfo.mainRole
+		this._mainRoleMetadata = roleInfo.mainRole
 		this.partsMetadata = [...roleInfo.parts]
 		this.flavour = flavour
+	}
+
+	get mainRoleMetadata(): RoleMetadata<CompleteRole<unknown, unknown>> {
+		return this._mainRoleMetadata
 	}
 
 	get mainRole(): CompleteRole<unknown, unknown> {
@@ -159,6 +163,11 @@ export class MergedRole {
 		const metadata = findRoleMetadata(part)
 		this.partsMetadata.push(metadata)
 		await part.onRoleStart(this)
+	}
+
+	async changeMainRole(role: CompleteRole<unknown, unknown>): Promise<void> {
+		this._mainRoleMetadata = findRoleMetadata(role)
+		await role.onRoleStart(this)
 	}
 
 	getDescription(gameName: string): string {

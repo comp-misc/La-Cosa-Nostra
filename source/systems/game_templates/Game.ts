@@ -1665,8 +1665,12 @@ class Game {
 		}
 	}
 
-	async createPrivateChannel(channelName: string, permissions: RolePermission[]): Promise<TextChannel> {
-		return executable.misc.createPrivateChannel(this, channelName, permissions)
+	async createPrivateChannel(
+		channelName: string,
+		permissions: RolePermission[],
+		reason?: string
+	): Promise<TextChannel> {
+		return executable.misc.createPrivateChannel(this, channelName, permissions, reason)
 	}
 
 	postPrimeLog(): Promise<void> {

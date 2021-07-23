@@ -1,23 +1,28 @@
 import { Message } from "discord.js"
 import { CommandProperties, RoleCommand } from "../../../../commands/CommandType"
-import { TargetCommand } from "../../../../commands/createTargetCommand"
 import { BasicRolePart, PartialRoleProperties, RoleDescriptor, RoutineProperties } from "../../../../role"
 import { Actionable } from "../../../../systems/game_templates/Actions"
 import Player from "../../../../systems/game_templates/Player"
 import RemovableAction, { ExclusiveActionConfig } from "../RemovableAction"
 import { sendDefaultDeselectMessage } from "../targetableRolePart/command"
-import createKillCmd from "./killCmd"
+import killCmd from "./killCmd"
 
-export default class MafiaFactionKill extends BasicRolePart<ExclusiveActionConfig, null> implements RemovableAction {
+export interface Config extends ExclusiveActionConfig {
+	faction?: string
+	actionName?: string
+}
+
+export interface KillActionableMeta {
+	faction?: string
+}
+
+export default class MafiaFactionKill extends BasicRolePart<Config, null> implements RemovableAction {
 	readonly commands: CommandProperties<RoleCommand>[]
 	readonly properties: PartialRoleProperties = {}
 
-	private readonly killCmd: TargetCommand
-
-	constructor(config: ExclusiveActionConfig) {
+	constructor(config: Config) {
 		super(config, null)
-		this.killCmd = createKillCmd(this)
-		this.commands = [this.killCmd]
+		this.commands = [killCmd]
 	}
 
 	formatDescriptor(descriptor: RoleDescriptor): void {
@@ -40,22 +45,26 @@ export default class MafiaFactionKill extends BasicRolePart<ExclusiveActionConfi
 		await game.sendPeriodPin(
 			player.getPrivateChannel(),
 			":dagger: You may kill a player tonight using the faction kill.\n\n" +
-				this.killCmd.formatUsageDescription(game.config)
+				killCmd.formatUsageDescription(game.config)
 		)
 	}
 
 	getExistingAction(from: Player): Actionable<unknown> | null {
-		return from
-			.getGame()
-			.actions.find(
-				(action) => action.identifier === "mafia_faction_kill/kill" && action.from === from.identifier
-			)
+		return from.getGame().actions.find((action) => this.actionMatches(action) && action.from === from.identifier)
 	}
 
 	async deselectExistingAction(from: Player, message: Message): Promise<void> {
 		if (this.getExistingAction(from)) {
-			from.getGame().actions.delete((action) => action.identifier === "mafia_faction_kill/kill")
+			from.getGame().actions.delete((action) => this.actionMatches(action))
 			await sendDefaultDeselectMessage(":dagger:", "kill", from, message)
 		}
+	}
+
+	actionMatches(action: Actionable<unknown>): boolean {
+		if (action.identifier !== "mafia_faction_kill/kill") {
+			return false
+		}
+		const castedAction = action as Actionable<KillActionableMeta>
+		return !!castedAction.meta && castedAction.meta.faction === this.config.faction
 	}
 }

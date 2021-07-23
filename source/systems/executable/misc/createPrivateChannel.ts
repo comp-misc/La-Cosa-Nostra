@@ -1,12 +1,17 @@
-import { CategoryChannel, PermissionObject, Permissions, Role, TextChannel, User } from "discord.js"
+import { CategoryChannel, GuildMember, PermissionObject, Permissions, Role, TextChannel, User } from "discord.js"
 import Game from "../../game_templates/Game"
 
 export interface RolePermission {
-	target: Role | User
+	target: Role | User | GuildMember
 	permissions: PermissionObject
 }
 
-export default async (game: Game, channel_name: string, permissions: RolePermission[]): Promise<TextChannel> => {
+export default async (
+	game: Game,
+	channel_name: string,
+	permissions: RolePermission[],
+	reason?: string
+): Promise<TextChannel> => {
 	const config = game.config
 	const guild = game.getGuild()
 
@@ -27,14 +32,15 @@ export default async (game: Game, channel_name: string, permissions: RolePermiss
 		throw new Error(`Unable to find category channel '${category}'`)
 	}
 
-	const channel = (await guild.channels.create(channel_name, {
+	const channel = await guild.channels.create(channel_name, {
 		type: "text",
 		permissionOverwrites: [
 			{ id: guild.id, deny: [Permissions.FLAGS.READ_MESSAGE_HISTORY, Permissions.FLAGS.VIEW_CHANNEL] },
 		],
 		parent: cat_channel,
 		position: 0,
-	}))
+		reason,
+	})
 
 	// {target, permissions}
 	for (let i = 0; i < permissions.length; i++) {

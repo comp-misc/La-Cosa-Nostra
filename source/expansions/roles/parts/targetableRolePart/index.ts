@@ -2,7 +2,12 @@ import TargetableRolePart from "./RolePart"
 import { TargetableRoleState } from "./types"
 
 export * from "./types"
-export { TargetableRoleCommand, sendDefaultActionMessage, sendDefaultNoActionMessage } from "./command"
+export {
+	TargetableRoleCommand,
+	sendDefaultActionMessage,
+	sendDefaultNoActionMessage,
+	createBasicTargetableCommand,
+} from "./command"
 
 export const DEFAULT_STATE: TargetableRoleState = {
 	shotsUsed: 0,

@@ -3,17 +3,17 @@ import { createBasicTargetableCommand } from "../targetableRolePart/command"
 
 export default createBasicTargetableCommand({
 	command: {
-		name: "investigate",
-		description: "Investigate a player to discover their alignment",
-		emoji: ":mag_right:",
+		name: "interrogate",
+		description: "Selects a player to interrogate",
+		emoji: ":chair:",
 	},
-	actionVerb: "investigate",
-	actionId: "alignment_cop/investigate",
+	actionVerb: "interrogate",
+	actionId: "interrogator/interrogate",
 	getActionOptions: (__, from, target) => ({
-		name: "AlignmentCop-investigate",
+		name: "Interrogator-interrogate",
 		expiry: 1,
 		from,
 		to: target,
-		priority: ActionPriorities.INVESTIGATE,
+		priority: ActionPriorities.DEFAULT,
 	}),
 })
