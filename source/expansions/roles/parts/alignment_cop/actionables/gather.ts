@@ -22,7 +22,7 @@ const gather: RoleActionable = (actionable, game) => {
 			alignmentToShow = responses[roleAlignment]
 		}
 	} else {
-		alignmentToShow = copRole.config.investigationImmuneResponse || "town"
+		alignmentToShow = copRole.config.investigationImmuneResponse || "Town"
 	}
 
 	game.addMessage(

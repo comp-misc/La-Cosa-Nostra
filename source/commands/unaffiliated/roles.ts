@@ -18,17 +18,6 @@ const roles: UnaffiliatedCommand = async (message, params, config) => {
 	const flavour = config.playing.flavour ? flavours[config.playing.flavour] : undefined
 	const roles = config.playing.possibleRoles.map((role) => new MergedRole(role, flavour))
 
-	let default_flavour = config.playing.flavour
-
-	if (!default_flavour) {
-		for (const key in flavours) {
-			if (flavours[key].info["default-display-flavour"] === true) {
-				default_flavour = key
-				break
-			}
-		}
-	}
-
 	if (params.length == 0) {
 		let sendable = ""
 

@@ -1,8 +1,8 @@
 {
 	"playing": {
-		"players": "dev",
+		"players": "auto",
 		"roles": [],
-		"expansions": ["compmeme", "phistomefel"],
+		"expansions": ["compmeme", "indecision"],
 		"shuffle": true,
 		"flavour": null
 	}

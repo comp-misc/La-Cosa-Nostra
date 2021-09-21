@@ -73,6 +73,7 @@ export class MergedRole {
 			...p1,
 			...p2,
 			investigation: [...p1.investigation, ...p2.investigation],
+			alignmentInvestigation: [...p1.alignmentInvestigation, ...p2.alignmentInvestigation],
 			credits: [...p1.credits, ...p2.credits],
 			stats: {
 				...p2.stats,

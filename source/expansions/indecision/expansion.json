@@ -1,0 +1,26 @@
+{
+	"name": "Indecision Mafia",
+	"type": "Setup",
+	"description": "A closed setup made by UNU and Ethan because nobody else did",
+	"authors": ["UNU", "Ethan"],
+
+	"overrides": {
+		"flavours": ["indecision/indecision"],
+		"role_win_conditions": ["roles/town", "roles/mafia", "roles/stalemate", "roles/serial_killer"],
+		"roles": ["roles/basic_mafia", "roles/town", "indecision/*"],
+		"parts": [
+			"roles/watcher",
+			"roles/roleblocker",
+			"roles/godfather",
+			"roles/goon",
+
+			"roles/tracker",
+			"roles/alignment_cop",
+			"roles/vigilante",
+			"roles/doctor",
+			"roles/bulletproof",
+			"roles/vanilla_townie"
+		]
+	},
+	"dependencies": ["roles"]
+}

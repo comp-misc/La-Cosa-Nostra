@@ -3,11 +3,11 @@
 		"name": "a game played on Saviet Union Mafia",
 
 		"game-start": "**Welcome to Saviet Union Mafia.**\n\nThis is the general chat channel and the primary platform for gameplay discussion. All players are able to see this channel.",
-		"whisper-log": "**This is the Billboard.**\n\nThis channel is normally used for whispers, but since whispers are disabled in this game, this channel has become a secondary discussion channel. Players are advised to direct the purpose of this channel to suit their needs.",
+		"whisper-log": "**This is the Note Board**\n\n Players are advised to direct the purpose of this channel to suit their needs.",
 		"mafia": "**This is the Mafia Chat.**\n\nThis channel is only open at night for members of the Mafia to communicate.",
 
 		"opening-quote": "May lies and deceit distort the dimming truth;\nfor calamity is sowed from the seeds of rivalry.",
-		"daytime-quote": "**It is now daytime. The trial has now begun.**",
+		"daytime-quote": "**It is now daytime.**",
 		"nighttime-quote": "**Night has descended. Remember to use your night actions if you intend to!**",
 		"no-summary": "Nothing of importance was uncovered.",
 		"no-summary-day": "The town chose to not lynch anyone.",

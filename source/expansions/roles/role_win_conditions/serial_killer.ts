@@ -1,4 +1,4 @@
-import auxils from "../../../systems/auxils"
+import getAssetAttachment from "../../../auxils/getAssetAttachment"
 import { WinCondition } from "../../../systems/win_conditions"
 
 const serial_killer: WinCondition = async (game) => {
@@ -11,7 +11,7 @@ const serial_killer: WinCondition = async (game) => {
 		const winners = serial_killers.filter((x) => x.canWin())
 
 		await game.setWins(winners)
-		await game.getMainChannel().send(auxils.getAssetAttachment("serial-killer-wins.png"))
+		await game.getMainChannel().send(getAssetAttachment("serial-killer-wins.png"))
 		game.primeWinLog("serial killer", "The Serial Killer has destroyed everyone who could oppose them.")
 
 		/* Return true to stop the game/checks

@@ -28,6 +28,7 @@ const createPlayers = (game: Game, config: LcnConfig): Player[] => {
 		players = Array.from({ length: playersNeeded }, (__, i) =>
 			String.fromCharCode(("a".codePointAt(0) as number) + i)
 		)
+		config.playing.shuffle = false
 	}
 
 	if (!playing.roles) {

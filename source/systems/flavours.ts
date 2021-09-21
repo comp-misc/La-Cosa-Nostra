@@ -1,5 +1,6 @@
 // Accounts for the flavours API
 import fs from "fs"
+import attemptRequiring from "../auxils/attemptRequiring"
 import expansions from "../expansions"
 import auxils from "./auxils"
 
@@ -21,7 +22,6 @@ export interface FlavourData {
 	flavours: Record<string, FlavourRoleData>
 }
 export interface FlavourInfo {
-	"default-display-flavour": boolean
 	"show-role-equivalent": boolean
 	"display-role-equivalent-on-death": boolean
 	"display-role-equivalent-in-win-log": boolean
@@ -86,8 +86,8 @@ for (let i = 0; i < flavours.length; i++) {
 
 	// Scan the system
 	const info = require(`${directory}/info.json`) as FlavourInfo
-	const roles = require(`${directory}/roles.json`) as Record<string, FlavourRoleData[]>
-	const asset_swaps = require(`${directory}/asset-swaps.json`) as AssetSwap[]
+	const roles = attemptRequiring<Record<string, FlavourRoleData[]>>(`${directory}/roles.json`) || {}
+	const asset_swaps = attemptRequiring<AssetSwap[]>(`${directory}/asset-swaps.json`) || []
 	const assets: Record<string, Buffer> = {}
 
 	const assets_dir = directory + "/assets/"
