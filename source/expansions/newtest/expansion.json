@@ -1,0 +1,33 @@
+{
+	"name": "New Test",
+	"type": "Setup",
+	"description": "Testing new roles",
+	"authors": ["Ethan"],
+
+	"overrides": {
+		"flavours": ["newtest/newtest"],
+		"role_win_conditions": ["roles/town", "roles/mafia", "roles/stalemate"],
+		"roles": ["roles/basic_mafia", "roles/town"],
+		"parts": [
+			"roles/alignment_cop",
+			"roles/tracker",
+			"roles/watcher",
+			"roles/informed",
+			"roles/jailkeeper",
+			"roles/mirror", //TODO
+			"roles/commuter",
+			"roles/vigilante",
+			"roles/bomb",
+			"roles/veteran",
+			"roles/arsonist", //TODO
+			"roles/roleblocker",
+			"roles/bus_driver", //TOD
+			"roles/transporter", //TOD
+			"roles/redirector", //TODO
+			"roles/vanilla_townie",
+			"roles/lover",
+			"roles/godfather"
+		]
+	},
+	"dependencies": ["roles"]
+}

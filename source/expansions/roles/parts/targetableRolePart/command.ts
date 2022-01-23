@@ -134,6 +134,13 @@ export const createRealCommand = <T extends TargetableRoleConfig, S extends Targ
 		if (preValidation && !(await preValidation(game, message, params, player))) {
 			return
 		}
+		if (!role.canUseOnPeriod(game)) {
+			await message.reply(`:x: You can only use this command ${role.formatPeriodDescription().toLowerCase()}`)
+		}
+		if (!role.hasRemainingShots()) {
+			await message.reply(":x: You have no shots remaining!")
+		}
+
 		if (params.length === 0) {
 			throw new CommandUsageError()
 		}

@@ -16,7 +16,7 @@ const watch: RoleActionable = async (actionable, game, params) => {
 		expiry: 1,
 		from: game.getPlayerOrThrow(actionable.from),
 		to: game.getPlayerOrThrow(actionable.to),
-		priority: ActionPriorities.LOWEST,
+		priority: ActionPriorities.INVESTIGATE_RESULT,
 	})
 
 	await attributeDecrement(actionable, game, params)

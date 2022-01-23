@@ -23,6 +23,7 @@ const start: StartScript = (config) => ({
 	},
 	playing: {
 		...config.playing,
+		players: "dev",
 		flavour: "indecision",
 		possibleRoles: createPossibleRoles(),
 	},

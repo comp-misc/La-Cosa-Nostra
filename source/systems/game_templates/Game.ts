@@ -1056,6 +1056,7 @@ class Game {
 		// Can be used to mask death but show true
 		// reason of death to the player killed
 		await this.execute("killed", {
+			to: player.identifier,
 			target: player.identifier,
 			circumstances: circumstances,
 		})

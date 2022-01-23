@@ -8,5 +8,15 @@
 	"[typescript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-	"gitlens.advanced.similarityThreshold": 35
+	"gitlens.advanced.similarityThreshold": 35,
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/Thumbs.db": true,
+		"node_modules": true,
+		".idea": true
+	}
 }

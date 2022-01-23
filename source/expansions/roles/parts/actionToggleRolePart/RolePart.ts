@@ -5,28 +5,30 @@ import { BasicRolePart, RoutineProperties } from "../../../../role"
 import { Actionable } from "../../../../systems/game_templates/Actions"
 import Game from "../../../../systems/game_templates/Game"
 import Player from "../../../../systems/game_templates/Player"
-import { createRealCommand, TargetableRoleCommand } from "./command"
+import { ActionToggleRoleCommand, createRealCommand } from "./command"
 import {
-	ITargetableRolePart,
-	PlayerTargets,
+	ActionToggleRoleConfig,
+	ActionToggleRoleState,
+	IActionToggleRolePart,
 	RolePeriodUse,
 	RoleUsePeriod,
-	TargetableRoleConfig,
-	TargetableRoleState,
 } from "./types"
 
-export default abstract class TargetableRolePart<T extends TargetableRoleConfig, S extends TargetableRoleState>
+export default abstract class ActionToggleRolePart<
+		T extends ActionToggleRoleConfig = ActionToggleRoleConfig,
+		S extends ActionToggleRoleState = ActionToggleRoleState
+	>
 	extends BasicRolePart<T, S>
-	implements ITargetableRolePart<T, S>
+	implements IActionToggleRolePart<T, S>
 {
-	readonly targetCommand: TargetableRoleCommand
+	readonly toggleCommand: ActionToggleRoleCommand
 
 	readonly commands: CommandProperties<RoleCommand>[]
 
-	constructor(config: T, state: S, targetCommand: TargetableRoleCommand) {
+	constructor(config: T, state: S, toggleCommand: ActionToggleRoleCommand) {
 		super(config, state)
-		this.targetCommand = targetCommand
-		this.commands = [createRealCommand(targetCommand, this)]
+		this.toggleCommand = toggleCommand
+		this.commands = [createRealCommand(toggleCommand, this)]
 	}
 
 	get routineProperties(): RoutineProperties {
@@ -41,31 +43,30 @@ export default abstract class TargetableRolePart<T extends TargetableRoleConfig,
 		if (!this.canUseOnPeriod(player.getGame())) {
 			return
 		}
-		this.state.targets.push(null)
+		this.state.periodsUsedAction.push(false)
 		if (!this.hasRemainingShots()) {
 			return
 		}
 
 		const game = player.getGame()
+		const channel = player.getPrivateChannel()
+
 		const {
 			actionVerb,
 			command: { emoji, name: commandName },
-		} = this.targetCommand
+		} = this.toggleCommand
 		const { "command-prefix": commandPrefix } = game.config
 
 		await game.sendPeriodPin(
-			player.getPrivateChannel(),
-			`${emoji} You may ${actionVerb} a player ${
+			channel,
+			`${emoji} You may use your ${actionVerb} action${
 				game.isDay() ? "today" : "tonight"
-			}.\n\nUse \`${commandPrefix}${commandName} <player | nobody> to select your target\`.`
+			}.\n\nUse \`${commandPrefix}${commandName} <on | off>\` to toggle on and off.`
 		)
 	}
 
 	getRoleDetails(): string[] {
 		const details: string[] = []
-		if (this.sameTargetCooldown > 0) {
-			details.push(this.formatCooldown())
-		}
 		if (Number.isFinite(this.startingShots)) {
 			details.push(this.formatShots())
 		}
@@ -81,19 +82,6 @@ export default abstract class TargetableRolePart<T extends TargetableRoleConfig,
 		if (!Number.isFinite(shots)) return ""
 		else if (shots == 1) return `You have 1 ${singularText}`
 		else return `You have ${shots} ${pluralText}`
-	}
-
-	formatCooldown(): string {
-		const use = this.periods
-		const cooldown = this.sameTargetCooldown
-		if (use.type === "on" && (use.on === RoleUsePeriod.NIGHT || use.on === RoleUsePeriod.DAY)) {
-			const period = use.on === RoleUsePeriod.NIGHT ? "nights" : "days"
-			if (cooldown == 1) return `You may not target the same player on consecutive ${period}`
-			else return `You may only target the same player again after ${cooldown} ${period}`
-		}
-		const inARow = cooldown + 1
-		if (inARow === 2) return "You may not target the same player twice in a row"
-		else return `You may not target the same player ${inARow} times in a row`
 	}
 
 	formatPeriodDescription(): string {
@@ -193,10 +181,6 @@ export default abstract class TargetableRolePart<T extends TargetableRoleConfig,
 		)
 	}
 
-	get sameTargetCooldown(): number {
-		return this.config.sameTargetCooldown || 0
-	}
-
 	get startingShots(): number {
 		const shots = this.config.shots
 		if (shots === undefined) {
@@ -212,22 +196,18 @@ export default abstract class TargetableRolePart<T extends TargetableRoleConfig,
 		return this.state.shotsUsed
 	}
 
-	get targets(): PlayerTargets {
-		return this.state.targets
-	}
-
 	getExistingAction(from: Player): Actionable<unknown> | null {
-		return this.targetCommand.getCurrentAction(from.getGame(), from)
+		return this.toggleCommand.getCurrentAction(from.getGame(), from)
 	}
 
 	async deselectExistingAction(from: Player, message: Message): Promise<void> {
 		if (this.getExistingAction(from) != null) {
-			const targets = this.targets
-			if (targets.length > 0) {
-				targets[targets.length - 1] = null
+			const { periodsUsedAction } = this.state
+			if (periodsUsedAction.length > 0) {
+				periodsUsedAction[periodsUsedAction.length - 1] = false
 			}
 		}
-		await this.targetCommand.deselectCurrentAction(from.getGame(), message, from)
+		await this.toggleCommand.deselectCurrentAction(from.getGame(), message, from)
 	}
 
 	//TODO Keep track of how many shots have been used
